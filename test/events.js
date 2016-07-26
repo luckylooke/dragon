@@ -2,12 +2,12 @@
 
 var test = require('tape');
 var events = require('./lib/events');
-var dragula = require('..');
+var dragon = require('..');
 
 test('.start() emits "cloned" for copies', function (t) {
   var div = document.createElement('div');
   var item = document.createElement('div');
-  var drake = dragula([div], { copy: true });
+  var drake = dragon([div], { copy: true });
   div.appendChild(item);
   document.body.appendChild(div);
   drake.on('cloned', cloned);
@@ -26,7 +26,7 @@ test('.start() emits "cloned" for copies', function (t) {
 test('.start() emits "drag" for items', function (t) {
   var div = document.createElement('div');
   var item = document.createElement('div');
-  var drake = dragula([div]);
+  var drake = dragon([div]);
   div.appendChild(item);
   document.body.appendChild(div);
   drake.on('drag', drag);
@@ -42,7 +42,7 @@ test('.start() emits "drag" for items', function (t) {
 test('.end() emits "cancel" when not moved', function (t) {
   var div = document.createElement('div');
   var item = document.createElement('div');
-  var drake = dragula([div]);
+  var drake = dragon([div]);
   div.appendChild(item);
   document.body.appendChild(div);
   drake.on('dragend', dragend);
@@ -65,7 +65,7 @@ test('.end() emits "drop" when moved', function (t) {
   var div = document.createElement('div');
   var div2 = document.createElement('div');
   var item = document.createElement('div');
-  var drake = dragula([div, div2]);
+  var drake = dragon([div, div2]);
   div.appendChild(item);
   document.body.appendChild(div);
   document.body.appendChild(div2);
@@ -90,7 +90,7 @@ test('.end() emits "drop" when moved', function (t) {
 test('.remove() emits "remove" for items', function (t) {
   var div = document.createElement('div');
   var item = document.createElement('div');
-  var drake = dragula([div]);
+  var drake = dragon([div]);
   div.appendChild(item);
   document.body.appendChild(div);
   drake.on('dragend', dragend);
@@ -112,7 +112,7 @@ test('.remove() emits "remove" for items', function (t) {
 test('.remove() emits "cancel" for copies', function (t) {
   var div = document.createElement('div');
   var item = document.createElement('div');
-  var drake = dragula([div], { copy: true });
+  var drake = dragon([div], { copy: true });
   div.appendChild(item);
   document.body.appendChild(div);
   drake.on('dragend', dragend);
@@ -135,7 +135,7 @@ test('.remove() emits "cancel" for copies', function (t) {
 test('.cancel() emits "cancel" when not moved', function (t) {
   var div = document.createElement('div');
   var item = document.createElement('div');
-  var drake = dragula([div]);
+  var drake = dragon([div]);
   div.appendChild(item);
   document.body.appendChild(div);
   drake.on('dragend', dragend);
@@ -158,7 +158,7 @@ test('.cancel() emits "drop" when not reverted', function (t) {
   var div = document.createElement('div');
   var div2 = document.createElement('div');
   var item = document.createElement('div');
-  var drake = dragula([div]);
+  var drake = dragon([div]);
   div.appendChild(item);
   document.body.appendChild(div);
   document.body.appendChild(div2);
@@ -184,7 +184,7 @@ test('.cancel() emits "cancel" when reverts', function (t) {
   var div = document.createElement('div');
   var div2 = document.createElement('div');
   var item = document.createElement('div');
-  var drake = dragula([div], { revertOnSpill: true });
+  var drake = dragon([div], { revertOnSpill: true });
   div.appendChild(item);
   document.body.appendChild(div);
   document.body.appendChild(div2);
@@ -208,7 +208,7 @@ test('.cancel() emits "cancel" when reverts', function (t) {
 test('mousedown emits "cloned" for mirrors', function (t) {
   var div = document.createElement('div');
   var item = document.createElement('div');
-  var drake = dragula([div]);
+  var drake = dragon([div]);
   div.appendChild(item);
   document.body.appendChild(div);
   drake.on('cloned', cloned);
@@ -228,7 +228,7 @@ test('mousedown emits "cloned" for mirrors', function (t) {
 test('mousedown emits "cloned" for copies', function (t) {
   var div = document.createElement('div');
   var item = document.createElement('div');
-  var drake = dragula([div], { copy: true });
+  var drake = dragon([div], { copy: true });
   div.appendChild(item);
   document.body.appendChild(div);
   drake.on('cloned', cloned);
@@ -248,7 +248,7 @@ test('mousedown emits "cloned" for copies', function (t) {
 test('mousedown emits "drag" for items', function (t) {
   var div = document.createElement('div');
   var item = document.createElement('div');
-  var drake = dragula([div]);
+  var drake = dragon([div]);
   div.appendChild(item);
   document.body.appendChild(div);
   drake.on('drag', drag);

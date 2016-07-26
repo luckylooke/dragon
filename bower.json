@@ -1,15 +1,16 @@
 {
-  "name": "dragula.js",
-  "version": "3.7.1",
+  "name": "dragon.js",
+  "version": "0.0.1",
   "description": "Drag and drop so simple it hurts",
   "main": [
-    "dist/dragula.js",
-    "dist/dragula.css"
+    "dist/dragon.js",
+    "dist/dragon.css"
   ],
   "ignore": [],
-  "homepage": "https://github.com/bevacqua/dragula",
+  "homepage": "https://github.com/luckylooke/dragon",
   "authors": [
-    "Nicolas Bevacqua <nicolasbevacqua@gmail.com>"
+    "Nicolas Bevacqua <nicolasbevacqua@gmail.com>",
+    "Ctibor Laky <luckylooke@gmail.com>"
   ],
   "license": "MIT"
 }

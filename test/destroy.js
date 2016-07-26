@@ -1,24 +1,24 @@
 'use strict';
 
 var test = require('tape');
-var dragula = require('..');
+var dragon = require('..');
 
 test('destroy does not throw when not dragging, destroyed, or whatever', function (t) {
   t.test('a single time', function once (st) {
-    var drake = dragula();
+    var drake = dragon();
     st.doesNotThrow(function () {
       drake.destroy();
-    }, 'dragula bites into a single call to drake.destroy');
+    }, 'dragon bites into a single call to drake.destroy');
     st.end();
   });
   t.test('multiple times', function once (st) {
-    var drake = dragula();
+    var drake = dragon();
     st.doesNotThrow(function () {
       drake.destroy();
       drake.destroy();
       drake.destroy();
       drake.destroy();
-    }, 'dragula bites into multiple calls to drake.destroy');
+    }, 'dragon bites into multiple calls to drake.destroy');
     st.end();
   });
   t.end();
@@ -27,7 +27,7 @@ test('destroy does not throw when not dragging, destroyed, or whatever', functio
 test('when dragging and destroy gets called, nothing happens', function (t) {
   var div = document.createElement('div');
   var item = document.createElement('div');
-  var drake = dragula([div]);
+  var drake = dragon([div]);
   div.appendChild(item);
   document.body.appendChild(div);
   drake.start(item);
@@ -40,7 +40,7 @@ test('when dragging and destroy gets called, nothing happens', function (t) {
 test('when dragging and destroy gets called, dragend event is emitted gracefully', function (t) {
   var div = document.createElement('div');
   var item = document.createElement('div');
-  var drake = dragula([div]);
+  var drake = dragon([div]);
   div.appendChild(item);
   document.body.appendChild(div);
   drake.start(item);
@@ -57,7 +57,7 @@ test('when dragging a copy and destroy gets called, default does not revert', fu
   var div = document.createElement('div');
   var div2 = document.createElement('div');
   var item = document.createElement('div');
-  var drake = dragula([div, div2]);
+  var drake = dragon([div, div2]);
   div.appendChild(item);
   document.body.appendChild(div);
   document.body.appendChild(div2);
@@ -82,7 +82,7 @@ test('when dragging a copy and destroy gets called, revert is executed', functio
   var div = document.createElement('div');
   var div2 = document.createElement('div');
   var item = document.createElement('div');
-  var drake = dragula([div, div2], { revertOnSpill: true });
+  var drake = dragon([div, div2], { revertOnSpill: true });
   div.appendChild(item);
   document.body.appendChild(div);
   document.body.appendChild(div2);

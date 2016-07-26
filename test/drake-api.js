@@ -1,18 +1,18 @@
 'use strict';
 
 var test = require('tape');
-var dragula = require('..');
+var dragon = require('..');
 
 test('drake can be instantiated without throwing', function (t) {
-  t.doesNotThrow(drakeFactory, 'calling dragula() without arguments does not throw');
+  t.doesNotThrow(drakeFactory, 'calling dragon() without arguments does not throw');
   t.end();
   function drakeFactory () {
-    return dragula();
+    return dragon();
   }
 });
 
 test('drake has expected api properties', function (t) {
-  var drake = dragula();
+  var drake = dragon();
   t.ok(drake, 'drake is not null');
   t.equal(typeof drake, 'object', 'drake is an object');
   t.ok(Array.isArray(drake.containers), 'drake.containers is an array');

@@ -20,7 +20,7 @@ Thanks for reporting bugs, we'd be lost without you.
 
 ### Feature Requests
 
-We're still considering feature requests. Note that we might not implement the feature you want, or exactly how you want it. The goal here is to keep making `dragula` awesome while not making it too bloated.
+We're still considering feature requests. Note that we might not implement the feature you want, or exactly how you want it. The goal here is to keep making `dragon` awesome while not making it too bloated.
 
 We also dislike overly specific features and favor more abstract ones you the consumer can build other features upon.
 
@@ -57,5 +57,5 @@ npm test
 ```
 
 [1]: https://github.com/bevacqua/dragula/issues?q=label%3Asupport
-[2]: http://bevacqua.github.io/dragula/
-[3]: https://dragula-slackin.herokuapp.com/
+[2]: http://bevacqua.github.io/dragon/
+[3]: https://dragon-slackin.herokuapp.com/

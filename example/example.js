@@ -1,7 +1,7 @@
 'use strict';
 
-dragula([$('left-defaults'), $('right-defaults')]);
-dragula([$('left-copy'), $('right-copy')], { copy: true });
+dragon([$('left-defaults'), $('right-defaults')]);
+dragon([$('left-copy'), $('right-copy')], { copy: true });
 
 
 
