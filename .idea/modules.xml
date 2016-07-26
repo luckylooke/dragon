@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/dragula.iml" filepath="$PROJECT_DIR$/.idea/dragula.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../dragon/.idea/dragula.iml" filepath="$PROJECT_DIR$/../dragon/.idea/dragula.iml" />
     </modules>
   </component>
 </project>
