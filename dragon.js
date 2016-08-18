@@ -41,6 +41,8 @@ function dragon (initialContainers, options) {
 
   return drake;
 
+  // Declarations
+
   function isContainer (el) {
     return drake.containers.indexOf(el) !== -1 || o.isContainer(el);
   }
@@ -48,7 +50,6 @@ function dragon (initialContainers, options) {
   function events (remove) {
     var op = remove ? 'remove' : 'add';
     touchy(documentElement, op, 'mousedown', grab);
-    touchy(documentElement, op, 'mouseup', release);
   }
 
   function eventualMovements (remove) {
@@ -74,6 +75,8 @@ function dragon (initialContainers, options) {
   }
 
   function grab (e) {
+    touchy(documentElement, 'add', 'mouseup', release);
+
     _moveX = e.clientX;
     _moveY = e.clientY;
 
@@ -161,6 +164,8 @@ function dragon (initialContainers, options) {
   }
 
   function release (e) {
+    touchy(documentElement, 'remove', 'mouseup', release);
+
     ungrab();
 
     if (!drake.dragging) {
