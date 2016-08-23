@@ -20,7 +20,7 @@ function dragon (initialContainers, options) {
   var _moveY; // reference move y
   var _initialSibling; // reference sibling when grabbed
   var _currentSibling; // reference sibling now
-  var _grabbed; // holds mousedown context until first mousemove
+  var _grabbedContext; // holds mousedown context until first mousemove
 
   var o = options || {};
   if (o.containers === void 0) { o.containers = initialContainers || []; }
@@ -30,14 +30,13 @@ function dragon (initialContainers, options) {
 
   var drake = {
     containers: o.containers,
-    end: end,
     cancel: cancel,
     remove: remove,
     destroy: destroy,
     dragging: false
   };
 
-  events();
+  touchy(documentElement, 'add', 'mousedown', grab);
 
   return drake;
 
@@ -49,27 +48,18 @@ function dragon (initialContainers, options) {
 
   function events (remove) {
     var op = remove ? 'remove' : 'add';
-    touchy(documentElement, op, 'mousedown', grab);
-  }
-
-  function eventualMovements (remove) {
-    var op = remove ? 'remove' : 'add';
-    touchy(documentElement, op, 'mousemove', startBecauseMouseMoved);
-  }
-
-  function movements (remove) {
-    var op = remove ? 'remove' : 'add';
-    crossvent[op](documentElement, 'selectstart', preventGrabbed); // IE8
-    crossvent[op](documentElement, 'click', preventGrabbed);
+    touchy(documentElement, op, 'mousemove', drag);
+    crossvent[op](documentElement, 'selectstart', protectGrab); // IE8
+    crossvent[op](documentElement, 'click', protectGrab);
   }
 
   function destroy () {
-    events(true);
+    touchy(documentElement, 'remove', 'mousedown', grab);
     release({});
   }
 
-  function preventGrabbed (e) {
-    if (_grabbed) {
+  function protectGrab (e) {
+    if (_grabbedContext) {
       e.preventDefault();
     }
   }
@@ -85,32 +75,35 @@ function dragon (initialContainers, options) {
     if (!context) {
       return;
     }
-    _grabbed = context;
-    eventualMovements();
+    _grabbedContext = context;
+
+    events();
     if (e.type === 'mousedown') {
-      if (isInput(item)) { // see also: https://github.com/bevacqua/dragula/issues/208
-        item.focus(); // fixes https://github.com/bevacqua/dragula/issues/176
+      if (isInput(item)) { // see also: github.com/bevacqua/dragula/issues/208
+        item.focus(); // fixes github.com/bevacqua/dragula/issues/176
       } else {
-        e.preventDefault(); // fixes https://github.com/bevacqua/dragula/issues/155
+        e.preventDefault(); // fixes github.com/bevacqua/dragula/issues/155
       }
     }
   }
 
-  function startBecauseMouseMoved (e) {
+  function startByMovement (e) {
     if (whichMouseButton(e) === 0) {
       release({});
       return; // when text is selected on an input and then dragged, mouseup doesn't fire. this is our only hope
     }
-    // truthy check fixes #239, equality fixes #207
+    // truthy check fixes github.com/bevacqua/dragula/issues/239, equality fixes github.com/bevacqua/dragula/issues/207
     if (e.clientX !== void 0 && e.clientX === _moveX && e.clientY !== void 0 && e.clientY === _moveY) {
       return;
     }
 
-    var grabbed = _grabbed; // call to end() unsets _grabbed
-    eventualMovements(true);
-    movements();
-    end();
-    start(grabbed);
+    touchy(documentElement, 'remove', 'mousemove', startByMovement);
+
+    _source = _grabbedContext.source;
+    _item = _grabbedContext.item;
+    _initialSibling = _currentSibling = nextEl(_grabbedContext.item);
+
+    drake.dragging = true;
 
     var offset = getOffset(_item);
     _offsetX = getCoord('pageX', e) - offset.left;
@@ -142,31 +135,8 @@ function dragon (initialContainers, options) {
     };
   }
 
-  function start (context) {
-    _source = context.source;
-    _item = context.item;
-    _initialSibling = _currentSibling = nextEl(context.item);
-
-    drake.dragging = true;
-  }
-
-  function end () {
-    if (!drake.dragging) {
-      return;
-    }
-    drop(_item, getParent(_item));
-  }
-
-  function ungrab () {
-    _grabbed = false;
-    eventualMovements(true);
-    movements(true);
-  }
-
   function release (e) {
     touchy(documentElement, 'remove', 'mouseup', release);
-
-    ungrab();
 
     if (!drake.dragging) {
       return;
@@ -212,7 +182,8 @@ function dragon (initialContainers, options) {
   }
 
   function cleanup () {
-    ungrab();
+    _grabbedContext = false;
+    events('remove');
     removeMirrorImage();
     if (_item) {
       classes.rm(_item, 'gu-transit');
@@ -242,9 +213,14 @@ function dragon (initialContainers, options) {
   }
 
   function drag (e) {
-    if (!_mirror) {
+    if(!drake.dragging){
+      startByMovement(e);
       return;
     }
+
+    if (!_mirror)
+      return;
+
     e.preventDefault();
 
     var clientX = getCoord('clientX', e);
@@ -286,17 +262,15 @@ function dragon (initialContainers, options) {
     classes.rm(_mirror, 'gu-transit');
     classes.add(_mirror, 'gu-mirror');
     o.mirrorContainer.appendChild(_mirror);
-    touchy(documentElement, 'add', 'mousemove', drag);
     classes.add(o.mirrorContainer, 'gu-unselectable');
   }
 
   function removeMirrorImage () {
-    if (_mirror) {
-      classes.rm(o.mirrorContainer, 'gu-unselectable');
-      touchy(documentElement, 'remove', 'mousemove', drag);
-      getParent(_mirror).removeChild(_mirror);
-      _mirror = null;
-    }
+    if (!_mirror)
+      return;
+    classes.rm(o.mirrorContainer, 'gu-unselectable');
+    getParent(_mirror).removeChild(_mirror);
+    _mirror = null;
   }
 
   function getImmediateChild (dropTarget, target) {
@@ -374,10 +348,10 @@ function touchy (el, op, type, fn) {
 function whichMouseButton (e) {
   /** @namespace e.touches -- resolving webstorm unresolved variables */
   if (e.touches !== void 0) { return e.touches.length; }
-  if (e.which !== void 0 && e.which !== 0) { return e.which; } // see https://github.com/bevacqua/dragula/issues/261
+  if (e.which !== void 0 && e.which !== 0) { return e.which; } // see github.com/bevacqua/dragula/issues/261
   if (e.buttons !== void 0) { return e.buttons; }
   var button = e.button;
-  if (button !== void 0) { // see https://github.com/jquery/jquery/blob/99e8ff1baa7ae341e94bb89c3e84570c7c3ad9ea/src/event.js#L573-L575
+  if (button !== void 0) { // see github.com/jquery/jquery/blob/99e8ff1baa7ae341e94bb89c3e84570c7c3ad9ea/src/event.js#L573-L575
     return button & 1 ? 1 : button & 2 ? 3 : (button & 4 ? 2 : 0);
   }
 }
@@ -438,7 +412,7 @@ function nextEl (el) {
 function getEventHost (e) {
   // on touchend event, we have to use `e.changedTouches`
   // see http://stackoverflow.com/questions/7192563/touchend-event-properties
-  // see https://github.com/bevacqua/dragula/issues/34
+  // see github.com/bevacqua/dragula/issues/34
   /** @namespace e.targetTouches -- resolving webstorm unresolved variables */
   /** @namespace e.changedTouches -- resolving webstorm unresolved variables */
   if (e.targetTouches && e.targetTouches.length) {
