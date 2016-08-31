@@ -3,27 +3,22 @@
 var crossvent = require('crossvent');
 var classes = require('./classes');
 var doc = document;
-var documentElement = doc.documentElement;
+var docElm = doc.documentElement;
 
-function dragon (initialContainers, options) {
-  var len = arguments.length;
-  if (len === 1 && Array.isArray(initialContainers) === false) {
-    options = initialContainers;
-    initialContainers = [];
-  }
-  var _mirror; // mirror image
-  var _source; // source container
-  var _item; // item being dragged
-  var _offsetX; // reference x
-  var _offsetY; // reference y
-  var _moveX; // reference move x
-  var _moveY; // reference move y
-  var _initialSibling; // reference sibling when grabbed
-  var _currentSibling; // reference sibling now
-  var _grabbedContext; // holds mousedown context until first mousemove
+function dragon (options) {
+  var _mirror, // mirror image
+      _source, // source container
+      _item, // item being dragged
+      _offsetX, // reference x
+      _offsetY, // reference y
+      _moveX, // reference move x
+      _moveY, // reference move y
+      _initialSibling, // reference sibling when grabbed
+      _currentSibling, // reference sibling now
+      _grabbedContext, // holds mousedown context until first mousemove
+      o = options || {};
 
-  var o = options || {};
-  if (o.containers === void 0) { o.containers = initialContainers || []; }
+  if (o.containers === void 0) { o.containers = []; }
   if (o.isContainer === void 0) { o.isContainer = never; }
   if (o.direction === void 0) { o.direction = 'vertical'; }
   if (o.mirrorContainer === void 0) { o.mirrorContainer = doc.body; }
@@ -32,11 +27,12 @@ function dragon (initialContainers, options) {
     containers: o.containers,
     cancel: cancel,
     remove: remove,
+    drop: drop,
     destroy: destroy,
     dragging: false
   };
 
-  touchy(documentElement, 'add', 'mousedown', grab);
+  touchy(docElm, 'add', 'mousedown', grab);
 
   return drake;
 
@@ -48,13 +44,13 @@ function dragon (initialContainers, options) {
 
   function events (remove) {
     var op = remove ? 'remove' : 'add';
-    touchy(documentElement, op, 'mousemove', drag);
-    crossvent[op](documentElement, 'selectstart', protectGrab); // IE8
-    crossvent[op](documentElement, 'click', protectGrab);
+    touchy(docElm, op, 'mousemove', drag);
+    crossvent[op](docElm, 'selectstart', protectGrab); // IE8
+    crossvent[op](docElm, 'click', protectGrab);
   }
 
   function destroy () {
-    touchy(documentElement, 'remove', 'mousedown', grab);
+    touchy(docElm, 'remove', 'mousedown', grab);
     release({});
   }
 
@@ -65,19 +61,33 @@ function dragon (initialContainers, options) {
   }
 
   function grab (e) {
-    touchy(documentElement, 'add', 'mouseup', release);
+    touchy(docElm, 'add', 'mouseup', release);
+
+    var item = e.target;
+
+    if (drake.dragging && _mirror) {
+      release();
+    }
+    while (getParent(item) && isContainer(getParent(item)) === false) {
+      item = getParent(item); // drag target should be a top element
+    }
+    var source = getParent(item);
+    if (!source) {
+      release();
+    }
+
+    var context =  {
+      item: item,
+      source: source
+    };
+
+    _grabbedContext = context;
 
     _moveX = e.clientX;
     _moveY = e.clientY;
 
-    var item = e.target;
-    var context = canStart(item);
-    if (!context) {
-      return;
-    }
-    _grabbedContext = context;
-
     events();
+
     if (e.type === 'mousedown') {
       if (isInput(item)) { // see also: github.com/bevacqua/dragula/issues/208
         item.focus(); // fixes github.com/bevacqua/dragula/issues/176
@@ -97,7 +107,7 @@ function dragon (initialContainers, options) {
       return;
     }
 
-    touchy(documentElement, 'remove', 'mousemove', startByMovement);
+    touchy(docElm, 'remove', 'mousemove', startByMovement);
 
     _source = _grabbedContext.source;
     _item = _grabbedContext.item;
@@ -114,29 +124,8 @@ function dragon (initialContainers, options) {
     drag(e);
   }
 
-  function canStart (item) {
-    if (drake.dragging && _mirror) {
-      return;
-    }
-    if (isContainer(item)) {
-      return; // don't drag container itself
-    }
-    while (getParent(item) && isContainer(getParent(item)) === false) {
-      item = getParent(item); // drag target should be a top element
-    }
-    var source = getParent(item);
-    if (!source) {
-      return;
-    }
-
-    return {
-      item: item,
-      source: source
-    };
-  }
-
   function release (e) {
-    touchy(documentElement, 'remove', 'mouseup', release);
+    touchy(docElm, 'remove', 'mouseup', release);
 
     if (!drake.dragging) {
       return;
@@ -223,19 +212,19 @@ function dragon (initialContainers, options) {
 
     e.preventDefault();
 
-    var clientX = getCoord('clientX', e);
-    var clientY = getCoord('clientY', e);
-    var x = clientX - _offsetX;
-    var y = clientY - _offsetY;
+    var clientX = getCoord('clientX', e),
+        clientY = getCoord('clientY', e),
+        x = clientX - _offsetX,
+        y = clientY - _offsetY;
 
     _mirror.style.left = x + 'px';
     _mirror.style.top = y + 'px';
 
-    var elementBehindCursor = getElementBehindPoint(_mirror, clientX, clientY);
-    var dropTarget = findDropTarget(elementBehindCursor, clientX, clientY);
-    
-    var reference;
-    var immediate = getImmediateChild(dropTarget, elementBehindCursor);
+    var elementBehindCursor = getElementBehindPoint(_mirror, clientX, clientY),
+        dropTarget = findDropTarget(elementBehindCursor, clientX, clientY),
+        reference,
+        immediate = getImmediateChild(dropTarget, elementBehindCursor);
+
     if (immediate !== null) {
       reference = getReference(dropTarget, immediate, clientX, clientY);
     } else {
@@ -278,7 +267,7 @@ function dragon (initialContainers, options) {
     while (immediate !== dropTarget && getParent(immediate) !== dropTarget) {
       immediate = getParent(immediate);
     }
-    if (immediate === documentElement) {
+    if (immediate === docElm) {
       return null;
     }
     return immediate;
@@ -289,16 +278,18 @@ function dragon (initialContainers, options) {
     return target !== dropTarget ? inside() : outside(); // reference
 
     function outside () { // slower, but able to figure out any position
-      var len = dropTarget.children.length;
-      var i;
-      var el;
-      var rect;
+      var len = dropTarget.children.length,
+          i,
+          el,
+          rect;
+
       for (i = 0; i < len; i++) {
         el = dropTarget.children[i];
         rect = el.getBoundingClientRect();
         if (horizontal && (rect.left + rect.width / 2) > x) { return el; }
         if (!horizontal && (rect.top + rect.height / 2) > y) { return el; }
       }
+
       return null;
     }
 
@@ -368,16 +359,16 @@ function getScroll (scrollProp, offsetProp) {
   if (typeof global[offsetProp] !== 'undefined') {
     return global[offsetProp];
   }
-  if (documentElement.clientHeight) {
-    return documentElement[scrollProp];
+  if (docElm.clientHeight) {
+    return docElm[scrollProp];
   }
   return doc.body[scrollProp];
 }
 
 function getElementBehindPoint (point, x, y) {
-  var p = point || {};
-  var state = p.className;
-  var el;
+  var p = point || {},
+      state = p.className,
+      el;
   p.className += ' gu-hide';
   el = doc.elementFromPoint(x, y);
   p.className = state;
