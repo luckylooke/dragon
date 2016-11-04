@@ -1,7 +1,7 @@
 'use strict';
 
 var test = require('tape');
-var classes = require('../classes');
+var classes = require('../utils/classes');
 
 test('classes exports the expected api', function (t) {
   t.equal(typeof classes.add, 'function', 'classes.add is a method');

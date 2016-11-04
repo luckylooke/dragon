@@ -1,11 +1,14 @@
 'use strict';
 
 var crossvent = require('crossvent');
-var classes = require('./classes');
+var classes = require('./utils/classes');
 var doc = document;
 var docElm = doc.documentElement;
 
 function dragon (options) {
+  if(options instanceof Array)
+    options = {containers: options};
+
   var _mirror, // mirror image
       _source, // source container
       _item, // item being dragged
@@ -17,6 +20,8 @@ function dragon (options) {
       _currentSibling, // reference sibling now
       _grabbedContext, // holds mousedown context until first mousemove
       o = options || {};
+
+  console.log('options', options);
 
   if (o.containers === void 0) { o.containers = []; }
   if (o.isContainer === void 0) { o.isContainer = never; }
@@ -74,14 +79,13 @@ function dragon (options) {
     var source = getParent(item);
     if (!source) {
       release();
+      return;
     }
 
-    var context =  {
+    _grabbedContext =  {
       item: item,
       source: source
     };
-
-    _grabbedContext = context;
 
     _moveX = e.clientX;
     _moveY = e.clientY;
@@ -127,7 +131,8 @@ function dragon (options) {
   function release (e) {
     touchy(docElm, 'remove', 'mouseup', release);
 
-    if (!drake.dragging) {
+    if (!drake.dragging || !e) {
+      cancel();
       return;
     }
 
@@ -207,7 +212,7 @@ function dragon (options) {
       return;
     }
 
-    if (!_mirror)
+    if (!_mirror || !e)
       return;
 
     e.preventDefault();
@@ -425,6 +430,10 @@ function getCoord (coord, e) {
     coord = missMap[coord];
   }
   return host[coord];
+}
+
+function always() {
+  return true;
 }
 
 module.exports = dragon;

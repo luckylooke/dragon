@@ -1,7 +1,7 @@
 {
   "name": "dragon",
-  "version": "3.7.1",
-  "description": "Drag and drop so simple it hurts",
+  "version": "0.0.1",
+  "description": "Drag and drop SOLID",
   "main": "dragon.js",
   "scripts": {
     "build": "npm run scripts && npm run styles",
@@ -22,15 +22,17 @@
     "type": "git",
     "url": "https://github.com/bevacqua/dragula.git"
   },
-  "author": "Nicolas Bevacqua <nicolasbevacqua@gmail.com> (http://bevacqua.io/)",
+  "author": "Ctibor Laky <luckylooke@gmail.com> (github.com/luckylooke)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bevacqua/dragula/issues"
+    "url": "https://github.com/luckylooke/dragon/issues"
   },
-  "homepage": "https://github.com/bevacqua/dragula",
+  "homepage": "https://github.com/luckylooke/dragon",
   "dependencies": {
     "contra": "1.9.4",
-    "crossvent": "1.5.4"
+    "crossvent": "1.5.4",
+    "diamond": "0.0.2",
+    "middle.js": "^1.0.0"
   },
   "devDependencies": {
     "bower": "1.5.2",
