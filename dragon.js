@@ -1,6 +1,6 @@
 'use strict';
 
-var crossvent = require('crossvent');
+var touchy = require('./utils/touchy');
 var classes = require('./utils/classes');
 var doc = document;
 var docElm = doc.documentElement;
@@ -50,8 +50,8 @@ function dragon (options) {
   function events (remove) {
     var op = remove ? 'remove' : 'add';
     touchy(docElm, op, 'mousemove', drag);
-    crossvent[op](docElm, 'selectstart', protectGrab); // IE8
-    crossvent[op](docElm, 'click', protectGrab);
+    touchy(docElm, op, 'selectstart', protectGrab); // IE8
+    touchy(docElm, op, 'click', protectGrab);
   }
 
   function destroy () {
@@ -93,8 +93,8 @@ function dragon (options) {
     events();
 
     if (e.type === 'mousedown') {
-      if (isInput(item)) { // see also: github.com/bevacqua/dragula/issues/208
-        item.focus(); // fixes github.com/bevacqua/dragula/issues/176
+      if (isInput(e.target)) { // see also: github.com/bevacqua/dragula/issues/208
+        e.target.focus(); // fixes github.com/bevacqua/dragula/issues/176
       } else {
         e.preventDefault(); // fixes github.com/bevacqua/dragula/issues/155
       }
@@ -309,35 +309,6 @@ function dragon (options) {
     function resolve (after) {
       return after ? nextEl(target) : target;
     }
-  }
-}
-
-function touchy (el, op, type, fn) {
-  var touch = {
-    mouseup: 'touchend',
-    mousedown: 'touchstart',
-    mousemove: 'touchmove'
-  };
-  var pointers = {
-    mouseup: 'pointerup',
-    mousedown: 'pointerdown',
-    mousemove: 'pointermove'
-  };
-  var microsoft = {
-    mouseup: 'MSPointerUp',
-    mousedown: 'MSPointerDown',
-    mousemove: 'MSPointerMove'
-  };
-
-  /** @namespace global.navigator.pointerEnabled -- resolving webstorm unresolved variables */
-  /** @namespace global.navigator.msPointerEnabled -- resolving webstorm unresolved variables */
-  if (global.navigator.pointerEnabled) {
-    crossvent[op](el, pointers[type], fn);
-  } else if (global.navigator.msPointerEnabled) {
-    crossvent[op](el, microsoft[type], fn);
-  } else {
-    crossvent[op](el, touch[type], fn);
-    crossvent[op](el, type, fn);
   }
 }
 
