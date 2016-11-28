@@ -1,7 +1,7 @@
 'use strict';
 
-dragon([$('left-defaults'), $('right-defaults')]);
-dragon([$('left-copy'), $('right-copy')], { copy: true });
+new Dragon([$('left-defaults'), $('right-defaults')]);
+// dragon([$('left-copy'), $('right-copy')], { copy: true });
 
 
 
