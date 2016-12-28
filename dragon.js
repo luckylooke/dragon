@@ -205,6 +205,12 @@ Drag.prototype.renderMirrorImage = function(mirrorContainer) {
   classes.add(mirrorContainer, 'gu-unselectable');
 };
 
+Drag.prototype.removeMirrorImage = function() {
+    var mirrorContainer = getParent(this.mirror);
+    classes.rm(mirrorContainer, 'gu-unselectable');
+    mirrorContainer.removeChild(this.mirror);
+};
+
 Drag.prototype.release = function(e) {
   if(DEV) console.log('Drag.release called, e:', e);
 
@@ -272,7 +278,7 @@ Drag.prototype.cleanup = function() {
   this.events('remove');
 
   if(this.mirror)
-    removeMirrorImage(this.mirror);
+    this.removeMirrorImage();
 
   if (this.item) {
     classes.rm(this.item, 'gu-transit');
@@ -327,12 +333,6 @@ function bind(obj, methodName){
       obj[methodName].apply(obj, arguments);
     };
   return obj[bindedName];
-}
-
-function removeMirrorImage (mirror) {
-  var mirrorContainer = getParent(mirror);
-  classes.rm(mirrorContainer, 'gu-unselectable');
-  mirrorContainer.removeChild(mirror);
 }
 
 function findDropTarget (elementBehindCursor) {
