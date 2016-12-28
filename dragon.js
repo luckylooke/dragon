@@ -1,7 +1,19 @@
 'use strict';
 
-var touchy = require('./utils/touchy'),
-    classes = require('./utils/classes'),
+var touchy = require(__dirname + '/src/touchy'), // cross event
+    classes = require(__dirname + '/src/classes'),
+
+    utils = require(__dirname + '/src/utils'),
+    nextEl = utils.nextEl,
+    getParent = utils.getParent,
+    getRectHeight = utils.getRectHeight,
+    getRectWidth = utils.getRectWidth,
+    getElementBehindPoint = utils.getElementBehindPoint,
+    getCoord = utils.getCoord,
+    getOffset = utils.getOffset,
+    getReference = utils.getReference,
+    getImmediateChild = utils.getImmediateChild,
+
     doc = document,
     docElm = doc.documentElement,
     dragonSpace = {
@@ -25,7 +37,9 @@ function Dragon (options) {
 
   this.options = options instanceof Array ? {containers: options} : options || {};
   this.containers = [];
+    //noinspection JSUnresolvedVariable
   this.dragonSpace = dragonSpace;
+    //noinspection JSUnresolvedVariable
   this.id = this.options.id || 'dragon' + id++;
   
   dragonSpace.dragons.push(this); // register dragon
@@ -54,8 +68,12 @@ Dragon.prototype.addContainers = function(containers) {
 function Container(dragon, elm) {
   if(DEV) console.log('Container instance created, elm:', elm);
 
+    //noinspection JSUnresolvedVariable
   this.id = elm.id || 'container' + id++;
+    //noinspection JSUnresolvedVariable
   this.dragon = dragon;
+  /** @property this.elm
+   * @interface */
   this.elm = elm;
   this.options = {};
   this.options.mirrorContainer = doc.body;
@@ -91,6 +109,8 @@ function Drag(e, item, source) {
   this.source = source;
   this.sourceContainer = getContainer(source);
   this.options = this.sourceContainer.options || {};
+    //noinspection JSUnresolvedVariable
+  this.dragon = this.sourceContainer.dragon;
 
   this.events();
 }
@@ -240,9 +260,9 @@ Drag.prototype.drop = function() {
 };
 
 Drag.prototype.remove = function() {
-  if(DEV) console.log('Drag.remove called, e:', e);
+  if(DEV) console.log('Drag.remove called');
 
-  if (this.state !== 'draging')
+  if (this.state !== 'dragging')
     return;
 
   if(DEV) console.log('*** Changing state: ', this.state, ' -> dragging');
@@ -258,7 +278,7 @@ Drag.prototype.remove = function() {
 Drag.prototype.cancel = function(reverts){
   if(DEV) console.log('Drag.cancel called, reverts:', reverts);
 
-  if (this.state == 'draging'){
+  if (this.state == 'dragging'){
       var parent = getParent(this.item);
       var initial = this.isInitialPlacement(parent);
       if (initial === false && reverts) {
@@ -347,142 +367,7 @@ function isContainer(elm) {
   return dragonSpace.containersLookup.indexOf(elm)+1;
 }
 
-function getImmediateChild (dropTarget, target) {
-  var immediate = target;
-  while (immediate !== dropTarget && getParent(immediate) !== dropTarget) {
-    immediate = getParent(immediate);
-  }
-  if (immediate === docElm) {
-    return null;
-  }
-  return immediate;
-}
-
-function getReference (dropTarget, target, x, y, direction) {
-  var horizontal = direction === 'horizontal';
-  return target !== dropTarget ? inside() : outside(); // reference
-
-  function outside () { // slower, but able to figure out any position
-    var len = dropTarget.children.length,
-        i,
-        el,
-        rect;
-
-    for (i = 0; i < len; i++) {
-      el = dropTarget.children[i];
-      rect = el.getBoundingClientRect();
-      if (horizontal && (rect.left + rect.width / 2) > x) { return el; }
-      if (!horizontal && (rect.top + rect.height / 2) > y) { return el; }
-    }
-
-    return null;
-  }
-
-  function inside () { // faster, but only available if dropped inside a child element
-    var rect = target.getBoundingClientRect();
-    if (horizontal) {
-      return resolve(x > rect.left + getRectWidth(rect) / 2);
-    }
-    return resolve(y > rect.top + getRectHeight(rect) / 2);
-  }
-
-  function resolve (after) {
-    return after ? nextEl(target) : target;
-  }
-}
-
-
-// function whichMouseButton (e) {
-//   /** @namespace e.touches -- resolving webstorm unresolved variables */
-//   if (e.touches !== void 0) { return e.touches.length; }
-//   if (e.which !== void 0 && e.which !== 0) { return e.which; } // see github.com/bevacqua/dragula/issues/261
-//   if (e.buttons !== void 0) { return e.buttons; }
-//   var button = e.button;
-//   if (button !== void 0) { // see github.com/jquery/jquery/blob/99e8ff1baa7ae341e94bb89c3e84570c7c3ad9ea/src/event.js#L573-L575
-//     return button & 1 ? 1 : button & 2 ? 3 : (button & 4 ? 2 : 0);
-//   }
-// }
-
-function getOffset (el) {
-  var rect = el.getBoundingClientRect();
-  return {
-    left: rect.left + getScroll('scrollLeft', 'pageXOffset'),
-    top: rect.top + getScroll('scrollTop', 'pageYOffset')
-  };
-}
-
-function getScroll (scrollProp, offsetProp) {
-  if (typeof global[offsetProp] !== 'undefined') {
-    return global[offsetProp];
-  }
-  if (docElm.clientHeight) {
-    return docElm[scrollProp];
-  }
-  return doc.body[scrollProp];
-}
-
-function getElementBehindPoint (point, x, y) {
-  var p = point || {},
-      state = p.className,
-      el;
-  p.className += ' gu-hide';
-  el = doc.elementFromPoint(x, y);
-  p.className = state;
-  return el;
-}
-
-function never () { return false; }
-function always () { return true; }
-function getRectWidth (rect) { return rect.width || (rect.right - rect.left); }
-function getRectHeight (rect) { return rect.height || (rect.bottom - rect.top); }
-function getParent (el) { return el.parentNode === doc ? null : el.parentNode; }
 function getContainer (el) { return dragonSpace.containers[dragonSpace.containersLookup.indexOf(el)] }
-function isInput (el) { return el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || isEditable(el); }
-function isEditable (el) {
-  /** @namespace el.contentEditable -- resolving webstorm unresolved variables */
-  if (!el) { return false; } // no parents were editable
-  if (el.contentEditable === 'false') { return false; } // stop the lookup
-  if (el.contentEditable === 'true') { return true; } // found a contentEditable element in the chain
-  return isEditable(getParent(el)); // contentEditable is set to 'inherit'
-}
-
-function nextEl (el) {
-  return el.nextElementSibling || manually();
-  function manually () {
-    var sibling = el;
-    do {
-      sibling = sibling.nextSibling;
-    } while (sibling && sibling.nodeType !== 1);
-    return sibling;
-  }
-}
-
-function getEventHost (e) {
-  // on touchend event, we have to use `e.changedTouches`
-  // see http://stackoverflow.com/questions/7192563/touchend-event-properties
-  // see github.com/bevacqua/dragula/issues/34
-  /** @namespace e.targetTouches -- resolving webstorm unresolved variables */
-  /** @namespace e.changedTouches -- resolving webstorm unresolved variables */
-  if (e.targetTouches && e.targetTouches.length) {
-    return e.targetTouches[0];
-  }
-  if (e.changedTouches && e.changedTouches.length) {
-    return e.changedTouches[0];
-  }
-  return e;
-}
-
-function getCoord (coord, e) {
-  var host = getEventHost(e);
-  var missMap = {
-    pageX: 'clientX', // IE8
-    pageY: 'clientY' // IE8
-  };
-  if (coord in missMap && !(coord in host) && missMap[coord] in host) {
-    coord = missMap[coord];
-  }
-  return host[coord];
-}
 
 module.exports = Dragon;
 window.Dragon = Dragon;
