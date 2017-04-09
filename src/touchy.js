@@ -1,18 +1,18 @@
 "use strict";
-var crossvent = require('crossvent');
+let crossvent = require('crossvent');
 
 module.exports = function touchy (el, op, type, fn) {
-    var touch = {
+    let touch = {
         mouseup: 'touchend',
         mousedown: 'touchstart',
         mousemove: 'touchmove'
     };
-    var pointers = {
+    let pointers = {
         mouseup: 'pointerup',
         mousedown: 'pointerdown',
         mousemove: 'pointermove'
     };
-    var microsoft = {
+    let microsoft = {
         mouseup: 'MSPointerUp',
         mousedown: 'MSPointerDown',
         mousemove: 'MSPointerMove'

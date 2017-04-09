@@ -1,10 +1,12 @@
 'use strict';
+/* global dragons */
 
-new Dragon([$('left-defaults'), $('right-defaults')]);
+var testDragon = dragons.dragon ( [ $ ( 'left-defaults' ), $ ( 'right-defaults' ) ] );
 // dragon([$('left-copy'), $('right-copy')], { copy: true });
 
+console.log ( 'testDragon', testDragon );
 
 
-function $ (id) {
-  return document.getElementById(id);
+function $( id ) {
+	return document.getElementById ( id );
 }
