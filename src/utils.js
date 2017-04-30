@@ -6,6 +6,7 @@ export default function Utils() {
 }
 
 export function getImmediateChild( dropTarget, target ) {
+
 	let immediate = target;
 	while ( immediate !== dropTarget && getParent( immediate ) !== dropTarget ) {
 		immediate = getParent( immediate );
@@ -17,6 +18,7 @@ export function getImmediateChild( dropTarget, target ) {
 }
 
 export function getReference( dropTarget, target, x, y, direction ) {
+
 	let horizontal = direction === 'horizontal';
 	return target !== dropTarget ? inside() : outside(); // reference
 
@@ -54,6 +56,7 @@ export function getReference( dropTarget, target, x, y, direction ) {
 }
 
 export function getCoord( coord, e ) {
+
 	let host = getEventHost( e );
 	let missMap = {
 		pageX: 'clientX', // IE8
@@ -66,6 +69,7 @@ export function getCoord( coord, e ) {
 }
 
 export function getEventHost( e ) {
+
 	// on touchend event, we have to use `e.changedTouches`
 	// see http://stackoverflow.com/questions/7192563/touchend-event-properties
 	// see github.com/bevacqua/dragula/issues/34
@@ -92,6 +96,7 @@ export function getEventHost( e ) {
 // }
 
 export function getOffset( el ) {
+
 	let rect = el.getBoundingClientRect();
 	return {
 		left: rect.left + getScroll( 'scrollLeft', 'pageXOffset' ),
@@ -100,6 +105,7 @@ export function getOffset( el ) {
 }
 
 export function getScroll( scrollProp, offsetProp ) {
+
 	if ( typeof global[ offsetProp ] !== 'undefined' ) {
 		return global[ offsetProp ];
 	}
@@ -110,6 +116,7 @@ export function getScroll( scrollProp, offsetProp ) {
 }
 
 export function getElementBehindPoint( point, x, y ) {
+
 	let p = point || {},
 		state = p.className,
 		el;
@@ -120,15 +127,22 @@ export function getElementBehindPoint( point, x, y ) {
 }
 
 export function getRectWidth( rect ) {
+
 	return rect.width || (rect.right - rect.left);
 }
+
 export function getRectHeight( rect ) {
+
 	return rect.height || (rect.bottom - rect.top);
 }
+
 export function getParent( el ) {
+
 	return el.parentNode === doc ? null : el.parentNode;
 }
+
 export function nextEl( el ) {
+
 	return el.nextElementSibling || manually();
 	function manually() {
 		let sibling = el;
@@ -140,10 +154,16 @@ export function nextEl( el ) {
 }
 
 export function bind( obj, methodName ) {
+
 	let bindedName = 'binded' + methodName;
 	if ( !obj[ bindedName ] )
 		obj[ bindedName ] = function () {
 			obj[ methodName ].apply( obj, arguments );
 		};
 	return obj[ bindedName ];
+}
+
+export function toArray( obj ) {
+
+	return [].slice.call( obj );
 }

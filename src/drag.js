@@ -16,7 +16,7 @@ export default class Drag {
 		// this.mirror; // mirror image
 		// this.source; // source container element
 		// this.source; // source Container object
-		// this.item; // item element being dragged
+		// this.itemElm; // item element being dragged
 		// this.offsetX; // reference x
 		// this.offsetY; // reference y
 		// this.moveX; // reference move x
@@ -33,10 +33,11 @@ export default class Drag {
 		this.state = 'grabbed';
 
 		this.item = item;
-		this.source = container.elm;
+		this.itemElm = item.elm;
 		this.sourceContainer = container;
-		this.options = this.sourceContainer.options || {};
-		this.options.mirrorContainer = this.options.mirrorContainer || document.body; // TODO: default options obj, initOptions from dragular
+		this.source = container.elm;
+		this.config = this.sourceContainer.config || {};
+		this.config.mirrorContainer = this.config.mirrorContainer || document.body; // TODO: default config obj, initOptions from dragular
 		//noinspection JSUnresolvedVariable
 		this.dragon = this.sourceContainer.dragon;
 		this.findDropTarget = this.dragon.findDropTarget.bind( this.dragon );
@@ -106,11 +107,11 @@ export default class Drag {
 		}
 		if (
 			reference === null ||
-			reference !== this.item &&
-			reference !== nextEl( this.item )
+			reference !== this.itemElm &&
+			reference !== nextEl( this.itemElm )
 		) {
 			this.currentSibling = reference;
-			dropTarget.insertBefore( this.item, reference );
+			dropTarget.insertBefore( this.itemElm, reference );
 		}
 	}
 
@@ -127,14 +128,14 @@ export default class Drag {
 			return;
 		}
 
-		this.initialSibling = this.currentSibling = nextEl( this.item );
+		this.initialSibling = this.currentSibling = nextEl( this.itemElm );
 
-		let offset = getOffset( this.item );
+		let offset = getOffset( this.itemElm );
 		this.offsetX = getCoord( 'pageX', e ) - offset.left;
 		this.offsetY = getCoord( 'pageY', e ) - offset.top;
 
-		classes.add( this.item, 'gu-transit' );
-		this.renderMirrorImage( this.options.mirrorContainer );
+		classes.add( this.itemElm, 'gu-transit' );
+		this.renderMirrorImage( this.config.mirrorContainer );
 
 		console.log( '*** Changing state: ', this.state, ' -> moved' );
 		this.state = 'moved';
@@ -143,8 +144,8 @@ export default class Drag {
 	renderMirrorImage( mirrorContainer ) {
 		console.log( 'Drag.renderMirrorImage called, e:', mirrorContainer );
 
-		let rect = this.item.getBoundingClientRect();
-		let mirror = this.mirror = this.item.cloneNode( true );
+		let rect = this.itemElm.getBoundingClientRect();
+		let mirror = this.mirror = this.itemElm.cloneNode( true );
 
 		mirror.style.width = getRectWidth( rect ) + 'px';
 		mirror.style.height = getRectHeight( rect ) + 'px';
@@ -171,7 +172,7 @@ export default class Drag {
 		let elementBehindCursor = getElementBehindPoint( this.mirror, clientX, clientY );
 		let dropTarget = this.findDropTarget( elementBehindCursor, clientX, clientY );
 		if ( dropTarget && dropTarget !== this.source ) {
-			this.drop( e, this.item, dropTarget );
+			this.drop( e, this.itemElm, dropTarget );
 		} else {
 			this.cancel();
 		}
@@ -197,9 +198,9 @@ export default class Drag {
 		console.log( '*** Changing state: ', this.state, ' -> dragging' );
 		this.state = 'removed';
 
-		let parent = getParent( this.item );
+		let parent = getParent( this.itemElm );
 		if ( parent ) {
-			parent.removeChild( this.item );
+			parent.removeChild( this.itemElm );
 		}
 		this.cleanup();
 	}
@@ -208,10 +209,10 @@ export default class Drag {
 		console.log( 'Drag.cancel called, reverts:', reverts );
 
 		if ( this.state == 'dragging' ) {
-			let parent = getParent( this.item );
+			let parent = getParent( this.itemElm );
 			let initial = this.isInitialPlacement( parent );
 			if ( initial === false && reverts ) {
-				this.source.insertBefore( this.item, this.initialSibling );
+				this.source.insertBefore( this.itemElm, this.initialSibling );
 			}
 		}
 
@@ -229,14 +230,14 @@ export default class Drag {
 		if ( this.mirror )
 			this.removeMirrorImage();
 
-		if ( this.item ) {
-			classes.rm( this.item, 'gu-transit' );
+		if ( this.itemElm ) {
+			classes.rm( this.itemElm, 'gu-transit' );
 		}
 
 		console.log( '*** Changing state: ', this.state, ' -> cleaned' );
 		this.state = 'cleaned';
 
-		this.source = this.item = this.initialSibling = this.currentSibling = null;
+		this.source = this.itemElm = this.initialSibling = this.currentSibling = null;
 	}
 
 	isInitialPlacement( target, s ) {
@@ -246,7 +247,7 @@ export default class Drag {
 		} else if ( this.mirror ) {
 			sibling = this.currentSibling;
 		} else {
-			sibling = nextEl( this.item );
+			sibling = nextEl( this.itemElm );
 		}
 		return target === this.source && sibling === this.initialSibling;
 	}

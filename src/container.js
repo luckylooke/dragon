@@ -1,23 +1,62 @@
-import Drag from './drag';
+import Item from './item';
+import { toArray } from './utils';
 
 export default class Container {
 
-	constructor( dragon, elm ) {
+	constructor( dragon, elm, config ) {
 
-		console.log( 'Container instance created, elm:', elm );
+		console.log( 'Container instance created, dragon, config:', dragon, config, this );
 
-		//noinspection JSUnresolvedVariable
-		this.id = elm.id || 'containerID_' + this.getID();
-		//noinspection JSUnresolvedVariable
+		if ( !config )
+			config = {};
+
+		this.config = config;
+		this.id = config.id || 'containerID_' + Date.now();
 		this.dragon = dragon;
-		this.drags = [];
-		/** @property this.elm
-		 * @interface */
+		this.items = [];
+		this.itemsLookUp = [];
 		this.elm = elm;
+
+		this.initItems();
 	}
 
-	grab( e, item ) {
-		console.log( 'container.grab called' );
-		this.drags.push( new Drag( e, item, this ) );
+	grab( e, itemElm ) {
+
+		console.log( 'container.grab called, e, itemElm:', e, itemElm, this );
+
+		this.items[ this.itemsLookUp.indexOf( itemElm ) ].grab( e );
+	}
+
+	addItem( item, index ) {
+
+		console.log( 'dragon.addItem called config: ', config, this );
+
+		this.items.splice( index, 0, item );
+	}
+
+	addItemElm( elm, config ) {
+
+		console.log( 'container.item called, elm, config', elm, config, this );
+
+		let item = new Item( this, elm, config );
+		this.items.push( item );
+		this.itemsLookUp.push( elm );
+	}
+
+	initItems() {
+
+		var self = this;
+
+		toArray( this.elm.children ).forEach( function ( itemElm ) {
+			self.addItemElm( itemElm );
+		});
+	}
+
+	getConfig( prop ) {
+
+		console.log( 'container.getConfig called, prop', prop, this );
+
+		prop = typeof this.config[ prop ] != 'undefined' ? this.config[ prop ] : this.dragon.getConfig( prop );
+		return typeof prop == 'function' ? prop() : prop;
 	}
 }

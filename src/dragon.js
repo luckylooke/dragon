@@ -14,60 +14,60 @@ let doc = document;
 /** is group of containers with same settings */
 export default class Dragon {
 
-	constructor( options ) {
+	constructor( config ) {
 
-		console.log( 'Dragon instance created, options: ', options )
+		console.log( 'Dragon instance created, config: ', config, this )
 
-		if ( !options )
-			options = {};
-
-		this.id = options.id || 'dragonID_' + Date.now();
-
+		this.config = config || {};
 		this.defaults = {
 			mirrorContainer: doc.body
 		};
-		this.options = Object.assign( {}, this.defaults, options );
-
-		this.containersLookup = [];
-
+		this.id = config.id || 'dragonID_' + Date.now();
 		this.containers = [];
+		this.containersLookUp = [];
 
-		if ( this.options.containers )
-			this.addContainers();
-
+		// init
+		this.addContainers();
 	}
 
-	addContainers( containers ) {
-		console.log( 'Adding containers: ', containers );
+	addContainers( containerElms, config ) {
 
-		if ( !containers )
-			containers = this.options.containers;
+		console.log( 'dragon.addContainers called config: ', config, this );
+
+		if ( !containerElms )
+			containerElms = this.config.containers;
 
 		let self = this;
-		containers.forEach( function ( containerElm ) {
-			if ( self.containersLookup.indexOf( containerElm ) > -1 ) {
-				console.warn( 'container already registered', containerElm );
+		containerElms.forEach( function ( elm ) {
+			if ( self.containersLookUp.indexOf( elm ) > -1 ) {
+				console.warn( 'container already registered', elm );
 				return;
 			}
 
-			let container = new Container( self, containerElm );
+			let container = new Container( self, elm, config );
 
 			self.containers.push( container );
-			self.containersLookup.push( containerElm );
+			self.containersLookUp.push( elm );
 		} );
 	}
 
 	isContainer( el ) {
-		console.log( 'dragon.isContainer called, el:', el, this.containersLookup );
-		return this.containersLookup.indexOf( el ) != -1;
+
+		console.log( 'dragon.isContainer called, el:', el, this );
+
+		return this.containersLookUp.indexOf( el ) != -1;
 	}
 
 	getContainer( el ) {
-		return this.containers[ this.containersLookup.indexOf( el ) ];
+
+		console.log( 'dragon.getContainer called, el:', el, this );
+
+		return this.containers[ this.containersLookUp.indexOf( el ) ];
 	}
 
 	grab( e ) {
-		console.log( 'grab called, e:', e );
+
+		console.log( 'dragon.grab called, e:', e, this );
 
 		let item = e.target;
 		let source;
@@ -87,17 +87,28 @@ export default class Dragon {
 			return;
 		}
 
-		index = this.containersLookup.indexOf( source );
+		index = this.containersLookUp.indexOf( source );
 		container = this.containers[ index ];
 		container.grab( e, item, source );
 	}
 
 	findDropTarget( elementBehindCursor ) {
+
+		console.log( 'dragon.findDropTarget called, prop', elementBehindCursor, this );
+
 		let target = elementBehindCursor;
 		while ( target && !this.isContainer( target ) ) {
 			target = getParent( target );
 		}
 		return target;
+	}
+
+	getConfig( prop ) {
+
+		console.log( 'dragon.getConfig called, prop', prop, this );
+
+		prop = this.config[prop];
+		return typeof prop == 'function' ? prop() : prop;
 	}
 
 }

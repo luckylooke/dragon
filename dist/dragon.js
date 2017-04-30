@@ -65,9 +65,9 @@
 	// cross event
 
 	// Element.classList polyfill
-	function dragonLib(options) {
+	function dragonLib(config) {
 
-		var dragonInstance = new _dragon2.default(options);
+		var dragonInstance = new _dragon2.default(config);
 		(0, _touchy2.default)(document.documentElement, 'add', 'mousedown', dragonInstance.grab.bind(dragonInstance));
 		return dragonInstance;
 	} // library core
@@ -207,62 +207,65 @@
 	/** is group of containers with same settings */
 
 	var Dragon = function () {
-		function Dragon(options) {
+		function Dragon(config) {
 			_classCallCheck(this, Dragon);
 
-			console.log('Dragon instance created, options: ', options);
+			console.log('Dragon instance created, config: ', config, this);
 
-			if (!options) options = {};
-
-			this.id = options.id || 'dragonID_' + Date.now();
-
+			this.config = config || {};
 			this.defaults = {
 				mirrorContainer: doc.body
 			};
-			this.options = Object.assign({}, this.defaults, options);
-
-			this.containersLookup = [];
-
+			this.id = config.id || 'dragonID_' + Date.now();
 			this.containers = [];
+			this.containersLookUp = [];
 
-			if (this.options.containers) this.addContainers();
+			// init
+			this.addContainers();
 		}
 
 		_createClass(Dragon, [{
 			key: 'addContainers',
-			value: function addContainers(containers) {
-				console.log('Adding containers: ', containers);
+			value: function addContainers(containerElms, config) {
 
-				if (!containers) containers = this.options.containers;
+				console.log('dragon.addContainers called config: ', config, this);
+
+				if (!containerElms) containerElms = this.config.containers;
 
 				var self = this;
-				containers.forEach(function (containerElm) {
-					if (self.containersLookup.indexOf(containerElm) > -1) {
-						console.warn('container already registered', containerElm);
+				containerElms.forEach(function (elm) {
+					if (self.containersLookUp.indexOf(elm) > -1) {
+						console.warn('container already registered', elm);
 						return;
 					}
 
-					var container = new _container2.default(self, containerElm);
+					var container = new _container2.default(self, elm, config);
 
 					self.containers.push(container);
-					self.containersLookup.push(containerElm);
+					self.containersLookUp.push(elm);
 				});
 			}
 		}, {
 			key: 'isContainer',
 			value: function isContainer(el) {
-				console.log('dragon.isContainer called, el:', el, this.containersLookup);
-				return this.containersLookup.indexOf(el) != -1;
+
+				console.log('dragon.isContainer called, el:', el, this);
+
+				return this.containersLookUp.indexOf(el) != -1;
 			}
 		}, {
 			key: 'getContainer',
 			value: function getContainer(el) {
-				return this.containers[this.containersLookup.indexOf(el)];
+
+				console.log('dragon.getContainer called, el:', el, this);
+
+				return this.containers[this.containersLookUp.indexOf(el)];
 			}
 		}, {
 			key: 'grab',
 			value: function grab(e) {
-				console.log('grab called, e:', e);
+
+				console.log('dragon.grab called, e:', e, this);
 
 				var item = e.target;
 				var source = void 0;
@@ -282,18 +285,30 @@
 					return;
 				}
 
-				index = this.containersLookup.indexOf(source);
+				index = this.containersLookUp.indexOf(source);
 				container = this.containers[index];
 				container.grab(e, item, source);
 			}
 		}, {
 			key: 'findDropTarget',
 			value: function findDropTarget(elementBehindCursor) {
+
+				console.log('dragon.findDropTarget called, prop', elementBehindCursor, this);
+
 				var target = elementBehindCursor;
 				while (target && !this.isContainer(target)) {
 					target = (0, _utils.getParent)(target);
 				}
 				return target;
+			}
+		}, {
+			key: 'getConfig',
+			value: function getConfig(prop) {
+
+				console.log('dragon.getConfig called, prop', prop, this);
+
+				prop = this.config[prop];
+				return typeof prop == 'function' ? prop() : prop;
 			}
 		}]);
 
@@ -324,12 +339,14 @@
 	exports.getParent = getParent;
 	exports.nextEl = nextEl;
 	exports.bind = bind;
+	exports.toArray = toArray;
 	var doc = document,
 	    docElm = doc.documentElement;
 
 	function Utils() {}
 
 	function getImmediateChild(dropTarget, target) {
+
 		var immediate = target;
 		while (immediate !== dropTarget && getParent(immediate) !== dropTarget) {
 			immediate = getParent(immediate);
@@ -341,6 +358,7 @@
 	}
 
 	function getReference(dropTarget, target, x, y, direction) {
+
 		var horizontal = direction === 'horizontal';
 		return target !== dropTarget ? inside() : outside(); // reference
 
@@ -380,6 +398,7 @@
 	}
 
 	function getCoord(coord, e) {
+
 		var host = getEventHost(e);
 		var missMap = {
 			pageX: 'clientX', // IE8
@@ -392,6 +411,7 @@
 	}
 
 	function getEventHost(e) {
+
 		// on touchend event, we have to use `e.changedTouches`
 		// see http://stackoverflow.com/questions/7192563/touchend-event-properties
 		// see github.com/bevacqua/dragula/issues/34
@@ -418,6 +438,7 @@
 	// }
 
 	function getOffset(el) {
+
 		var rect = el.getBoundingClientRect();
 		return {
 			left: rect.left + getScroll('scrollLeft', 'pageXOffset'),
@@ -426,6 +447,7 @@
 	}
 
 	function getScroll(scrollProp, offsetProp) {
+
 		if (typeof global[offsetProp] !== 'undefined') {
 			return global[offsetProp];
 		}
@@ -436,6 +458,7 @@
 	}
 
 	function getElementBehindPoint(point, x, y) {
+
 		var p = point || {},
 		    state = p.className,
 		    el = void 0;
@@ -446,15 +469,22 @@
 	}
 
 	function getRectWidth(rect) {
+
 		return rect.width || rect.right - rect.left;
 	}
+
 	function getRectHeight(rect) {
+
 		return rect.height || rect.bottom - rect.top;
 	}
+
 	function getParent(el) {
+
 		return el.parentNode === doc ? null : el.parentNode;
 	}
+
 	function nextEl(el) {
+
 		return el.nextElementSibling || manually();
 		function manually() {
 			var sibling = el;
@@ -466,11 +496,17 @@
 	}
 
 	function bind(obj, methodName) {
+
 		var bindedName = 'binded' + methodName;
 		if (!obj[bindedName]) obj[bindedName] = function () {
 			obj[methodName].apply(obj, arguments);
 		};
 		return obj[bindedName];
+	}
+
+	function toArray(obj) {
+
+		return [].slice.call(obj);
 	}
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
@@ -486,35 +522,78 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _drag = __webpack_require__(5);
+	var _item = __webpack_require__(11);
 
-	var _drag2 = _interopRequireDefault(_drag);
+	var _item2 = _interopRequireDefault(_item);
+
+	var _utils = __webpack_require__(3);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Container = function () {
-		function Container(dragon, elm) {
+		function Container(dragon, elm, config) {
 			_classCallCheck(this, Container);
 
-			console.log('Container instance created, elm:', elm);
+			console.log('Container instance created, dragon, config:', dragon, config, this);
 
-			//noinspection JSUnresolvedVariable
-			this.id = elm.id || 'containerID_' + this.getID();
-			//noinspection JSUnresolvedVariable
+			if (!config) config = {};
+
+			this.config = config;
+			this.id = config.id || 'containerID_' + Date.now();
 			this.dragon = dragon;
-			this.drags = [];
-			/** @property this.elm
-	   * @interface */
+			this.items = [];
+			this.itemsLookUp = [];
 			this.elm = elm;
+
+			this.initItems();
 		}
 
 		_createClass(Container, [{
 			key: 'grab',
-			value: function grab(e, item) {
-				console.log('container.grab called');
-				this.drags.push(new _drag2.default(e, item, this));
+			value: function grab(e, itemElm) {
+
+				console.log('container.grab called, e, itemElm:', e, itemElm, this);
+
+				this.items[this.itemsLookUp.indexOf(itemElm)].grab(e);
+			}
+		}, {
+			key: 'addItem',
+			value: function addItem(item, index) {
+
+				console.log('dragon.addItem called config: ', config, this);
+
+				this.items.splice(index, 0, item);
+			}
+		}, {
+			key: 'addItemElm',
+			value: function addItemElm(elm, config) {
+
+				console.log('container.item called, elm, config', elm, config, this);
+
+				var item = new _item2.default(this, elm, config);
+				this.items.push(item);
+				this.itemsLookUp.push(elm);
+			}
+		}, {
+			key: 'initItems',
+			value: function initItems() {
+
+				var self = this;
+
+				(0, _utils.toArray)(this.elm.children).forEach(function (itemElm) {
+					self.addItemElm(itemElm);
+				});
+			}
+		}, {
+			key: 'getConfig',
+			value: function getConfig(prop) {
+
+				console.log('container.getConfig called, prop', prop, this);
+
+				prop = typeof this.config[prop] != 'undefined' ? this.config[prop] : this.dragon.getConfig(prop);
+				return typeof prop == 'function' ? prop() : prop;
 			}
 		}]);
 
@@ -564,7 +643,7 @@
 			// this.mirror; // mirror image
 			// this.source; // source container element
 			// this.source; // source Container object
-			// this.item; // item element being dragged
+			// this.itemElm; // item element being dragged
 			// this.offsetX; // reference x
 			// this.offsetY; // reference y
 			// this.moveX; // reference move x
@@ -581,10 +660,11 @@
 			this.state = 'grabbed';
 
 			this.item = item;
-			this.source = container.elm;
+			this.itemElm = item.elm;
 			this.sourceContainer = container;
-			this.options = this.sourceContainer.options || {};
-			this.options.mirrorContainer = this.options.mirrorContainer || document.body; // TODO: default options obj, initOptions from dragular
+			this.source = container.elm;
+			this.config = this.sourceContainer.config || {};
+			this.config.mirrorContainer = this.config.mirrorContainer || document.body; // TODO: default config obj, initOptions from dragular
 			//noinspection JSUnresolvedVariable
 			this.dragon = this.sourceContainer.dragon;
 			this.findDropTarget = this.dragon.findDropTarget.bind(this.dragon);
@@ -657,9 +737,9 @@
 				} else {
 					return;
 				}
-				if (reference === null || reference !== this.item && reference !== (0, _utils.nextEl)(this.item)) {
+				if (reference === null || reference !== this.itemElm && reference !== (0, _utils.nextEl)(this.itemElm)) {
 					this.currentSibling = reference;
-					dropTarget.insertBefore(this.item, reference);
+					dropTarget.insertBefore(this.itemElm, reference);
 				}
 			}
 		}, {
@@ -677,14 +757,14 @@
 					return;
 				}
 
-				this.initialSibling = this.currentSibling = (0, _utils.nextEl)(this.item);
+				this.initialSibling = this.currentSibling = (0, _utils.nextEl)(this.itemElm);
 
-				var offset = (0, _utils.getOffset)(this.item);
+				var offset = (0, _utils.getOffset)(this.itemElm);
 				this.offsetX = (0, _utils.getCoord)('pageX', e) - offset.left;
 				this.offsetY = (0, _utils.getCoord)('pageY', e) - offset.top;
 
-				_classes2.default.add(this.item, 'gu-transit');
-				this.renderMirrorImage(this.options.mirrorContainer);
+				_classes2.default.add(this.itemElm, 'gu-transit');
+				this.renderMirrorImage(this.config.mirrorContainer);
 
 				console.log('*** Changing state: ', this.state, ' -> moved');
 				this.state = 'moved';
@@ -694,8 +774,8 @@
 			value: function renderMirrorImage(mirrorContainer) {
 				console.log('Drag.renderMirrorImage called, e:', mirrorContainer);
 
-				var rect = this.item.getBoundingClientRect();
-				var mirror = this.mirror = this.item.cloneNode(true);
+				var rect = this.itemElm.getBoundingClientRect();
+				var mirror = this.mirror = this.itemElm.cloneNode(true);
 
 				mirror.style.width = (0, _utils.getRectWidth)(rect) + 'px';
 				mirror.style.height = (0, _utils.getRectHeight)(rect) + 'px';
@@ -724,7 +804,7 @@
 				var elementBehindCursor = (0, _utils.getElementBehindPoint)(this.mirror, clientX, clientY);
 				var dropTarget = this.findDropTarget(elementBehindCursor, clientX, clientY);
 				if (dropTarget && dropTarget !== this.source) {
-					this.drop(e, this.item, dropTarget);
+					this.drop(e, this.itemElm, dropTarget);
 				} else {
 					this.cancel();
 				}
@@ -750,9 +830,9 @@
 				console.log('*** Changing state: ', this.state, ' -> dragging');
 				this.state = 'removed';
 
-				var parent = (0, _utils.getParent)(this.item);
+				var parent = (0, _utils.getParent)(this.itemElm);
 				if (parent) {
-					parent.removeChild(this.item);
+					parent.removeChild(this.itemElm);
 				}
 				this.cleanup();
 			}
@@ -762,10 +842,10 @@
 				console.log('Drag.cancel called, reverts:', reverts);
 
 				if (this.state == 'dragging') {
-					var parent = (0, _utils.getParent)(this.item);
+					var parent = (0, _utils.getParent)(this.itemElm);
 					var initial = this.isInitialPlacement(parent);
 					if (initial === false && reverts) {
-						this.source.insertBefore(this.item, this.initialSibling);
+						this.source.insertBefore(this.itemElm, this.initialSibling);
 					}
 				}
 
@@ -783,14 +863,14 @@
 
 				if (this.mirror) this.removeMirrorImage();
 
-				if (this.item) {
-					_classes2.default.rm(this.item, 'gu-transit');
+				if (this.itemElm) {
+					_classes2.default.rm(this.itemElm, 'gu-transit');
 				}
 
 				console.log('*** Changing state: ', this.state, ' -> cleaned');
 				this.state = 'cleaned';
 
-				this.source = this.item = this.initialSibling = this.currentSibling = null;
+				this.source = this.itemElm = this.initialSibling = this.currentSibling = null;
 			}
 		}, {
 			key: 'isInitialPlacement',
@@ -801,7 +881,7 @@
 				} else if (this.mirror) {
 					sibling = this.currentSibling;
 				} else {
-					sibling = (0, _utils.nextEl)(this.item);
+					sibling = (0, _utils.nextEl)(this.itemElm);
 				}
 				return target === this.source && sibling === this.initialSibling;
 			}
@@ -1070,6 +1150,65 @@
 	  add: addClass,
 	  rm: rmClass
 	};
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _drag = __webpack_require__(5);
+
+	var _drag2 = _interopRequireDefault(_drag);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Item = function () {
+		function Item(container, elm, config) {
+			_classCallCheck(this, Item);
+
+			console.log('Item instance created, container, elm, config:', container, elm, config, this);
+
+			if (!config) config = {};
+
+			this.config = config;
+			this.id = config.id || 'containerID_' + Date.now();
+			this.container = container;
+			this.elm = elm;
+		}
+
+		_createClass(Item, [{
+			key: 'grab',
+			value: function grab(e) {
+
+				console.log('container.grab called, e:', e, this);
+
+				this.drag = new _drag2.default(e, this, this.container);
+				return this.drag;
+			}
+		}, {
+			key: 'getConfig',
+			value: function getConfig(prop) {
+
+				console.log('item.getConfig called, prop', prop, this);
+
+				prop = typeof this.config[prop] != 'undefined' ? this.config[prop] : this.container.getConfig(prop);
+				return typeof prop == 'function' ? prop() : prop;
+			}
+		}]);
+
+		return Item;
+	}();
+
+	exports.default = Item;
 
 /***/ }
 /******/ ]);
