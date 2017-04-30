@@ -5,6 +5,8 @@ import Container from './container';
 
 let classes = require( './classes' );
 
+let doc = document;
+
 
 // ==============================================================================================================================================================
 // Dragon =====================================================================================================================================================
@@ -12,15 +14,23 @@ let classes = require( './classes' );
 /** is group of containers with same settings */
 export default class Dragon {
 
-	constructor( dragons, options ) {
+	constructor( options ) {
 
 		console.log( 'Dragon instance created, options: ', options )
 
-		this.options = options instanceof Array ? { containers: options } : options || {};
-		this.isContainer = this.options.isContainer || dragons.isContainer.bind( dragons );
-		this.dragons = dragons;
+		if ( !options )
+			options = {};
+
+		this.id = options.id || 'dragonID_' + Date.now();
+
+		this.defaults = {
+			mirrorContainer: doc.body
+		};
+		this.options = Object.assign( {}, this.defaults, options );
+
+		this.containersLookup = [];
+
 		this.containers = [];
-		this.id = options.id;
 
 		if ( this.options.containers )
 			this.addContainers();
@@ -35,7 +45,7 @@ export default class Dragon {
 
 		let self = this;
 		containers.forEach( function ( containerElm ) {
-			if ( self.dragons.containersLookup.indexOf( containerElm ) > -1 ) {
+			if ( self.containersLookup.indexOf( containerElm ) > -1 ) {
 				console.warn( 'container already registered', containerElm );
 				return;
 			}
@@ -43,9 +53,43 @@ export default class Dragon {
 			let container = new Container( self, containerElm );
 
 			self.containers.push( container );
-			self.dragons.containers.push( container );
-			self.dragons.containersLookup.push( containerElm );
+			self.containersLookup.push( containerElm );
 		} );
+	}
+
+	isContainer( el ) {
+		console.log( 'dragon.isContainer called, el:', el, this.containersLookup );
+		return this.containersLookup.indexOf( el ) != -1;
+	}
+
+	getContainer( el ) {
+		return this.containers[ this.containersLookup.indexOf( el ) ];
+	}
+
+	grab( e ) {
+		console.log( 'grab called, e:', e );
+
+		let item = e.target;
+		let source;
+		let container;
+		let index;
+
+		// if (isInput(item)) { // see also: github.com/bevacqua/dragula/issues/208
+		//   e.target.focus(); // fixes github.com/bevacqua/dragula/issues/176
+		//   return;
+		// }
+
+		while ( getParent( item ) && !this.isContainer( getParent( item ), item, e ) ) {
+			item = getParent( item ); // drag target should be a top element
+		}
+		source = getParent( item );
+		if ( !source ) {
+			return;
+		}
+
+		index = this.containersLookup.indexOf( source );
+		container = this.containers[ index ];
+		container.grab( e, item, source );
 	}
 
 	findDropTarget( elementBehindCursor ) {

@@ -47,16 +47,16 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+		value: true
 	});
 
 	__webpack_require__(1);
 
-	var _dragons = __webpack_require__(2);
+	var _dragon = __webpack_require__(2);
 
-	var _dragons2 = _interopRequireDefault(_dragons);
+	var _dragon2 = _interopRequireDefault(_dragon);
 
-	var _touchy = __webpack_require__(4);
+	var _touchy = __webpack_require__(6);
 
 	var _touchy2 = _interopRequireDefault(_touchy);
 
@@ -65,14 +65,15 @@
 	// cross event
 
 	// Element.classList polyfill
-	var dragonsInstance = new _dragons2.default(); // library core
+	function dragonLib(options) {
 
+		var dragonInstance = new _dragon2.default(options);
+		(0, _touchy2.default)(document.documentElement, 'add', 'mousedown', dragonInstance.grab.bind(dragonInstance));
+		return dragonInstance;
+	} // library core
+	exports.default = dragonLib;
 
-	(0, _touchy2.default)(document.documentElement, 'add', 'mousedown', dragonsInstance.grab.bind(dragonsInstance));
-
-	exports.default = dragonsInstance;
-
-	window.dragons = dragonsInstance;
+	window.dragon = dragonLib;
 
 /***/ },
 /* 1 */
@@ -83,6 +84,7 @@
 	/**
 	 * Polyfill from https://github.com/remy/polyfills/blob/master/classList.js
 	 */
+
 	(function () {
 
 		if (typeof window.Element === "undefined" || "classList" in document.documentElement) return;
@@ -153,6 +155,26 @@
 		});
 	})();
 
+	/**
+	 * Polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now
+	 */
+
+	if (!Date.now) {
+		Date.now = function now() {
+			return new Date().getTime();
+		};
+	}
+
+	// Simple version of polyfill Array.prototype.forEach()
+	if (![].forEach) {
+		Array.prototype.forEach = function (callback, thisArg) {
+			var len = this.length;
+			for (var i = 0; i < len; i++) {
+				callback.call(thisArg, this[i], i, this);
+			}
+		};
+	}
+
 /***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
@@ -167,24 +189,32 @@
 
 	var _utils = __webpack_require__(3);
 
-	var _dragon = __webpack_require__(8);
+	var _container = __webpack_require__(4);
 
-	var _dragon2 = _interopRequireDefault(_dragon);
+	var _container2 = _interopRequireDefault(_container);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var doc = document;
-	var id = 1;
+	var classes = __webpack_require__(10);
 
-	var Dragons = function () {
-		function Dragons(options) {
-			_classCallCheck(this, Dragons);
+	var doc = document;
+
+	// ==============================================================================================================================================================
+	// Dragon =====================================================================================================================================================
+	// =============================================================================================================================================================
+	/** is group of containers with same settings */
+
+	var Dragon = function () {
+		function Dragon(options) {
+			_classCallCheck(this, Dragon);
+
+			console.log('Dragon instance created, options: ', options);
 
 			if (!options) options = {};
 
-			if (!options.id) options.id = 'dragonsID_' + id++;
+			this.id = options.id || 'dragonID_' + Date.now();
 
 			this.defaults = {
 				mirrorContainer: doc.body
@@ -192,22 +222,36 @@
 			this.options = Object.assign({}, this.defaults, options);
 
 			this.containersLookup = [];
+
 			this.containers = [];
-			this.members = []; // dragons
+
+			if (this.options.containers) this.addContainers();
 		}
 
-		_createClass(Dragons, [{
-			key: 'dragon',
-			value: function dragon(options) {
-				if (!options.id) options.id = 'dragonID_' + id++;
-				var dragon = new _dragon2.default(this, options);
-				this.members.push(dragon);
-				return dragon;
+		_createClass(Dragon, [{
+			key: 'addContainers',
+			value: function addContainers(containers) {
+				console.log('Adding containers: ', containers);
+
+				if (!containers) containers = this.options.containers;
+
+				var self = this;
+				containers.forEach(function (containerElm) {
+					if (self.containersLookup.indexOf(containerElm) > -1) {
+						console.warn('container already registered', containerElm);
+						return;
+					}
+
+					var container = new _container2.default(self, containerElm);
+
+					self.containers.push(container);
+					self.containersLookup.push(containerElm);
+				});
 			}
 		}, {
 			key: 'isContainer',
 			value: function isContainer(el) {
-				console.log('dragons.isContainer called, el:', el, this.containersLookup);
+				console.log('dragon.isContainer called, el:', el, this.containersLookup);
 				return this.containersLookup.indexOf(el) != -1;
 			}
 		}, {
@@ -242,12 +286,21 @@
 				container = this.containers[index];
 				container.grab(e, item, source);
 			}
+		}, {
+			key: 'findDropTarget',
+			value: function findDropTarget(elementBehindCursor) {
+				var target = elementBehindCursor;
+				while (target && !this.isContainer(target)) {
+					target = (0, _utils.getParent)(target);
+				}
+				return target;
+			}
 		}]);
 
-		return Dragons;
+		return Dragon;
 	}();
 
-	exports.default = Dragons;
+	exports.default = Dragon;
 
 /***/ },
 /* 3 */
@@ -425,227 +478,6 @@
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {"use strict";
-
-	var crossvent = __webpack_require__(5);
-
-	module.exports = function touchy(el, op, type, fn) {
-	    var touch = {
-	        mouseup: 'touchend',
-	        mousedown: 'touchstart',
-	        mousemove: 'touchmove'
-	    };
-	    var pointers = {
-	        mouseup: 'pointerup',
-	        mousedown: 'pointerdown',
-	        mousemove: 'pointermove'
-	    };
-	    var microsoft = {
-	        mouseup: 'MSPointerUp',
-	        mousedown: 'MSPointerDown',
-	        mousemove: 'MSPointerMove'
-	    };
-
-	    /** @namespace global.navigator.pointerEnabled -- resolving webstorm unresolved variables */
-	    /** @namespace global.navigator.msPointerEnabled -- resolving webstorm unresolved variables */
-	    if (global.navigator.pointerEnabled) {
-	        crossvent[op](el, pointers[type] || type, fn);
-	    } else if (global.navigator.msPointerEnabled) {
-	        crossvent[op](el, microsoft[type] || type, fn);
-	    } else {
-	        crossvent[op](el, touch[type] || type, fn);
-	        crossvent[op](el, type, fn);
-	    }
-	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
-
-	var customEvent = __webpack_require__(6);
-	var eventmap = __webpack_require__(7);
-	var doc = global.document;
-	var addEvent = addEventEasy;
-	var removeEvent = removeEventEasy;
-	var hardCache = [];
-
-	if (!global.addEventListener) {
-	  addEvent = addEventHard;
-	  removeEvent = removeEventHard;
-	}
-
-	module.exports = {
-	  add: addEvent,
-	  remove: removeEvent,
-	  fabricate: fabricateEvent
-	};
-
-	function addEventEasy (el, type, fn, capturing) {
-	  return el.addEventListener(type, fn, capturing);
-	}
-
-	function addEventHard (el, type, fn) {
-	  return el.attachEvent('on' + type, wrap(el, type, fn));
-	}
-
-	function removeEventEasy (el, type, fn, capturing) {
-	  return el.removeEventListener(type, fn, capturing);
-	}
-
-	function removeEventHard (el, type, fn) {
-	  var listener = unwrap(el, type, fn);
-	  if (listener) {
-	    return el.detachEvent('on' + type, listener);
-	  }
-	}
-
-	function fabricateEvent (el, type, model) {
-	  var e = eventmap.indexOf(type) === -1 ? makeCustomEvent() : makeClassicEvent();
-	  if (el.dispatchEvent) {
-	    el.dispatchEvent(e);
-	  } else {
-	    el.fireEvent('on' + type, e);
-	  }
-	  function makeClassicEvent () {
-	    var e;
-	    if (doc.createEvent) {
-	      e = doc.createEvent('Event');
-	      e.initEvent(type, true, true);
-	    } else if (doc.createEventObject) {
-	      e = doc.createEventObject();
-	    }
-	    return e;
-	  }
-	  function makeCustomEvent () {
-	    return new customEvent(type, { detail: model });
-	  }
-	}
-
-	function wrapperFactory (el, type, fn) {
-	  return function wrapper (originalEvent) {
-	    var e = originalEvent || global.event;
-	    e.target = e.target || e.srcElement;
-	    e.preventDefault = e.preventDefault || function preventDefault () { e.returnValue = false; };
-	    e.stopPropagation = e.stopPropagation || function stopPropagation () { e.cancelBubble = true; };
-	    e.which = e.which || e.keyCode;
-	    fn.call(el, e);
-	  };
-	}
-
-	function wrap (el, type, fn) {
-	  var wrapper = unwrap(el, type, fn) || wrapperFactory(el, type, fn);
-	  hardCache.push({
-	    wrapper: wrapper,
-	    element: el,
-	    type: type,
-	    fn: fn
-	  });
-	  return wrapper;
-	}
-
-	function unwrap (el, type, fn) {
-	  var i = find(el, type, fn);
-	  if (i) {
-	    var wrapper = hardCache[i].wrapper;
-	    hardCache.splice(i, 1); // free up a tad of memory
-	    return wrapper;
-	  }
-	}
-
-	function find (el, type, fn) {
-	  var i, item;
-	  for (i = 0; i < hardCache.length; i++) {
-	    item = hardCache[i];
-	    if (item.element === el && item.type === type && item.fn === fn) {
-	      return i;
-	    }
-	  }
-	}
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {
-	var NativeCustomEvent = global.CustomEvent;
-
-	function useNative () {
-	  try {
-	    var p = new NativeCustomEvent('cat', { detail: { foo: 'bar' } });
-	    return  'cat' === p.type && 'bar' === p.detail.foo;
-	  } catch (e) {
-	  }
-	  return false;
-	}
-
-	/**
-	 * Cross-browser `CustomEvent` constructor.
-	 *
-	 * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent.CustomEvent
-	 *
-	 * @public
-	 */
-
-	module.exports = useNative() ? NativeCustomEvent :
-
-	// IE >= 9
-	'function' === typeof document.createEvent ? function CustomEvent (type, params) {
-	  var e = document.createEvent('CustomEvent');
-	  if (params) {
-	    e.initCustomEvent(type, params.bubbles, params.cancelable, params.detail);
-	  } else {
-	    e.initCustomEvent(type, false, false, void 0);
-	  }
-	  return e;
-	} :
-
-	// IE <= 8
-	function CustomEvent (type, params) {
-	  var e = document.createEventObject();
-	  e.type = type;
-	  if (params) {
-	    e.bubbles = Boolean(params.bubbles);
-	    e.cancelable = Boolean(params.cancelable);
-	    e.detail = params.detail;
-	  } else {
-	    e.bubbles = false;
-	    e.cancelable = false;
-	    e.detail = void 0;
-	  }
-	  return e;
-	}
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
-
-	var eventmap = [];
-	var eventname = '';
-	var ron = /^on/;
-
-	for (eventname in global) {
-	  if (ron.test(eventname)) {
-	    eventmap.push(eventname.slice(2));
-	  }
-	}
-
-	module.exports = eventmap;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
@@ -654,88 +486,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _utils = __webpack_require__(3);
-
-	var _container = __webpack_require__(9);
-
-	var _container2 = _interopRequireDefault(_container);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var classes = __webpack_require__(11);
-
-	// ==============================================================================================================================================================
-	// Dragon =====================================================================================================================================================
-	// =============================================================================================================================================================
-	/** is group of containers with same settings */
-
-	var Dragon = function () {
-		function Dragon(dragons, options) {
-			_classCallCheck(this, Dragon);
-
-			console.log('Dragon instance created, options: ', options);
-
-			this.options = options instanceof Array ? { containers: options } : options || {};
-			this.isContainer = this.options.isContainer || dragons.isContainer.bind(dragons);
-			this.dragons = dragons;
-			this.containers = [];
-			this.id = options.id;
-
-			if (this.options.containers) this.addContainers();
-		}
-
-		_createClass(Dragon, [{
-			key: 'addContainers',
-			value: function addContainers(containers) {
-				console.log('Adding containers: ', containers);
-
-				if (!containers) containers = this.options.containers;
-
-				var self = this;
-				containers.forEach(function (containerElm) {
-					if (self.dragons.containersLookup.indexOf(containerElm) > -1) {
-						console.warn('container already registered', containerElm);
-						return;
-					}
-
-					var container = new _container2.default(self, containerElm);
-
-					self.containers.push(container);
-					self.dragons.containers.push(container);
-					self.dragons.containersLookup.push(containerElm);
-				});
-			}
-		}, {
-			key: 'findDropTarget',
-			value: function findDropTarget(elementBehindCursor) {
-				var target = elementBehindCursor;
-				while (target && !this.isContainer(target)) {
-					target = (0, _utils.getParent)(target);
-				}
-				return target;
-			}
-		}]);
-
-		return Dragon;
-	}();
-
-	exports.default = Dragon;
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _drag = __webpack_require__(10);
+	var _drag = __webpack_require__(5);
 
 	var _drag2 = _interopRequireDefault(_drag);
 
@@ -773,7 +524,7 @@
 	exports.default = Container;
 
 /***/ },
-/* 10 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -786,11 +537,11 @@
 	// cross event
 
 
-	var _touchy = __webpack_require__(4);
+	var _touchy = __webpack_require__(6);
 
 	var _touchy2 = _interopRequireDefault(_touchy);
 
-	var _classes = __webpack_require__(11);
+	var _classes = __webpack_require__(10);
 
 	var _classes2 = _interopRequireDefault(_classes);
 
@@ -1062,7 +813,228 @@
 	exports.default = Drag;
 
 /***/ },
-/* 11 */
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {"use strict";
+
+	var crossvent = __webpack_require__(7);
+
+	module.exports = function touchy(el, op, type, fn) {
+	    var touch = {
+	        mouseup: 'touchend',
+	        mousedown: 'touchstart',
+	        mousemove: 'touchmove'
+	    };
+	    var pointers = {
+	        mouseup: 'pointerup',
+	        mousedown: 'pointerdown',
+	        mousemove: 'pointermove'
+	    };
+	    var microsoft = {
+	        mouseup: 'MSPointerUp',
+	        mousedown: 'MSPointerDown',
+	        mousemove: 'MSPointerMove'
+	    };
+
+	    /** @namespace global.navigator.pointerEnabled -- resolving webstorm unresolved variables */
+	    /** @namespace global.navigator.msPointerEnabled -- resolving webstorm unresolved variables */
+	    if (global.navigator.pointerEnabled) {
+	        crossvent[op](el, pointers[type] || type, fn);
+	    } else if (global.navigator.msPointerEnabled) {
+	        crossvent[op](el, microsoft[type] || type, fn);
+	    } else {
+	        crossvent[op](el, touch[type] || type, fn);
+	        crossvent[op](el, type, fn);
+	    }
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+
+	var customEvent = __webpack_require__(8);
+	var eventmap = __webpack_require__(9);
+	var doc = global.document;
+	var addEvent = addEventEasy;
+	var removeEvent = removeEventEasy;
+	var hardCache = [];
+
+	if (!global.addEventListener) {
+	  addEvent = addEventHard;
+	  removeEvent = removeEventHard;
+	}
+
+	module.exports = {
+	  add: addEvent,
+	  remove: removeEvent,
+	  fabricate: fabricateEvent
+	};
+
+	function addEventEasy (el, type, fn, capturing) {
+	  return el.addEventListener(type, fn, capturing);
+	}
+
+	function addEventHard (el, type, fn) {
+	  return el.attachEvent('on' + type, wrap(el, type, fn));
+	}
+
+	function removeEventEasy (el, type, fn, capturing) {
+	  return el.removeEventListener(type, fn, capturing);
+	}
+
+	function removeEventHard (el, type, fn) {
+	  var listener = unwrap(el, type, fn);
+	  if (listener) {
+	    return el.detachEvent('on' + type, listener);
+	  }
+	}
+
+	function fabricateEvent (el, type, model) {
+	  var e = eventmap.indexOf(type) === -1 ? makeCustomEvent() : makeClassicEvent();
+	  if (el.dispatchEvent) {
+	    el.dispatchEvent(e);
+	  } else {
+	    el.fireEvent('on' + type, e);
+	  }
+	  function makeClassicEvent () {
+	    var e;
+	    if (doc.createEvent) {
+	      e = doc.createEvent('Event');
+	      e.initEvent(type, true, true);
+	    } else if (doc.createEventObject) {
+	      e = doc.createEventObject();
+	    }
+	    return e;
+	  }
+	  function makeCustomEvent () {
+	    return new customEvent(type, { detail: model });
+	  }
+	}
+
+	function wrapperFactory (el, type, fn) {
+	  return function wrapper (originalEvent) {
+	    var e = originalEvent || global.event;
+	    e.target = e.target || e.srcElement;
+	    e.preventDefault = e.preventDefault || function preventDefault () { e.returnValue = false; };
+	    e.stopPropagation = e.stopPropagation || function stopPropagation () { e.cancelBubble = true; };
+	    e.which = e.which || e.keyCode;
+	    fn.call(el, e);
+	  };
+	}
+
+	function wrap (el, type, fn) {
+	  var wrapper = unwrap(el, type, fn) || wrapperFactory(el, type, fn);
+	  hardCache.push({
+	    wrapper: wrapper,
+	    element: el,
+	    type: type,
+	    fn: fn
+	  });
+	  return wrapper;
+	}
+
+	function unwrap (el, type, fn) {
+	  var i = find(el, type, fn);
+	  if (i) {
+	    var wrapper = hardCache[i].wrapper;
+	    hardCache.splice(i, 1); // free up a tad of memory
+	    return wrapper;
+	  }
+	}
+
+	function find (el, type, fn) {
+	  var i, item;
+	  for (i = 0; i < hardCache.length; i++) {
+	    item = hardCache[i];
+	    if (item.element === el && item.type === type && item.fn === fn) {
+	      return i;
+	    }
+	  }
+	}
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {
+	var NativeCustomEvent = global.CustomEvent;
+
+	function useNative () {
+	  try {
+	    var p = new NativeCustomEvent('cat', { detail: { foo: 'bar' } });
+	    return  'cat' === p.type && 'bar' === p.detail.foo;
+	  } catch (e) {
+	  }
+	  return false;
+	}
+
+	/**
+	 * Cross-browser `CustomEvent` constructor.
+	 *
+	 * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent.CustomEvent
+	 *
+	 * @public
+	 */
+
+	module.exports = useNative() ? NativeCustomEvent :
+
+	// IE >= 9
+	'function' === typeof document.createEvent ? function CustomEvent (type, params) {
+	  var e = document.createEvent('CustomEvent');
+	  if (params) {
+	    e.initCustomEvent(type, params.bubbles, params.cancelable, params.detail);
+	  } else {
+	    e.initCustomEvent(type, false, false, void 0);
+	  }
+	  return e;
+	} :
+
+	// IE <= 8
+	function CustomEvent (type, params) {
+	  var e = document.createEventObject();
+	  e.type = type;
+	  if (params) {
+	    e.bubbles = Boolean(params.bubbles);
+	    e.cancelable = Boolean(params.cancelable);
+	    e.detail = params.detail;
+	  } else {
+	    e.bubbles = false;
+	    e.cancelable = false;
+	    e.detail = void 0;
+	  }
+	  return e;
+	}
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+
+	var eventmap = [];
+	var eventname = '';
+	var ron = /^on/;
+
+	for (eventname in global) {
+	  if (ron.test(eventname)) {
+	    eventmap.push(eventname.slice(2));
+	  }
+	}
+
+	module.exports = eventmap;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';

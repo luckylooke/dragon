@@ -1,6 +1,7 @@
 /**
  * Polyfill from https://github.com/remy/polyfills/blob/master/classList.js
  */
+
 (function () {
 
 	if ( typeof window.Element === "undefined" || "classList" in document.documentElement ) return;
@@ -71,3 +72,24 @@
 	} );
 
 })();
+
+
+/**
+ * Polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now
+ */
+
+if (!Date.now) {
+	Date.now = function now() {
+		return new Date().getTime();
+	};
+}
+
+// Simple version of polyfill Array.prototype.forEach()
+if ( ![].forEach ) {
+	Array.prototype.forEach = function ( callback, thisArg ) {
+		var len = this.length;
+		for ( var i = 0; i < len; i++ ) {
+			callback.call( thisArg, this[ i ], i, this )
+		}
+	};
+}

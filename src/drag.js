@@ -1,7 +1,9 @@
 import touchy from './touchy'; // cross event
 import classes from './classes'; // cross event
-import { nextEl, bind, getOffset, getCoord, getRectWidth, getRectHeight,
-	getElementBehindPoint, getImmediateChild, getReference, getParent } from './utils'; // cross event
+import {
+	nextEl, bind, getOffset, getCoord, getRectWidth, getRectHeight,
+	getElementBehindPoint, getImmediateChild, getReference, getParent
+} from './utils'; // cross event
 
 let docElm = document.documentElement;
 

@@ -1,10 +1,13 @@
-import './classListPolyfill.js'; // Element.classList polyfill
-import Dragons from './dragons.js'; // library core
+import './polyfills.js'; // Element.classList polyfill
+import Dragon from './dragon.js'; // library core
 import touchy from './touchy.js'; // cross event
 
-let dragonsInstance = new Dragons ();
+function dragonLib( options ) {
 
-touchy ( document.documentElement, 'add', 'mousedown', dragonsInstance.grab.bind ( dragonsInstance ) );
+	let dragonInstance = new Dragon( options );
+	touchy( document.documentElement, 'add', 'mousedown', dragonInstance.grab.bind( dragonInstance ) );
+	return dragonInstance;
+}
 
-export default dragonsInstance;
-window.dragons = dragonsInstance;
+export default dragonLib;
+window.dragon = dragonLib;

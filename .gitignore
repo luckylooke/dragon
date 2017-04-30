@@ -101,3 +101,4 @@ fabric.properties
 # *.ipr
 
 .idea/
+/tmp/
