@@ -49,6 +49,7 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+	exports.default = dragonLib;
 
 	__webpack_require__(1);
 
@@ -71,9 +72,9 @@
 		(0, _touchy2.default)(document.documentElement, 'add', 'mousedown', dragonInstance.grab.bind(dragonInstance));
 		return dragonInstance;
 	} // library core
-	exports.default = dragonLib;
 
-	window.dragon = dragonLib;
+
+	dragon = dragonLib;
 
 /***/ },
 /* 1 */

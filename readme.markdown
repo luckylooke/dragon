@@ -1,2 +1,0 @@
-# Dragon (dragon.js)
-Rewrite of [dragula.js](https://github.com/bevacqua/dragula) to new library with [SOLID](https://en.wikipedia.org/wiki/SOLID_%28object-oriented_design%29) design. (work in progress!)
