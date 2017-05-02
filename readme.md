@@ -6,8 +6,9 @@ THIS LIBRARY IS IN TURBULENT DEVELOPMENT, CODE IS RAPIDLY CHANGING AND REFACTORI
 
 ## Installation
 ```
-npm install dragons
+npm install dragon
 ```
+*\* many thanks to Enrico Marino ([@onirame](https://www.npmjs.com/~onirame)) for transferring ownership of his dragon npm package in favor of this project.*
 
 Projects **with** module bundler:
 ```js
