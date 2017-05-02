@@ -1,6 +1,8 @@
 module.exports = {
-	entry: __dirname + "/src/dragon.lib.js",
+	entry: __dirname + "/src/webpack.entry.js",
 	output: {
+		library: 'Dragon',
+		libraryTarget: 'umd',
 		path: __dirname + "/dist",
 		filename: "dragon.js"
 	},

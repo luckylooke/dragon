@@ -22,13 +22,13 @@
     "middle.js": "^1.0.0"
   },
   "devDependencies": {
-    "diamond": "0.0.2",
     "babel-core": "^6.21.0",
     "babel-loader": "^6.2.10",
     "babel-preset-es2015": "^6.18.0",
     "bower": "1.5.2",
     "browserify": "11.0.0",
     "clean-css": "3.3.6",
+    "diamond": "0.0.2",
     "electron-prebuilt": "0.30.1",
     "hihat": "1.2.1",
     "jshint": "2.8.0",

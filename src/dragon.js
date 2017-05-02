@@ -1,12 +1,12 @@
 'use strict';
 
-import { getParent } from './utils';
+import './polyfills.js'; // Element.classList polyfill
+import touchy from './touchy.js'; // cross event
+import { getParent, toArray } from './utils';
 import Container from './container';
 
-let classes = require( './classes' );
-
 let doc = document;
-
+let space = window;
 
 // ==============================================================================================================================================================
 // Dragon =====================================================================================================================================================
@@ -16,7 +16,13 @@ export default class Dragon {
 
 	constructor( config ) {
 
-		console.log( 'Dragon instance created, config: ', config, this )
+		console.log( 'Dragon instance created, config: ', config, this );
+
+		if ( typeof config.length !== 'undefined' ) // is array-like
+			config = { containers: toArray( config ) };
+
+		this.initSpace( config );
+		this.space = space;
 
 		this.config = config || {};
 		this.defaults = {
@@ -30,12 +36,32 @@ export default class Dragon {
 		this.addContainers();
 	}
 
+	initSpace( config ) {
+		if ( config && config.space )
+			space = config.space;
+
+		if ( !space.dragons ) { // initialisation
+			space.dragonSpace = {};
+			space = space.dragonSpace;
+			space.dragons = [];
+			touchy( document.documentElement, 'add', 'mousedown', this.grab.bind( this ) );
+		}
+
+		if ( !space.Dragon )
+			space.Dragon = Dragon;
+
+		console.log( 'dingdong', space );
+
+		space.dragons.push( this );
+	}
+
 	addContainers( containerElms, config ) {
 
 		console.log( 'dragon.addContainers called config: ', config, this );
 
-		if ( !containerElms )
-			containerElms = this.config.containers;
+		containerElms = containerElms || this.config.containers;
+
+		if ( !containerElms ) return;
 
 		let self = this;
 		containerElms.forEach( function ( elm ) {
@@ -55,7 +81,12 @@ export default class Dragon {
 
 		console.log( 'dragon.isContainer called, el:', el, this );
 
-		return this.containersLookUp.indexOf( el ) != -1;
+		var found = false;
+		space.dragons.forEach( function ( dragon ) {
+			if ( dragon.containersLookUp.indexOf( el ) != -1 )
+				found = true;
+		} );
+		return found;
 	}
 
 	getContainer( el ) {
@@ -107,7 +138,7 @@ export default class Dragon {
 
 		console.log( 'dragon.getConfig called, prop', prop, this );
 
-		prop = this.config[prop];
+		prop = this.config[ prop ];
 		return typeof prop == 'function' ? prop() : prop;
 	}
 

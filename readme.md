@@ -6,5 +6,29 @@ THIS LIBRARY IS IN TURBULENT DEVELOPMENT, CODE IS RAPIDLY CHANGING AND REFACTORI
 
 ## Installation
 ```
-npm install dragon
+npm install dragons
+```
+
+Projects **with** module bundler:
+```js
+import Dragon from 'dragons';
+new Dragon( config );
+```
+
+Projects **without** module bundler:
+```html
+<script src='./dragon.js'></script>
+```
+
+## Quick example
+
+Projects **with** module bundler:
+```js
+import Dragon from 'dragons';
+new Dragon( document.getElementsByClassName('container') );
+```
+
+Projects **without** module bundler:
+```js
+new Dragon( document.getElementsByClassName('container') );
 ```

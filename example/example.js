@@ -1,12 +1,7 @@
 'use strict';
 /* global dragon */
 
-var testDragon = dragon( { containers: [ $( 'left-defaults' ), $( 'right-defaults' ) ] } );
+var testDragon = new Dragon( document.getElementsByClassName('container') );
 // dragon([$('left-copy'), $('right-copy')], { copy: true });
 
 console.log( 'testDragon', testDragon );
-
-
-function $( id ) {
-	return document.getElementById( id );
-}

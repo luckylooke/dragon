@@ -1,4 +1,14 @@
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["Dragon"] = factory();
+	else
+		root["Dragon"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 
@@ -46,38 +56,191 @@
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.default = dragonLib;
-
-	__webpack_require__(1);
-
-	var _dragon = __webpack_require__(2);
-
-	var _dragon2 = _interopRequireDefault(_dragon);
-
-	var _touchy = __webpack_require__(6);
-
-	var _touchy2 = _interopRequireDefault(_touchy);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	// cross event
-
-	// Element.classList polyfill
-	function dragonLib(config) {
-
-		var dragonInstance = new _dragon2.default(config);
-		(0, _touchy2.default)(document.documentElement, 'add', 'mousedown', dragonInstance.grab.bind(dragonInstance));
-		return dragonInstance;
-	} // library core
-
-
-	dragon = dragonLib;
+	// workaround from https://github.com/webpack/webpack/issues/3929
+	module.exports = __webpack_require__(1).default;
 
 /***/ },
 /* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // Element.classList polyfill
+	// cross event
+
+
+	__webpack_require__(2);
+
+	var _touchy = __webpack_require__(3);
+
+	var _touchy2 = _interopRequireDefault(_touchy);
+
+	var _utils = __webpack_require__(7);
+
+	var _container = __webpack_require__(8);
+
+	var _container2 = _interopRequireDefault(_container);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var doc = document;
+	var space = window;
+
+	// ==============================================================================================================================================================
+	// Dragon =====================================================================================================================================================
+	// =============================================================================================================================================================
+	/** is group of containers with same settings */
+
+	var Dragon = function () {
+		function Dragon(config) {
+			_classCallCheck(this, Dragon);
+
+			console.log('Dragon instance created, config: ', config, this);
+
+			if (typeof config.length !== 'undefined') // is array-like
+				config = { containers: (0, _utils.toArray)(config) };
+
+			this.initSpace(config);
+			this.space = space;
+
+			this.config = config || {};
+			this.defaults = {
+				mirrorContainer: doc.body
+			};
+			this.id = config.id || 'dragonID_' + Date.now();
+			this.containers = [];
+			this.containersLookUp = [];
+
+			// init
+			this.addContainers();
+		}
+
+		_createClass(Dragon, [{
+			key: 'initSpace',
+			value: function initSpace(config) {
+				if (config && config.space) space = config.space;
+
+				if (!space.dragons) {
+					// initialisation
+					space.dragonSpace = {};
+					space = space.dragonSpace;
+					space.dragons = [];
+					(0, _touchy2.default)(document.documentElement, 'add', 'mousedown', this.grab.bind(this));
+				}
+
+				if (!space.Dragon) space.Dragon = Dragon;
+
+				console.log('dingdong', space);
+
+				space.dragons.push(this);
+			}
+		}, {
+			key: 'addContainers',
+			value: function addContainers(containerElms, config) {
+
+				console.log('dragon.addContainers called config: ', config, this);
+
+				containerElms = containerElms || this.config.containers;
+
+				if (!containerElms) return;
+
+				var self = this;
+				containerElms.forEach(function (elm) {
+					if (self.containersLookUp.indexOf(elm) > -1) {
+						console.warn('container already registered', elm);
+						return;
+					}
+
+					var container = new _container2.default(self, elm, config);
+
+					self.containers.push(container);
+					self.containersLookUp.push(elm);
+				});
+			}
+		}, {
+			key: 'isContainer',
+			value: function isContainer(el) {
+
+				console.log('dragon.isContainer called, el:', el, this);
+
+				var found = false;
+				space.dragons.forEach(function (dragon) {
+					if (dragon.containersLookUp.indexOf(el) != -1) found = true;
+				});
+				return found;
+			}
+		}, {
+			key: 'getContainer',
+			value: function getContainer(el) {
+
+				console.log('dragon.getContainer called, el:', el, this);
+
+				return this.containers[this.containersLookUp.indexOf(el)];
+			}
+		}, {
+			key: 'grab',
+			value: function grab(e) {
+
+				console.log('dragon.grab called, e:', e, this);
+
+				var item = e.target;
+				var source = void 0;
+				var container = void 0;
+				var index = void 0;
+
+				// if (isInput(item)) { // see also: github.com/bevacqua/dragula/issues/208
+				//   e.target.focus(); // fixes github.com/bevacqua/dragula/issues/176
+				//   return;
+				// }
+
+				while ((0, _utils.getParent)(item) && !this.isContainer((0, _utils.getParent)(item), item, e)) {
+					item = (0, _utils.getParent)(item); // drag target should be a top element
+				}
+				source = (0, _utils.getParent)(item);
+				if (!source) {
+					return;
+				}
+
+				index = this.containersLookUp.indexOf(source);
+				container = this.containers[index];
+				container.grab(e, item, source);
+			}
+		}, {
+			key: 'findDropTarget',
+			value: function findDropTarget(elementBehindCursor) {
+
+				console.log('dragon.findDropTarget called, prop', elementBehindCursor, this);
+
+				var target = elementBehindCursor;
+				while (target && !this.isContainer(target)) {
+					target = (0, _utils.getParent)(target);
+				}
+				return target;
+			}
+		}, {
+			key: 'getConfig',
+			value: function getConfig(prop) {
+
+				console.log('dragon.getConfig called, prop', prop, this);
+
+				prop = this.config[prop];
+				return typeof prop == 'function' ? prop() : prop;
+			}
+		}]);
+
+		return Dragon;
+	}();
+
+	exports.default = Dragon;
+
+/***/ },
+/* 2 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -177,149 +340,228 @@
 	}
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	/* WEBPACK VAR INJECTION */(function(global) {"use strict";
 
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
+	var crossvent = __webpack_require__(4);
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	module.exports = function touchy(el, op, type, fn) {
+	    var touch = {
+	        mouseup: 'touchend',
+	        mousedown: 'touchstart',
+	        mousemove: 'touchmove'
+	    };
+	    var pointers = {
+	        mouseup: 'pointerup',
+	        mousedown: 'pointerdown',
+	        mousemove: 'pointermove'
+	    };
+	    var microsoft = {
+	        mouseup: 'MSPointerUp',
+	        mousedown: 'MSPointerDown',
+	        mousemove: 'MSPointerMove'
+	    };
 
-	var _utils = __webpack_require__(3);
-
-	var _container = __webpack_require__(4);
-
-	var _container2 = _interopRequireDefault(_container);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var classes = __webpack_require__(10);
-
-	var doc = document;
-
-	// ==============================================================================================================================================================
-	// Dragon =====================================================================================================================================================
-	// =============================================================================================================================================================
-	/** is group of containers with same settings */
-
-	var Dragon = function () {
-		function Dragon(config) {
-			_classCallCheck(this, Dragon);
-
-			console.log('Dragon instance created, config: ', config, this);
-
-			this.config = config || {};
-			this.defaults = {
-				mirrorContainer: doc.body
-			};
-			this.id = config.id || 'dragonID_' + Date.now();
-			this.containers = [];
-			this.containersLookUp = [];
-
-			// init
-			this.addContainers();
-		}
-
-		_createClass(Dragon, [{
-			key: 'addContainers',
-			value: function addContainers(containerElms, config) {
-
-				console.log('dragon.addContainers called config: ', config, this);
-
-				if (!containerElms) containerElms = this.config.containers;
-
-				var self = this;
-				containerElms.forEach(function (elm) {
-					if (self.containersLookUp.indexOf(elm) > -1) {
-						console.warn('container already registered', elm);
-						return;
-					}
-
-					var container = new _container2.default(self, elm, config);
-
-					self.containers.push(container);
-					self.containersLookUp.push(elm);
-				});
-			}
-		}, {
-			key: 'isContainer',
-			value: function isContainer(el) {
-
-				console.log('dragon.isContainer called, el:', el, this);
-
-				return this.containersLookUp.indexOf(el) != -1;
-			}
-		}, {
-			key: 'getContainer',
-			value: function getContainer(el) {
-
-				console.log('dragon.getContainer called, el:', el, this);
-
-				return this.containers[this.containersLookUp.indexOf(el)];
-			}
-		}, {
-			key: 'grab',
-			value: function grab(e) {
-
-				console.log('dragon.grab called, e:', e, this);
-
-				var item = e.target;
-				var source = void 0;
-				var container = void 0;
-				var index = void 0;
-
-				// if (isInput(item)) { // see also: github.com/bevacqua/dragula/issues/208
-				//   e.target.focus(); // fixes github.com/bevacqua/dragula/issues/176
-				//   return;
-				// }
-
-				while ((0, _utils.getParent)(item) && !this.isContainer((0, _utils.getParent)(item), item, e)) {
-					item = (0, _utils.getParent)(item); // drag target should be a top element
-				}
-				source = (0, _utils.getParent)(item);
-				if (!source) {
-					return;
-				}
-
-				index = this.containersLookUp.indexOf(source);
-				container = this.containers[index];
-				container.grab(e, item, source);
-			}
-		}, {
-			key: 'findDropTarget',
-			value: function findDropTarget(elementBehindCursor) {
-
-				console.log('dragon.findDropTarget called, prop', elementBehindCursor, this);
-
-				var target = elementBehindCursor;
-				while (target && !this.isContainer(target)) {
-					target = (0, _utils.getParent)(target);
-				}
-				return target;
-			}
-		}, {
-			key: 'getConfig',
-			value: function getConfig(prop) {
-
-				console.log('dragon.getConfig called, prop', prop, this);
-
-				prop = this.config[prop];
-				return typeof prop == 'function' ? prop() : prop;
-			}
-		}]);
-
-		return Dragon;
-	}();
-
-	exports.default = Dragon;
+	    /** @namespace global.navigator.pointerEnabled -- resolving webstorm unresolved variables */
+	    /** @namespace global.navigator.msPointerEnabled -- resolving webstorm unresolved variables */
+	    if (global.navigator.pointerEnabled) {
+	        crossvent[op](el, pointers[type] || type, fn);
+	    } else if (global.navigator.msPointerEnabled) {
+	        crossvent[op](el, microsoft[type] || type, fn);
+	    } else {
+	        crossvent[op](el, touch[type] || type, fn);
+	        crossvent[op](el, type, fn);
+	    }
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 3 */
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+
+	var customEvent = __webpack_require__(5);
+	var eventmap = __webpack_require__(6);
+	var doc = global.document;
+	var addEvent = addEventEasy;
+	var removeEvent = removeEventEasy;
+	var hardCache = [];
+
+	if (!global.addEventListener) {
+	  addEvent = addEventHard;
+	  removeEvent = removeEventHard;
+	}
+
+	module.exports = {
+	  add: addEvent,
+	  remove: removeEvent,
+	  fabricate: fabricateEvent
+	};
+
+	function addEventEasy (el, type, fn, capturing) {
+	  return el.addEventListener(type, fn, capturing);
+	}
+
+	function addEventHard (el, type, fn) {
+	  return el.attachEvent('on' + type, wrap(el, type, fn));
+	}
+
+	function removeEventEasy (el, type, fn, capturing) {
+	  return el.removeEventListener(type, fn, capturing);
+	}
+
+	function removeEventHard (el, type, fn) {
+	  var listener = unwrap(el, type, fn);
+	  if (listener) {
+	    return el.detachEvent('on' + type, listener);
+	  }
+	}
+
+	function fabricateEvent (el, type, model) {
+	  var e = eventmap.indexOf(type) === -1 ? makeCustomEvent() : makeClassicEvent();
+	  if (el.dispatchEvent) {
+	    el.dispatchEvent(e);
+	  } else {
+	    el.fireEvent('on' + type, e);
+	  }
+	  function makeClassicEvent () {
+	    var e;
+	    if (doc.createEvent) {
+	      e = doc.createEvent('Event');
+	      e.initEvent(type, true, true);
+	    } else if (doc.createEventObject) {
+	      e = doc.createEventObject();
+	    }
+	    return e;
+	  }
+	  function makeCustomEvent () {
+	    return new customEvent(type, { detail: model });
+	  }
+	}
+
+	function wrapperFactory (el, type, fn) {
+	  return function wrapper (originalEvent) {
+	    var e = originalEvent || global.event;
+	    e.target = e.target || e.srcElement;
+	    e.preventDefault = e.preventDefault || function preventDefault () { e.returnValue = false; };
+	    e.stopPropagation = e.stopPropagation || function stopPropagation () { e.cancelBubble = true; };
+	    e.which = e.which || e.keyCode;
+	    fn.call(el, e);
+	  };
+	}
+
+	function wrap (el, type, fn) {
+	  var wrapper = unwrap(el, type, fn) || wrapperFactory(el, type, fn);
+	  hardCache.push({
+	    wrapper: wrapper,
+	    element: el,
+	    type: type,
+	    fn: fn
+	  });
+	  return wrapper;
+	}
+
+	function unwrap (el, type, fn) {
+	  var i = find(el, type, fn);
+	  if (i) {
+	    var wrapper = hardCache[i].wrapper;
+	    hardCache.splice(i, 1); // free up a tad of memory
+	    return wrapper;
+	  }
+	}
+
+	function find (el, type, fn) {
+	  var i, item;
+	  for (i = 0; i < hardCache.length; i++) {
+	    item = hardCache[i];
+	    if (item.element === el && item.type === type && item.fn === fn) {
+	      return i;
+	    }
+	  }
+	}
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {
+	var NativeCustomEvent = global.CustomEvent;
+
+	function useNative () {
+	  try {
+	    var p = new NativeCustomEvent('cat', { detail: { foo: 'bar' } });
+	    return  'cat' === p.type && 'bar' === p.detail.foo;
+	  } catch (e) {
+	  }
+	  return false;
+	}
+
+	/**
+	 * Cross-browser `CustomEvent` constructor.
+	 *
+	 * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent.CustomEvent
+	 *
+	 * @public
+	 */
+
+	module.exports = useNative() ? NativeCustomEvent :
+
+	// IE >= 9
+	'function' === typeof document.createEvent ? function CustomEvent (type, params) {
+	  var e = document.createEvent('CustomEvent');
+	  if (params) {
+	    e.initCustomEvent(type, params.bubbles, params.cancelable, params.detail);
+	  } else {
+	    e.initCustomEvent(type, false, false, void 0);
+	  }
+	  return e;
+	} :
+
+	// IE <= 8
+	function CustomEvent (type, params) {
+	  var e = document.createEventObject();
+	  e.type = type;
+	  if (params) {
+	    e.bubbles = Boolean(params.bubbles);
+	    e.cancelable = Boolean(params.cancelable);
+	    e.detail = params.detail;
+	  } else {
+	    e.bubbles = false;
+	    e.cancelable = false;
+	    e.detail = void 0;
+	  }
+	  return e;
+	}
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+
+	var eventmap = [];
+	var eventname = '';
+	var ron = /^on/;
+
+	for (eventname in global) {
+	  if (ron.test(eventname)) {
+	    eventmap.push(eventname.slice(2));
+	  }
+	}
+
+	module.exports = eventmap;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 7 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -512,7 +754,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 4 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -523,11 +765,11 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _item = __webpack_require__(11);
+	var _item = __webpack_require__(9);
 
 	var _item2 = _interopRequireDefault(_item);
 
-	var _utils = __webpack_require__(3);
+	var _utils = __webpack_require__(7);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -604,7 +846,66 @@
 	exports.default = Container;
 
 /***/ },
-/* 5 */
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _drag = __webpack_require__(10);
+
+	var _drag2 = _interopRequireDefault(_drag);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Item = function () {
+		function Item(container, elm, config) {
+			_classCallCheck(this, Item);
+
+			console.log('Item instance created, container, elm, config:', container, elm, config, this);
+
+			if (!config) config = {};
+
+			this.config = config;
+			this.id = config.id || 'containerID_' + Date.now();
+			this.container = container;
+			this.elm = elm;
+		}
+
+		_createClass(Item, [{
+			key: 'grab',
+			value: function grab(e) {
+
+				console.log('container.grab called, e:', e, this);
+
+				this.drag = new _drag2.default(e, this, this.container);
+				return this.drag;
+			}
+		}, {
+			key: 'getConfig',
+			value: function getConfig(prop) {
+
+				console.log('item.getConfig called, prop', prop, this);
+
+				prop = typeof this.config[prop] != 'undefined' ? this.config[prop] : this.container.getConfig(prop);
+				return typeof prop == 'function' ? prop() : prop;
+			}
+		}]);
+
+		return Item;
+	}();
+
+	exports.default = Item;
+
+/***/ },
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -617,15 +918,15 @@
 	// cross event
 
 
-	var _touchy = __webpack_require__(6);
+	var _touchy = __webpack_require__(3);
 
 	var _touchy2 = _interopRequireDefault(_touchy);
 
-	var _classes = __webpack_require__(10);
+	var _classes = __webpack_require__(11);
 
 	var _classes2 = _interopRequireDefault(_classes);
 
-	var _utils = __webpack_require__(3);
+	var _utils = __webpack_require__(7);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -894,228 +1195,7 @@
 	exports.default = Drag;
 
 /***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {"use strict";
-
-	var crossvent = __webpack_require__(7);
-
-	module.exports = function touchy(el, op, type, fn) {
-	    var touch = {
-	        mouseup: 'touchend',
-	        mousedown: 'touchstart',
-	        mousemove: 'touchmove'
-	    };
-	    var pointers = {
-	        mouseup: 'pointerup',
-	        mousedown: 'pointerdown',
-	        mousemove: 'pointermove'
-	    };
-	    var microsoft = {
-	        mouseup: 'MSPointerUp',
-	        mousedown: 'MSPointerDown',
-	        mousemove: 'MSPointerMove'
-	    };
-
-	    /** @namespace global.navigator.pointerEnabled -- resolving webstorm unresolved variables */
-	    /** @namespace global.navigator.msPointerEnabled -- resolving webstorm unresolved variables */
-	    if (global.navigator.pointerEnabled) {
-	        crossvent[op](el, pointers[type] || type, fn);
-	    } else if (global.navigator.msPointerEnabled) {
-	        crossvent[op](el, microsoft[type] || type, fn);
-	    } else {
-	        crossvent[op](el, touch[type] || type, fn);
-	        crossvent[op](el, type, fn);
-	    }
-	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
-
-	var customEvent = __webpack_require__(8);
-	var eventmap = __webpack_require__(9);
-	var doc = global.document;
-	var addEvent = addEventEasy;
-	var removeEvent = removeEventEasy;
-	var hardCache = [];
-
-	if (!global.addEventListener) {
-	  addEvent = addEventHard;
-	  removeEvent = removeEventHard;
-	}
-
-	module.exports = {
-	  add: addEvent,
-	  remove: removeEvent,
-	  fabricate: fabricateEvent
-	};
-
-	function addEventEasy (el, type, fn, capturing) {
-	  return el.addEventListener(type, fn, capturing);
-	}
-
-	function addEventHard (el, type, fn) {
-	  return el.attachEvent('on' + type, wrap(el, type, fn));
-	}
-
-	function removeEventEasy (el, type, fn, capturing) {
-	  return el.removeEventListener(type, fn, capturing);
-	}
-
-	function removeEventHard (el, type, fn) {
-	  var listener = unwrap(el, type, fn);
-	  if (listener) {
-	    return el.detachEvent('on' + type, listener);
-	  }
-	}
-
-	function fabricateEvent (el, type, model) {
-	  var e = eventmap.indexOf(type) === -1 ? makeCustomEvent() : makeClassicEvent();
-	  if (el.dispatchEvent) {
-	    el.dispatchEvent(e);
-	  } else {
-	    el.fireEvent('on' + type, e);
-	  }
-	  function makeClassicEvent () {
-	    var e;
-	    if (doc.createEvent) {
-	      e = doc.createEvent('Event');
-	      e.initEvent(type, true, true);
-	    } else if (doc.createEventObject) {
-	      e = doc.createEventObject();
-	    }
-	    return e;
-	  }
-	  function makeCustomEvent () {
-	    return new customEvent(type, { detail: model });
-	  }
-	}
-
-	function wrapperFactory (el, type, fn) {
-	  return function wrapper (originalEvent) {
-	    var e = originalEvent || global.event;
-	    e.target = e.target || e.srcElement;
-	    e.preventDefault = e.preventDefault || function preventDefault () { e.returnValue = false; };
-	    e.stopPropagation = e.stopPropagation || function stopPropagation () { e.cancelBubble = true; };
-	    e.which = e.which || e.keyCode;
-	    fn.call(el, e);
-	  };
-	}
-
-	function wrap (el, type, fn) {
-	  var wrapper = unwrap(el, type, fn) || wrapperFactory(el, type, fn);
-	  hardCache.push({
-	    wrapper: wrapper,
-	    element: el,
-	    type: type,
-	    fn: fn
-	  });
-	  return wrapper;
-	}
-
-	function unwrap (el, type, fn) {
-	  var i = find(el, type, fn);
-	  if (i) {
-	    var wrapper = hardCache[i].wrapper;
-	    hardCache.splice(i, 1); // free up a tad of memory
-	    return wrapper;
-	  }
-	}
-
-	function find (el, type, fn) {
-	  var i, item;
-	  for (i = 0; i < hardCache.length; i++) {
-	    item = hardCache[i];
-	    if (item.element === el && item.type === type && item.fn === fn) {
-	      return i;
-	    }
-	  }
-	}
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {
-	var NativeCustomEvent = global.CustomEvent;
-
-	function useNative () {
-	  try {
-	    var p = new NativeCustomEvent('cat', { detail: { foo: 'bar' } });
-	    return  'cat' === p.type && 'bar' === p.detail.foo;
-	  } catch (e) {
-	  }
-	  return false;
-	}
-
-	/**
-	 * Cross-browser `CustomEvent` constructor.
-	 *
-	 * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent.CustomEvent
-	 *
-	 * @public
-	 */
-
-	module.exports = useNative() ? NativeCustomEvent :
-
-	// IE >= 9
-	'function' === typeof document.createEvent ? function CustomEvent (type, params) {
-	  var e = document.createEvent('CustomEvent');
-	  if (params) {
-	    e.initCustomEvent(type, params.bubbles, params.cancelable, params.detail);
-	  } else {
-	    e.initCustomEvent(type, false, false, void 0);
-	  }
-	  return e;
-	} :
-
-	// IE <= 8
-	function CustomEvent (type, params) {
-	  var e = document.createEventObject();
-	  e.type = type;
-	  if (params) {
-	    e.bubbles = Boolean(params.bubbles);
-	    e.cancelable = Boolean(params.cancelable);
-	    e.detail = params.detail;
-	  } else {
-	    e.bubbles = false;
-	    e.cancelable = false;
-	    e.detail = void 0;
-	  }
-	  return e;
-	}
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
-
-	var eventmap = [];
-	var eventname = '';
-	var ron = /^on/;
-
-	for (eventname in global) {
-	  if (ron.test(eventname)) {
-	    eventmap.push(eventname.slice(2));
-	  }
-	}
-
-	module.exports = eventmap;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1152,64 +1232,7 @@
 	  rm: rmClass
 	};
 
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _drag = __webpack_require__(5);
-
-	var _drag2 = _interopRequireDefault(_drag);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Item = function () {
-		function Item(container, elm, config) {
-			_classCallCheck(this, Item);
-
-			console.log('Item instance created, container, elm, config:', container, elm, config, this);
-
-			if (!config) config = {};
-
-			this.config = config;
-			this.id = config.id || 'containerID_' + Date.now();
-			this.container = container;
-			this.elm = elm;
-		}
-
-		_createClass(Item, [{
-			key: 'grab',
-			value: function grab(e) {
-
-				console.log('container.grab called, e:', e, this);
-
-				this.drag = new _drag2.default(e, this, this.container);
-				return this.drag;
-			}
-		}, {
-			key: 'getConfig',
-			value: function getConfig(prop) {
-
-				console.log('item.getConfig called, prop', prop, this);
-
-				prop = typeof this.config[prop] != 'undefined' ? this.config[prop] : this.container.getConfig(prop);
-				return typeof prop == 'function' ? prop() : prop;
-			}
-		}]);
-
-		return Item;
-	}();
-
-	exports.default = Item;
-
 /***/ }
-/******/ ]);
+/******/ ])
+});
+;
