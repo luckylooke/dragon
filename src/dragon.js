@@ -6,7 +6,10 @@ import { getParent, toArray } from './utils';
 import Container from './container';
 
 let doc = document;
-let space = window;
+
+if ( !window.dragonSpace )
+	window.dragonSpace = {};
+let space = window.dragonSpace;
 
 // ==============================================================================================================================================================
 // Dragon =====================================================================================================================================================
@@ -41,8 +44,6 @@ export default class Dragon {
 			space = config.space;
 
 		if ( !space.dragons ) { // initialisation
-			space.dragonSpace = {};
-			space = space.dragonSpace;
 			space.dragons = [];
 			touchy( document.documentElement, 'add', 'mousedown', this.grab.bind( this ) );
 		}
