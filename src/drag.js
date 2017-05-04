@@ -55,10 +55,10 @@ export default class Drag {
 		console.log( 'Drag.events called, "remove" param:', remove );
 
 		let op = remove ? 'remove' : 'add';
-		touchy( docElm, op, 'mouseup', bind( this, 'release' ) );
-		touchy( docElm, op, 'mousemove', bind( this, 'drag' ) );
-		touchy( docElm, op, 'selectstart', bind( this, 'protectGrab' ) ); // IE8
-		touchy( docElm, op, 'click', bind( this, 'protectGrab' ) );
+		touchy( docElm, op, 'mouseup', this.release.bind( this ) );
+		touchy( docElm, op, 'mousemove', this.drag.bind( this ) );
+		touchy( docElm, op, 'selectstart', this.protectGrab.bind( this ) ); // IE8
+		touchy( docElm, op, 'click', this.protectGrab.bind( this ) );
 	}
 
 	protectGrab( e ) {

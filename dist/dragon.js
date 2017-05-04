@@ -318,7 +318,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	})();
 
 	/**
-	 * Polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now
+	 * Polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now#Polyfill
 	 */
 
 	if (!Date.now) {
@@ -334,6 +334,35 @@ return /******/ (function(modules) { // webpackBootstrap
 			for (var i = 0; i < len; i++) {
 				callback.call(thisArg, this[i], i, this);
 			}
+		};
+	}
+
+	/**
+	 * Polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Polyfill
+	 */
+
+	if (!Function.prototype.bind) {
+		Function.prototype.bind = function (oThis) {
+			if (typeof this !== 'function') {
+				// closest thing possible to the ECMAScript 5
+				// internal IsCallable function
+				throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
+			}
+
+			var aArgs = Array.prototype.slice.call(arguments, 1),
+			    fToBind = this,
+			    fNOP = function fNOP() {},
+			    fBound = function fBound() {
+				return fToBind.apply(this instanceof fNOP ? this : oThis, aArgs.concat(Array.prototype.slice.call(arguments)));
+			};
+
+			if (this.prototype) {
+				// Function.prototype doesn't have a prototype property
+				fNOP.prototype = this.prototype;
+			}
+			fBound.prototype = new fNOP();
+
+			return fBound;
 		};
 	}
 
@@ -579,7 +608,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.getRectHeight = getRectHeight;
 	exports.getParent = getParent;
 	exports.nextEl = nextEl;
-	exports.bind = bind;
 	exports.toArray = toArray;
 	var doc = document,
 	    docElm = doc.documentElement;
@@ -734,15 +762,6 @@ return /******/ (function(modules) { // webpackBootstrap
 			} while (sibling && sibling.nodeType !== 1);
 			return sibling;
 		}
-	}
-
-	function bind(obj, methodName) {
-
-		var bindedName = 'binded' + methodName;
-		if (!obj[bindedName]) obj[bindedName] = function () {
-			obj[methodName].apply(obj, arguments);
-		};
-		return obj[bindedName];
 	}
 
 	function toArray(obj) {
@@ -985,10 +1004,10 @@ return /******/ (function(modules) { // webpackBootstrap
 				console.log('Drag.events called, "remove" param:', remove);
 
 				var op = remove ? 'remove' : 'add';
-				(0, _touchy2.default)(docElm, op, 'mouseup', (0, _utils.bind)(this, 'release'));
-				(0, _touchy2.default)(docElm, op, 'mousemove', (0, _utils.bind)(this, 'drag'));
-				(0, _touchy2.default)(docElm, op, 'selectstart', (0, _utils.bind)(this, 'protectGrab')); // IE8
-				(0, _touchy2.default)(docElm, op, 'click', (0, _utils.bind)(this, 'protectGrab'));
+				(0, _touchy2.default)(docElm, op, 'mouseup', this.release.bind(this));
+				(0, _touchy2.default)(docElm, op, 'mousemove', this.drag.bind(this));
+				(0, _touchy2.default)(docElm, op, 'selectstart', this.protectGrab.bind(this)); // IE8
+				(0, _touchy2.default)(docElm, op, 'click', this.protectGrab.bind(this));
 			}
 		}, {
 			key: 'protectGrab',

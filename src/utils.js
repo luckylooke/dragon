@@ -153,16 +153,6 @@ export function nextEl( el ) {
 	}
 }
 
-export function bind( obj, methodName ) {
-
-	let bindedName = 'binded' + methodName;
-	if ( !obj[ bindedName ] )
-		obj[ bindedName ] = function () {
-			obj[ methodName ].apply( obj, arguments );
-		};
-	return obj[ bindedName ];
-}
-
 export function toArray( obj ) {
 
 	return [].slice.call( obj );
