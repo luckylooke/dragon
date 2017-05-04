@@ -1,5 +1,5 @@
 body {
-  background-color: #942A57;
+  background-color: #20674e;
   margin: 0 auto;
   max-width: 760px;
 }
@@ -24,7 +24,7 @@ body, input, button {
 
 h1 {
   text-align: center;
-  background-color: #AC5C7E;
+  background-color: #25ac93;
   margin-top: 20px;
   margin-bottom: 0;
   padding: 10px;
@@ -32,7 +32,7 @@ h1 {
 
 h3 {
   background-color: rgba(255, 255, 255, 0.2);
-  border-bottom: 5px solid #A13462;
+  border-bottom: 5px solid #24886f;
   text-align: center;
   padding: 10px;
 }
@@ -109,7 +109,7 @@ input {
   outline: none;
   background-color: #ecf0f1;
   padding: 10px;
-  color: #942A57;
+  color: #24886f;
   border: 0;
   margin: 5px 0;
   display: block;
@@ -118,7 +118,7 @@ input {
 
 button {
   background-color: #ecf0f1;
-  color: #942A57;
+  color: #24886f;
   border: 0;
   padding: 18px 12px;
   margin-left: 6px;
