@@ -89,7 +89,7 @@ export function getEventHost( e ) {
 //   if (e.touches !== void 0) { return e.touches.length; }
 //   if (e.which !== void 0 && e.which !== 0) { return e.which; } // see github.com/bevacqua/dragula/issues/261
 //   if (e.buttons !== void 0) { return e.buttons; }
-//   var button = e.button;
+//   let button = e.button;
 //   if (button !== void 0) { // see github.com/jquery/jquery/blob/99e8ff1baa7ae341e94bb89c3e84570c7c3ad9ea/src/event.js#L573-L575
 //     return button & 1 ? 1 : button & 2 ? 3 : (button & 4 ? 2 : 0);
 //   }
@@ -156,4 +156,19 @@ export function nextEl( el ) {
 export function toArray( obj ) {
 
 	return [].slice.call( obj );
+}
+
+export function bind( obj, methodName ) {
+
+	let bindedName = 'binded' + methodName;
+	if ( !obj[ bindedName ] )
+		obj[ bindedName ] = function () {
+			obj[ methodName ].apply( obj, arguments );
+		};
+	return obj[ bindedName ];
+}
+
+export function domIndexOf( parent, child ) {
+	// Possible problems with IE8- ? https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/children#Browser_compatibility
+	return [].indexOf.call( parent.children, child );
 }

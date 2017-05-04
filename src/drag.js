@@ -1,7 +1,7 @@
 import touchy from './touchy'; // cross event
 import classes from './classes'; // cross event
 import {
-	nextEl, bind, getOffset, getCoord, getRectWidth, getRectHeight,
+	bind, nextEl, domIndexOf, getOffset, getCoord, getRectWidth, getRectHeight,
 	getElementBehindPoint, getImmediateChild, getReference, getParent
 } from './utils'; // cross event
 
@@ -23,7 +23,7 @@ export default class Drag {
 		// this.moveY; // reference move y
 		// this.initialSibling; // reference sibling when grabbed
 		// this.currentSibling; // reference sibling now
-		// this.state; // holds Drag state (grabbed, tracking, waiting, dragging, ...)
+		// this.state; // holds Drag state (grabbed, dragging, dropped...)
 
 		e.preventDefault(); // fixes github.com/bevacqua/dragula/issues/155
 		this.moveX = e.clientX;
@@ -46,22 +46,25 @@ export default class Drag {
 	}
 
 	destroy() {
+
 		console.log( 'Drag.destroy called' );
 
 		this.release( {} );
 	}
 
 	events( remove ) {
+
 		console.log( 'Drag.events called, "remove" param:', remove );
 
 		let op = remove ? 'remove' : 'add';
-		touchy( docElm, op, 'mouseup', this.release.bind( this ) );
-		touchy( docElm, op, 'mousemove', this.drag.bind( this ) );
-		touchy( docElm, op, 'selectstart', this.protectGrab.bind( this ) ); // IE8
-		touchy( docElm, op, 'click', this.protectGrab.bind( this ) );
+		touchy( docElm, op, 'mouseup', bind( this, 'release' ) );
+		touchy( docElm, op, 'mousemove', bind( this, 'drag' ) );
+		touchy( docElm, op, 'selectstart', bind( this, 'protectGrab' ) ); // IE8
+		touchy( docElm, op, 'click', bind( this, 'protectGrab' ) );
 	}
 
 	protectGrab( e ) {
+
 		console.log( 'Drag.protectGrab called, e:', e );
 
 		if ( this.state == 'grabbed' ) {
@@ -70,6 +73,7 @@ export default class Drag {
 	}
 
 	drag( e ) {
+
 		console.log( 'Drag.drag called, e:', e );
 
 		if ( this.state == 'grabbed' ) {
@@ -116,6 +120,7 @@ export default class Drag {
 	}
 
 	startByMovement( e ) {
+
 		console.log( 'Drag.startByMovement called, e:', e );
 
 		// if (whichMouseButton(e) === 0) {
@@ -142,6 +147,7 @@ export default class Drag {
 	}
 
 	renderMirrorImage( mirrorContainer ) {
+
 		console.log( 'Drag.renderMirrorImage called, e:', mirrorContainer );
 
 		let rect = this.itemElm.getBoundingClientRect();
@@ -156,12 +162,14 @@ export default class Drag {
 	}
 
 	removeMirrorImage() {
+
 		let mirrorContainer = getParent( this.mirror );
 		classes.rm( mirrorContainer, 'gu-unselectable' );
 		mirrorContainer.removeChild( this.mirror );
 	}
 
 	release( e ) {
+
 		console.log( 'Drag.release called, e:', e );
 
 		touchy( docElm, 'remove', 'mouseup', this.release );
@@ -172,16 +180,20 @@ export default class Drag {
 		let elementBehindCursor = getElementBehindPoint( this.mirror, clientX, clientY );
 		let dropTarget = this.findDropTarget( elementBehindCursor, clientX, clientY );
 		if ( dropTarget && dropTarget !== this.source ) {
-			this.drop( e, this.itemElm, dropTarget );
+			this.drop( dropTarget );
 		} else {
 			this.cancel();
 		}
 	}
 
-	drop() {
+	drop( dropTarget ) {
+
 		console.log( 'Drag.drop called' );
 		if ( this.state != 'dragging' )
 			return;
+
+		let container = this.dragon.getContainer( dropTarget );
+		container.addItem( this.item, domIndexOf( dropTarget, this.itemElm ) );
 
 		console.log( '*** Changing state: ', this.state, ' -> dropped' );
 		this.state = 'dropped';
@@ -190,6 +202,7 @@ export default class Drag {
 	}
 
 	remove() {
+
 		console.log( 'Drag.remove called' );
 
 		if ( this.state !== 'dragging' )
@@ -206,6 +219,7 @@ export default class Drag {
 	}
 
 	cancel( reverts ) {
+
 		console.log( 'Drag.cancel called, reverts:', reverts );
 
 		if ( this.state == 'dragging' ) {
@@ -223,6 +237,7 @@ export default class Drag {
 	}
 
 	cleanup() {
+
 		console.log( 'Drag.cleanup called' );
 
 		this.events( 'remove' );
@@ -236,11 +251,10 @@ export default class Drag {
 
 		console.log( '*** Changing state: ', this.state, ' -> cleaned' );
 		this.state = 'cleaned';
-
-		this.source = this.itemElm = this.initialSibling = this.currentSibling = null;
 	}
 
 	isInitialPlacement( target, s ) {
+
 		let sibling;
 		if ( s !== void 0 ) {
 			sibling = s;

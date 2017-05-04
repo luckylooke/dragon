@@ -162,24 +162,19 @@ return /******/ (function(modules) { // webpackBootstrap
 				});
 			}
 		}, {
-			key: 'isContainer',
-			value: function isContainer(el) {
-
-				console.log('dragon.isContainer called, el:', el, this);
-
-				var found = false;
-				space.dragons.forEach(function (dragon) {
-					if (dragon.containersLookUp.indexOf(el) != -1) found = true;
-				});
-				return found;
-			}
-		}, {
 			key: 'getContainer',
-			value: function getContainer(el) {
+			value: function getContainer(el, own) {
 
-				console.log('dragon.getContainer called, el:', el, this);
+				console.log('dragon.getContainer called, el, own:', el, own, this);
 
-				return this.containers[this.containersLookUp.indexOf(el)];
+				if (own) return this.containers[this.containersLookUp.indexOf(el)];
+
+				var container = null;
+				space.dragons.forEach(function (dragon) {
+					if (dragon.containersLookUp.indexOf(el) != -1) container = dragon.containers[dragon.containersLookUp.indexOf(el)];
+				});
+
+				return container;
 			}
 		}, {
 			key: 'grab',
@@ -197,7 +192,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				//   return;
 				// }
 
-				while ((0, _utils.getParent)(item) && !this.isContainer((0, _utils.getParent)(item), item, e)) {
+				while ((0, _utils.getParent)(item) && !this.getContainer((0, _utils.getParent)(item), item, e)) {
 					item = (0, _utils.getParent)(item); // drag target should be a top element
 				}
 				source = (0, _utils.getParent)(item);
@@ -216,7 +211,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				console.log('dragon.findDropTarget called, prop', elementBehindCursor, this);
 
 				var target = elementBehindCursor;
-				while (target && !this.isContainer(target)) {
+				while (target && !this.getContainer(target)) {
 					target = (0, _utils.getParent)(target);
 				}
 				return target;
@@ -226,6 +221,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function getConfig(prop) {
 
 				console.log('dragon.getConfig called, prop', prop, this);
+
+				if (!prop) return this.config;
 
 				prop = this.config[prop];
 				return typeof prop == 'function' ? prop() : prop;
@@ -261,8 +258,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			// The className needs to be trimmed and split on whitespace
 			// to retrieve a list of classes.
 			var classes = el.className.replace(/^\s+|\s+$/g, '').split(/\s+/);
-			for (var i = 0; i < classes.length; i++) {
-				push.call(this, classes[i]);
+			for (var _i = 0; _i < classes.length; _i++) {
+				push.call(this, classes[_i]);
 			}
 		}
 
@@ -280,8 +277,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			},
 			remove: function remove(token) {
 				if (!this.contains(token)) return;
-				for (var i = 0; i < this.length; i++) {
-					if (this[i] == token) break;
+				for (var _i2 = 0; _i2 < this.length; _i2++) {
+					if (this[_i2] == token) break;
 				}
 				splice.call(this, i, 1);
 				this.el.className = this.toString();
@@ -331,8 +328,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	if (![].forEach) {
 		Array.prototype.forEach = function (callback, thisArg) {
 			var len = this.length;
-			for (var i = 0; i < len; i++) {
-				callback.call(thisArg, this[i], i, this);
+			for (var _i3 = 0; _i3 < len; _i3++) {
+				callback.call(thisArg, this[_i3], _i3, this);
 			}
 		};
 	}
@@ -609,6 +606,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.getParent = getParent;
 	exports.nextEl = nextEl;
 	exports.toArray = toArray;
+	exports.bind = bind;
+	exports.domIndexOf = domIndexOf;
 	var doc = document,
 	    docElm = doc.documentElement;
 
@@ -700,7 +699,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//   if (e.touches !== void 0) { return e.touches.length; }
 	//   if (e.which !== void 0 && e.which !== 0) { return e.which; } // see github.com/bevacqua/dragula/issues/261
 	//   if (e.buttons !== void 0) { return e.buttons; }
-	//   var button = e.button;
+	//   let button = e.button;
 	//   if (button !== void 0) { // see github.com/jquery/jquery/blob/99e8ff1baa7ae341e94bb89c3e84570c7c3ad9ea/src/event.js#L573-L575
 	//     return button & 1 ? 1 : button & 2 ? 3 : (button & 4 ? 2 : 0);
 	//   }
@@ -768,6 +767,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		return [].slice.call(obj);
 	}
+
+	function bind(obj, methodName) {
+
+		var bindedName = 'binded' + methodName;
+		if (!obj[bindedName]) obj[bindedName] = function () {
+			obj[methodName].apply(obj, arguments);
+		};
+		return obj[bindedName];
+	}
+
+	function domIndexOf(parent, child) {
+		// Possible problems with IE8- ? https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/children#Browser_compatibility
+		return [].indexOf.call(parent.children, child);
+	}
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
@@ -820,21 +833,29 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: 'addItem',
-			value: function addItem(item, index) {
+			value: function addItem(itemOrElm, index, config) {
 
-				console.log('dragon.addItem called config: ', config, this);
+				console.log('dragon.addItem called, itemOrElm, index, config: ', itemOrElm, index, config, this);
+
+				index = index || 0;
+
+				var item = void 0,
+				    elm = void 0;
+
+				if (itemOrElm instanceof _item2.default) {
+
+					itemOrElm.container = this;
+					item = itemOrElm;
+					elm = itemOrElm.elm;
+				} else {
+
+					item = new _item2.default(this, itemOrElm, config);
+					elm = itemOrElm;
+				}
 
 				this.items.splice(index, 0, item);
-			}
-		}, {
-			key: 'addItemElm',
-			value: function addItemElm(elm, config) {
-
-				console.log('container.item called, elm, config', elm, config, this);
-
-				var item = new _item2.default(this, elm, config);
-				this.items.push(item);
-				this.itemsLookUp.push(elm);
+				this.itemsLookUp.splice(index, 0, elm);
+				return this;
 			}
 		}, {
 			key: 'initItems',
@@ -843,7 +864,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				var self = this;
 
 				(0, _utils.toArray)(this.elm.children).forEach(function (itemElm) {
-					self.addItemElm(itemElm);
+					self.addItem(itemElm);
 				});
 			}
 		}, {
@@ -969,7 +990,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			// this.moveY; // reference move y
 			// this.initialSibling; // reference sibling when grabbed
 			// this.currentSibling; // reference sibling now
-			// this.state; // holds Drag state (grabbed, tracking, waiting, dragging, ...)
+			// this.state; // holds Drag state (grabbed, dragging, dropped...)
 
 			e.preventDefault(); // fixes github.com/bevacqua/dragula/issues/155
 			this.moveX = e.clientX;
@@ -994,6 +1015,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		_createClass(Drag, [{
 			key: 'destroy',
 			value: function destroy() {
+
 				console.log('Drag.destroy called');
 
 				this.release({});
@@ -1001,17 +1023,19 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'events',
 			value: function events(remove) {
+
 				console.log('Drag.events called, "remove" param:', remove);
 
 				var op = remove ? 'remove' : 'add';
-				(0, _touchy2.default)(docElm, op, 'mouseup', this.release.bind(this));
-				(0, _touchy2.default)(docElm, op, 'mousemove', this.drag.bind(this));
-				(0, _touchy2.default)(docElm, op, 'selectstart', this.protectGrab.bind(this)); // IE8
-				(0, _touchy2.default)(docElm, op, 'click', this.protectGrab.bind(this));
+				(0, _touchy2.default)(docElm, op, 'mouseup', (0, _utils.bind)(this, 'release'));
+				(0, _touchy2.default)(docElm, op, 'mousemove', (0, _utils.bind)(this, 'drag'));
+				(0, _touchy2.default)(docElm, op, 'selectstart', (0, _utils.bind)(this, 'protectGrab')); // IE8
+				(0, _touchy2.default)(docElm, op, 'click', (0, _utils.bind)(this, 'protectGrab'));
 			}
 		}, {
 			key: 'protectGrab',
 			value: function protectGrab(e) {
+
 				console.log('Drag.protectGrab called, e:', e);
 
 				if (this.state == 'grabbed') {
@@ -1021,6 +1045,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'drag',
 			value: function drag(e) {
+
 				console.log('Drag.drag called, e:', e);
 
 				if (this.state == 'grabbed') {
@@ -1064,6 +1089,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'startByMovement',
 			value: function startByMovement(e) {
+
 				console.log('Drag.startByMovement called, e:', e);
 
 				// if (whichMouseButton(e) === 0) {
@@ -1091,6 +1117,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'renderMirrorImage',
 			value: function renderMirrorImage(mirrorContainer) {
+
 				console.log('Drag.renderMirrorImage called, e:', mirrorContainer);
 
 				var rect = this.itemElm.getBoundingClientRect();
@@ -1106,6 +1133,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'removeMirrorImage',
 			value: function removeMirrorImage() {
+
 				var mirrorContainer = (0, _utils.getParent)(this.mirror);
 				_classes2.default.rm(mirrorContainer, 'gu-unselectable');
 				mirrorContainer.removeChild(this.mirror);
@@ -1113,6 +1141,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'release',
 			value: function release(e) {
+
 				console.log('Drag.release called, e:', e);
 
 				(0, _touchy2.default)(docElm, 'remove', 'mouseup', this.release);
@@ -1123,16 +1152,20 @@ return /******/ (function(modules) { // webpackBootstrap
 				var elementBehindCursor = (0, _utils.getElementBehindPoint)(this.mirror, clientX, clientY);
 				var dropTarget = this.findDropTarget(elementBehindCursor, clientX, clientY);
 				if (dropTarget && dropTarget !== this.source) {
-					this.drop(e, this.itemElm, dropTarget);
+					this.drop(dropTarget);
 				} else {
 					this.cancel();
 				}
 			}
 		}, {
 			key: 'drop',
-			value: function drop() {
+			value: function drop(dropTarget) {
+
 				console.log('Drag.drop called');
 				if (this.state != 'dragging') return;
+
+				var container = this.dragon.getContainer(dropTarget);
+				container.addItem(this.item, (0, _utils.domIndexOf)(dropTarget, this.itemElm));
 
 				console.log('*** Changing state: ', this.state, ' -> dropped');
 				this.state = 'dropped';
@@ -1142,6 +1175,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'remove',
 			value: function remove() {
+
 				console.log('Drag.remove called');
 
 				if (this.state !== 'dragging') return;
@@ -1158,6 +1192,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'cancel',
 			value: function cancel(reverts) {
+
 				console.log('Drag.cancel called, reverts:', reverts);
 
 				if (this.state == 'dragging') {
@@ -1176,6 +1211,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'cleanup',
 			value: function cleanup() {
+
 				console.log('Drag.cleanup called');
 
 				this.events('remove');
@@ -1188,12 +1224,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				console.log('*** Changing state: ', this.state, ' -> cleaned');
 				this.state = 'cleaned';
-
-				this.source = this.itemElm = this.initialSibling = this.currentSibling = null;
 			}
 		}, {
 			key: 'isInitialPlacement',
 			value: function isInitialPlacement(target, s) {
+
 				var sibling = void 0;
 				if (s !== void 0) {
 					sibling = s;

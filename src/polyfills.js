@@ -35,7 +35,7 @@
 		},
 		remove: function ( token ) {
 			if ( !this.contains( token ) ) return;
-			for ( var i = 0; i < this.length; i++ ) {
+			for ( let i = 0; i < this.length; i++ ) {
 				if ( this[ i ] == token ) break;
 			}
 			splice.call( this, i, 1 );
@@ -87,8 +87,8 @@ if (!Date.now) {
 // Simple version of polyfill Array.prototype.forEach()
 if ( ![].forEach ) {
 	Array.prototype.forEach = function ( callback, thisArg ) {
-		var len = this.length;
-		for ( var i = 0; i < len; i++ ) {
+		let len = this.length;
+		for ( let i = 0; i < len; i++ ) {
 			callback.call( thisArg, this[ i ], i, this )
 		}
 	};
@@ -107,7 +107,7 @@ if (!Function.prototype.bind) {
 			throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
 		}
 
-		var aArgs   = Array.prototype.slice.call(arguments, 1),
+		let aArgs   = Array.prototype.slice.call(arguments, 1),
 			fToBind = this,
 			fNOP    = function() {},
 			fBound  = function() {

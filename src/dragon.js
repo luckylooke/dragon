@@ -76,23 +76,20 @@ export default class Dragon {
 		} );
 	}
 
-	isContainer( el ) {
+	getContainer( el, own ) {
 
-		console.log( 'dragon.isContainer called, el:', el, this );
+		console.log( 'dragon.getContainer called, el, own:', el, own, this );
 
-		var found = false;
+		if ( own )
+			return this.containers[ this.containersLookUp.indexOf( el ) ];
+
+		let container = null;
 		space.dragons.forEach( function ( dragon ) {
 			if ( dragon.containersLookUp.indexOf( el ) != -1 )
-				found = true;
+				container = dragon.containers[ dragon.containersLookUp.indexOf( el ) ];
 		} );
-		return found;
-	}
 
-	getContainer( el ) {
-
-		console.log( 'dragon.getContainer called, el:', el, this );
-
-		return this.containers[ this.containersLookUp.indexOf( el ) ];
+		return container;
 	}
 
 	grab( e ) {
@@ -109,7 +106,7 @@ export default class Dragon {
 		//   return;
 		// }
 
-		while ( getParent( item ) && !this.isContainer( getParent( item ), item, e ) ) {
+		while ( getParent( item ) && !this.getContainer( getParent( item ), item, e ) ) {
 			item = getParent( item ); // drag target should be a top element
 		}
 		source = getParent( item );
@@ -127,7 +124,7 @@ export default class Dragon {
 		console.log( 'dragon.findDropTarget called, prop', elementBehindCursor, this );
 
 		let target = elementBehindCursor;
-		while ( target && !this.isContainer( target ) ) {
+		while ( target && !this.getContainer( target ) ) {
 			target = getParent( target );
 		}
 		return target;
@@ -136,6 +133,9 @@ export default class Dragon {
 	getConfig( prop ) {
 
 		console.log( 'dragon.getConfig called, prop', prop, this );
+
+		if ( !prop )
+			return this.config;
 
 		prop = this.config[ prop ];
 		return typeof prop == 'function' ? prop() : prop;

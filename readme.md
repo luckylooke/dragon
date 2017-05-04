@@ -62,7 +62,7 @@ Every drag has these stages: GRAB, DRAG, RELEASE.
 Started with user interaction ( mousedown ) or by js, it is where Drag object instance is created. And it waits for starting signal ( movement, time, js ). 
 
 #### Drag
-Dragging is happening and parameters are changing ( position [x,y], elementBehindCursor )
+Dragging is happening and parameters are changing ( position [x,y], elementBehindCursor ). It has also state ( grabbed, moved, dragging, dropped, cancelled, cleaned ).
 
 #### Release
 Drag is finished by release and several scenarios can occur. Dragged item can be placed into actual position, can be moved to initial position, or item can be removed. Depends on config and actual situation.

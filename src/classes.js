@@ -1,11 +1,11 @@
 'use strict';
 
-var cache = {};
-var start = '(?:^|\\s)';
-var end = '(?:\\s|$)';
+let cache = {};
+let start = '(?:^|\\s)';
+let end = '(?:\\s|$)';
 
 function lookupClass (className) {
-  var cached = cache[className];
+  let cached = cache[className];
   if (cached) {
     cached.lastIndex = 0;
   } else {
@@ -15,7 +15,7 @@ function lookupClass (className) {
 }
 
 function addClass (el, className) {
-  var current = el.className;
+  let current = el.className;
   if (!current.length) {
     el.className = className;
   } else if (!lookupClass(className).test(current)) {

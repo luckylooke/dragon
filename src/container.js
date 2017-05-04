@@ -27,28 +27,36 @@ export default class Container {
 		this.items[ this.itemsLookUp.indexOf( itemElm ) ].grab( e );
 	}
 
-	addItem( item, index ) {
+	addItem( itemOrElm, index, config ) {
 
-		console.log( 'dragon.addItem called config: ', config, this );
+		console.log( 'dragon.addItem called, itemOrElm, index, config: ', itemOrElm, index, config, this );
+
+		index = index || 0;
+
+		let item, elm;
+
+		if ( itemOrElm instanceof Item ){
+
+			itemOrElm.container = this;
+			item = itemOrElm;
+			elm = itemOrElm.elm;
+		} else {
+
+			item = new Item( this, itemOrElm, config );
+			elm = itemOrElm;
+		}
 
 		this.items.splice( index, 0, item );
-	}
-
-	addItemElm( elm, config ) {
-
-		console.log( 'container.item called, elm, config', elm, config, this );
-
-		let item = new Item( this, elm, config );
-		this.items.push( item );
-		this.itemsLookUp.push( elm );
+		this.itemsLookUp.splice( index, 0, elm );
+		return this;
 	}
 
 	initItems() {
 
-		var self = this;
+		let self = this;
 
 		toArray( this.elm.children ).forEach( function ( itemElm ) {
-			self.addItemElm( itemElm );
+			self.addItem( itemElm );
 		});
 	}
 
