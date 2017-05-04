@@ -90,7 +90,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var doc = document;
-	var space = window;
+
+	if (!window.dragonSpace) window.dragonSpace = {};
+	var space = window.dragonSpace;
 
 	// ==============================================================================================================================================================
 	// Dragon =====================================================================================================================================================
@@ -106,8 +108,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			if (typeof config.length !== 'undefined') // is array-like
 				config = { containers: (0, _utils.toArray)(config) };
 
-			this.initSpace(config);
+			this.initSpace(config.space);
 			this.space = space;
+			space.dragons.push(this);
 
 			this.config = config || {};
 			this.defaults = {
@@ -123,22 +126,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		_createClass(Dragon, [{
 			key: 'initSpace',
-			value: function initSpace(config) {
-				if (config && config.space) space = config.space;
+			value: function initSpace(newSpace) {
+
+				if (newSpace) space = newSpace;
 
 				if (!space.dragons) {
 					// initialisation
-					space.dragonSpace = {};
-					space = space.dragonSpace;
 					space.dragons = [];
 					(0, _touchy2.default)(document.documentElement, 'add', 'mousedown', this.grab.bind(this));
 				}
 
 				if (!space.Dragon) space.Dragon = Dragon;
-
-				console.log('dingdong', space);
-
-				space.dragons.push(this);
 			}
 		}, {
 			key: 'addContainers',

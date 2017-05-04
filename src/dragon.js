@@ -24,8 +24,9 @@ export default class Dragon {
 		if ( typeof config.length !== 'undefined' ) // is array-like
 			config = { containers: toArray( config ) };
 
-		this.initSpace( config );
+		this.initSpace( config.space );
 		this.space = space;
+		space.dragons.push( this );
 
 		this.config = config || {};
 		this.defaults = {
@@ -39,9 +40,10 @@ export default class Dragon {
 		this.addContainers();
 	}
 
-	initSpace( config ) {
-		if ( config && config.space )
-			space = config.space;
+	initSpace( newSpace ) {
+
+		if ( newSpace )
+			space = newSpace;
 
 		if ( !space.dragons ) { // initialisation
 			space.dragons = [];
@@ -50,10 +52,6 @@ export default class Dragon {
 
 		if ( !space.Dragon )
 			space.Dragon = Dragon;
-
-		console.log( 'dingdong', space );
-
-		space.dragons.push( this );
 	}
 
 	addContainers( containerElms, config ) {
