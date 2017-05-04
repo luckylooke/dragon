@@ -116,7 +116,7 @@ export default class Dragon {
 
 		index = this.containersLookUp.indexOf( source );
 		container = this.containers[ index ];
-		container.grab( e, item, source );
+		return container.grab( e, item, source );
 	}
 
 	findDropTarget( elementBehindCursor ) {

@@ -202,7 +202,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				index = this.containersLookUp.indexOf(source);
 				container = this.containers[index];
-				container.grab(e, item, source);
+				return container.grab(e, item, source);
 			}
 		}, {
 			key: 'findDropTarget',
@@ -829,7 +829,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				console.log('container.grab called, e, itemElm:', e, itemElm, this);
 
-				this.items[this.itemsLookUp.indexOf(itemElm)].grab(e);
+				return this.items[this.itemsLookUp.indexOf(itemElm)].grab(e);
 			}
 		}, {
 			key: 'addItem',
@@ -855,6 +855,27 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				this.items.splice(index, 0, item);
 				this.itemsLookUp.splice(index, 0, elm);
+				return this;
+			}
+		}, {
+			key: 'removeItem',
+			value: function removeItem(itemOrElm) {
+
+				console.log('dragon.removeItem called, itemOrElm: ', itemOrElm, this);
+
+				var index = void 0;
+
+				if (itemOrElm instanceof _item2.default) {
+
+					itemOrElm.container = null;
+					index = this.itemsLookUp.indexOf(itemOrElm.elm);
+				} else {
+
+					index = this.itemsLookUp.indexOf(itemOrElm);
+				}
+
+				this.items.splice(index, 1);
+				this.itemsLookUp.splice(index, 1);
 				return this;
 			}
 		}, {

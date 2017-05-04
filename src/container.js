@@ -24,7 +24,7 @@ export default class Container {
 
 		console.log( 'container.grab called, e, itemElm:', e, itemElm, this );
 
-		this.items[ this.itemsLookUp.indexOf( itemElm ) ].grab( e );
+		return this.items[ this.itemsLookUp.indexOf( itemElm ) ].grab( e );
 	}
 
 	addItem( itemOrElm, index, config ) {
@@ -35,7 +35,7 @@ export default class Container {
 
 		let item, elm;
 
-		if ( itemOrElm instanceof Item ){
+		if ( itemOrElm instanceof Item ) {
 
 			itemOrElm.container = this;
 			item = itemOrElm;
@@ -51,13 +51,33 @@ export default class Container {
 		return this;
 	}
 
+	removeItem( itemOrElm ) {
+
+		console.log( 'dragon.removeItem called, itemOrElm: ', itemOrElm, this );
+
+		let index;
+
+		if ( itemOrElm instanceof Item ) {
+
+			itemOrElm.container = null;
+			index = this.itemsLookUp.indexOf( itemOrElm.elm );
+		} else {
+
+			index = this.itemsLookUp.indexOf( itemOrElm );
+		}
+
+		this.items.splice( index, 1 );
+		this.itemsLookUp.splice( index, 1 );
+		return this;
+	}
+
 	initItems() {
 
 		let self = this;
 
 		toArray( this.elm.children ).forEach( function ( itemElm ) {
 			self.addItem( itemElm );
-		});
+		} );
 	}
 
 	getConfig( prop ) {
