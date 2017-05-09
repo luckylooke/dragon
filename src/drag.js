@@ -33,8 +33,6 @@ export default class Drag {
 		this.itemElm = item.elm;
 		this.sourceContainer = container;
 		this.source = container.elm;
-		this.config = this.sourceContainer.config || {};
-		this.config.mirrorContainer = this.config.mirrorContainer || document.body; // TODO: default config obj, initOptions from dragular
 		//noinspection JSUnresolvedVariable
 		this.dragon = this.sourceContainer.dragon;
 		this.findDropTarget = this.dragon.findDropTarget.bind( this.dragon );
@@ -130,7 +128,7 @@ export default class Drag {
 		this.offsetY = getCoord( 'pageY', e ) - offset.top;
 
 		classes.add( this.itemElm, 'gu-transit' );
-		this.renderMirrorImage( this.config.mirrorContainer );
+		this.renderMirrorImage( this.getConfig( 'mirrorContainer' ) );
 		this.state = 'moved';
 	}
 
@@ -241,5 +239,11 @@ export default class Drag {
 			sibling = nextEl( this.itemElm );
 		}
 		return target === this.source && sibling === this.initialSibling;
+	}
+
+	@middle
+	getConfig( prop ) {
+
+		return this.item.getConfig( prop );
 	}
 }
