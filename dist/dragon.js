@@ -552,7 +552,7 @@ var Dragon = (_class = function () {
 
 			if (!prop) return this.config;
 
-			prop = this.config[prop];
+			prop = this.config.hasOwnProperty(prop) ? this.config[prop] : this.defaults[prop];
 			return typeof prop == 'function' ? prop() : prop;
 		}
 	}]);
@@ -736,7 +736,9 @@ var Container = (_class = function () {
 		key: 'getConfig',
 		value: function getConfig(prop) {
 
-			prop = typeof this.config[prop] != 'undefined' ? this.config[prop] : this.dragon.getConfig(prop);
+			if (!prop) return this.config;
+
+			prop = this.config.hasOwnProperty(prop) ? this.config[prop] : this.dragon.getConfig(prop);
 			return typeof prop == 'function' ? prop() : prop;
 		}
 	}]);
@@ -1123,7 +1125,9 @@ var Item = (_class = function () {
 		key: 'getConfig',
 		value: function getConfig(prop) {
 
-			prop = typeof this.config[prop] != 'undefined' ? this.config[prop] : this.container.getConfig(prop);
+			if (!prop) return this.config;
+
+			prop = this.config.hasOwnProperty(prop) ? this.config[prop] : this.container.getConfig(prop);
 			return typeof prop == 'function' ? prop() : prop;
 		}
 	}]);

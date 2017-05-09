@@ -80,7 +80,10 @@ export default class Container {
 	@middle
 	getConfig( prop ) {
 
-		prop = typeof this.config[ prop ] != 'undefined' ? this.config[ prop ] : this.dragon.getConfig( prop );
+		if ( !prop )
+			return this.config;
+
+		prop = this.config.hasOwnProperty( prop ) ? this.config[ prop ] : this.dragon.getConfig( prop );
 		return typeof prop == 'function' ? prop() : prop;
 	}
 }

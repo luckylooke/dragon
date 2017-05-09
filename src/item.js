@@ -17,14 +17,17 @@ export default class Item {
 	@middle
 	grab( e ) {
 
-		this.drag = new Drag( e,  this, this.container );
+		this.drag = new Drag( e, this, this.container );
 		return this.drag;
 	}
 
 	@middle
 	getConfig( prop ) {
 
-		prop = typeof this.config[prop] != 'undefined' ? this.config[prop] : this.container.getConfig( prop );
+		if ( !prop )
+			return this.config;
+
+		prop = this.config.hasOwnProperty( prop ) ? this.config[ prop ] : this.container.getConfig( prop );
 		return typeof prop == 'function' ? prop() : prop;
 	}
 }

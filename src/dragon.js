@@ -134,7 +134,7 @@ export default class Dragon {
 		if ( !prop )
 			return this.config;
 
-		prop = this.config[ prop ];
+		prop = this.config.hasOwnProperty( prop ) ? this.config[ prop ] : this.defaults[ prop ];
 		return typeof prop == 'function' ? prop() : prop;
 	}
 
