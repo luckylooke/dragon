@@ -2,7 +2,7 @@
 
 import './polyfills.js'; // Element.classList polyfill
 import touchy from './touchy.js'; // cross event
-import { getParent, toArray } from './utils';
+import { getParent, toArray, isInput } from './utils';
 import Container from './container';
 import { decorator as middle } from 'middle.js';
 
@@ -100,10 +100,10 @@ export default class Dragon {
 		let container;
 		let index;
 
-		// if (isInput(item)) { // see also: github.com/bevacqua/dragula/issues/208
-		//   e.target.focus(); // fixes github.com/bevacqua/dragula/issues/176
-		//   return;
-		// }
+		if ( isInput( item ) ) { // see also: github.com/bevacqua/dragula/issues/208
+			e.target.focus(); // fixes github.com/bevacqua/dragula/issues/176
+			return;
+		}
 
 		while ( getParent( item ) && !this.getContainer( getParent( item ), item, e ) ) {
 			item = getParent( item ); // drag target should be a top element

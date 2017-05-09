@@ -128,6 +128,8 @@ exports.nextEl = nextEl;
 exports.toArray = toArray;
 exports.bind = bind;
 exports.domIndexOf = domIndexOf;
+exports.isInput = isInput;
+exports.isEditable = isEditable;
 var doc = document,
     docElm = doc.documentElement;
 
@@ -300,6 +302,24 @@ function bind(obj, methodName) {
 function domIndexOf(parent, child) {
 	// Possible problems with IE8- ? https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/children#Browser_compatibility
 	return [].indexOf.call(parent.children, child);
+}
+
+function isInput(el) {
+	return el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || isEditable(el);
+}
+
+function isEditable(el) {
+	/** @namespace el.contentEditable -- resolving webstorm unresolved variables */
+	if (!el) {
+		return false;
+	} // no parents were editable
+	if (el.contentEditable === 'false') {
+		return false;
+	} // stop the lookup
+	if (el.contentEditable === 'true') {
+		return true;
+	} // found a contentEditable element in the chain
+	return isEditable(getParent(el)); // contentEditable is set to 'inherit'
 }
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
@@ -498,10 +518,11 @@ var Dragon = (_class = function () {
 			var container = void 0;
 			var index = void 0;
 
-			// if (isInput(item)) { // see also: github.com/bevacqua/dragula/issues/208
-			//   e.target.focus(); // fixes github.com/bevacqua/dragula/issues/176
-			//   return;
-			// }
+			if ((0, _utils.isInput)(item)) {
+				// see also: github.com/bevacqua/dragula/issues/208
+				e.target.focus(); // fixes github.com/bevacqua/dragula/issues/176
+				return;
+			}
 
 			while ((0, _utils.getParent)(item) && !this.getContainer((0, _utils.getParent)(item), item, e)) {
 				item = (0, _utils.getParent)(item); // drag target should be a top element
