@@ -84,15 +84,16 @@ if (!Date.now) {
 	};
 }
 
-// Simple version of polyfill Array.prototype.forEach()
-if ( ![].forEach ) {
-	Array.prototype.forEach = function ( callback, thisArg ) {
-		let len = this.length;
-		for ( let i = 0; i < len; i++ ) {
-			callback.call( thisArg, this[ i ], i, this )
-		}
-	};
-}
+
+// // Simple version of polyfill Array.prototype.forEach()
+// if ( ![].forEach ) {
+// 	Array.prototype.forEach = function ( callback, thisArg ) {
+// 		let len = this.length;
+// 		for ( let i = 0; i < len; i++ ) {
+// 			callback.call( thisArg, this[ i ], i, this )
+// 		}
+// 	};
+// }
 
 
 /**

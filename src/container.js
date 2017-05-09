@@ -1,89 +1,82 @@
-import Item from './item';
-import { toArray } from './utils';
-import { decorator as middle } from 'middle.js';
+import Item from './item'
+import { toArray, lookUpByElm } from './utils'
+import { decorator as middle } from 'middle.js'
 
 export default class Container {
 
 	constructor( dragon, elm, config ) {
 
 		if ( !config )
-			config = {};
+			config = {}
 
-		this.config = config;
-		this.id = config.id || 'containerID_' + Date.now();
-		this.dragon = dragon;
-		this.items = [];
-		this.itemsLookUp = [];
-		this.elm = elm;
+		this.config = config
+		this.id = config.id || 'containerID_' + Date.now()
+		this.dragon = dragon
+		this.items = []
+		this.elm = elm
 
-		this.initItems();
+		this.initItems()
 	}
 
 	@middle
 	grab( e, itemElm ) {
 
-		return this.items[ this.itemsLookUp.indexOf( itemElm ) ].grab( e );
+		return this.items[ lookUpByElm( this.items, itemElm ) ].grab( e )
 	}
 
 	@middle
 	addItem( itemOrElm, index, config ) {
 
-		index = index || 0;
+		index = index || 0
 
-		let item, elm;
+		let item
 
 		if ( itemOrElm instanceof Item ) {
 
-			itemOrElm.container = this;
-			item = itemOrElm;
-			elm = itemOrElm.elm;
+			itemOrElm.container = this
+			item = itemOrElm
 		} else {
 
-			item = new Item( this, itemOrElm, config );
-			elm = itemOrElm;
+			item = new Item( this, itemOrElm, config )
 		}
 
-		this.items.splice( index, 0, item );
-		this.itemsLookUp.splice( index, 0, elm );
-		return this;
+		this.items.splice( index, 0, item )
+		return this
 	}
 
 	@middle
 	removeItem( itemOrElm ) {
 
-		let index;
+		let index
 
 		if ( itemOrElm instanceof Item ) {
 
-			itemOrElm.container = null;
-			index = this.itemsLookUp.indexOf( itemOrElm.elm );
+			itemOrElm.container = null
+			index = this.items.indexOf( itemOrElm )
 		} else {
 
-			index = this.itemsLookUp.indexOf( itemOrElm );
+			index = lookUpByElm( this.items, itemOrElm )
 		}
 
-		this.items.splice( index, 1 );
-		this.itemsLookUp.splice( index, 1 );
-		return this;
+		this.items.splice( index, 1 )
+		return this
 	}
 
 	@middle
 	initItems() {
 
-		let self = this;
+		let arr = toArray( this.elm.children )
+		let len = arr.length
 
-		toArray( this.elm.children ).forEach( function ( itemElm ) {
-			self.addItem( itemElm );
-		} );
+		for ( let i = 0; i < len; i++ ) {
+			this.addItem( arr[ i ] )
+		}
 	}
 
 	@middle
 	getConfig( prop ) {
 
-		if ( !prop )
-			return this.config;
-
-		prop = this.config.hasOwnProperty( prop ) ? this.config[ prop ] : this.dragon.getConfig( prop );
-		return typeof prop == 'function' ? prop() : prop;
+		prop = this.config.hasOwnProperty( prop ) ? this.config[ prop ] : this.dragon.getConfig( prop )
+		return typeof prop == 'function' ? prop() : prop
 	}
 }

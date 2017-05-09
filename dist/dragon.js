@@ -283,20 +283,24 @@ exports.bind = bind;
 exports.domIndexOf = domIndexOf;
 exports.isInput = isInput;
 exports.isEditable = isEditable;
-var doc = document,
-    docElm = doc.documentElement;
+exports.lookUpByElm = lookUpByElm;
+var doc = document;
+var docElm = doc.documentElement;
 
 function Utils() {}
 
 function getImmediateChild(dropTarget, target) {
 
 	var immediate = target;
+
 	while (immediate !== dropTarget && getParent(immediate) !== dropTarget) {
 		immediate = getParent(immediate);
 	}
+
 	if (immediate === docElm) {
 		return null;
 	}
+
 	return immediate;
 }
 
@@ -313,11 +317,14 @@ function getReference(dropTarget, target, x, y, direction) {
 		    rect = void 0;
 
 		for (i = 0; i < len; i++) {
+
 			el = dropTarget.children[i];
 			rect = el.getBoundingClientRect();
+
 			if (horizontal && rect.left + rect.width / 2 > x) {
 				return el;
 			}
+
 			if (!horizontal && rect.top + rect.height / 2 > y) {
 				return el;
 			}
@@ -328,14 +335,18 @@ function getReference(dropTarget, target, x, y, direction) {
 
 	function inside() {
 		// faster, but only available if dropped inside a child element
+
 		var rect = target.getBoundingClientRect();
+
 		if (horizontal) {
 			return resolve(x > rect.left + getRectWidth(rect) / 2);
 		}
+
 		return resolve(y > rect.top + getRectHeight(rect) / 2);
 	}
 
 	function resolve(after) {
+
 		return after ? nextEl(target) : target;
 	}
 }
@@ -347,9 +358,11 @@ function getCoord(coord, e) {
 		pageX: 'clientX', // IE8
 		pageY: 'clientY' // IE8
 	};
+
 	if (coord in missMap && !(coord in host) && missMap[coord] in host) {
 		coord = missMap[coord];
 	}
+
 	return host[coord];
 }
 
@@ -358,25 +371,25 @@ function getEventHost(e) {
 	// on touchend event, we have to use `e.changedTouches`
 	// see http://stackoverflow.com/questions/7192563/touchend-event-properties
 	// see github.com/bevacqua/dragula/issues/34
-	/** @namespace e.targetTouches -- resolving webstorm unresolved variables */
-	/** @namespace e.changedTouches -- resolving webstorm unresolved variables */
 	if (e.targetTouches && e.targetTouches.length) {
 		return e.targetTouches[0];
 	}
+
 	if (e.changedTouches && e.changedTouches.length) {
 		return e.changedTouches[0];
 	}
+
 	return e;
 }
 
 // export function whichMouseButton (e) {
 //   /** @namespace e.touches -- resolving webstorm unresolved variables */
-//   if (e.touches !== void 0) { return e.touches.length; }
-//   if (e.which !== void 0 && e.which !== 0) { return e.which; } // see github.com/bevacqua/dragula/issues/261
-//   if (e.buttons !== void 0) { return e.buttons; }
-//   let button = e.button;
+//   if (e.touches !== void 0) { return e.touches.length }
+//   if (e.which !== void 0 && e.which !== 0) { return e.which } // see github.com/bevacqua/dragula/issues/261
+//   if (e.buttons !== void 0) { return e.buttons }
+//   let button = e.button
 //   if (button !== void 0) { // see github.com/jquery/jquery/blob/99e8ff1baa7ae341e94bb89c3e84570c7c3ad9ea/src/event.js#L573-L575
-//     return button & 1 ? 1 : button & 2 ? 3 : (button & 4 ? 2 : 0);
+//     return button & 1 ? 1 : button & 2 ? 3 : (button & 4 ? 2 : 0)
 //   }
 // }
 
@@ -394,9 +407,11 @@ function getScroll(scrollProp, offsetProp) {
 	if (typeof global[offsetProp] !== 'undefined') {
 		return global[offsetProp];
 	}
+
 	if (docElm.clientHeight) {
 		return docElm[scrollProp];
 	}
+
 	return doc.body[scrollProp];
 }
 
@@ -429,6 +444,7 @@ function getParent(el) {
 function nextEl(el) {
 
 	return el.nextElementSibling || manually();
+
 	function manually() {
 		var sibling = el;
 		do {
@@ -446,15 +462,17 @@ function toArray(obj) {
 function bind(obj, methodName) {
 
 	var bindedName = 'binded' + methodName;
+
 	if (!obj[bindedName]) obj[bindedName] = function () {
 		obj[methodName].apply(obj, arguments);
 	};
+
 	return obj[bindedName];
 }
 
 function domIndexOf(parent, child) {
 	// Possible problems with IE8- ? https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/children#Browser_compatibility
-	return [].indexOf.call(parent.children, child);
+	return Array.prototype.indexOf.call(parent.children, child);
 }
 
 function isInput(el) {
@@ -462,17 +480,32 @@ function isInput(el) {
 }
 
 function isEditable(el) {
-	/** @namespace el.contentEditable -- resolving webstorm unresolved variables */
+
 	if (!el) {
 		return false;
-	} // no parents were editable
+	}
+	// no parents were editable
 	if (el.contentEditable === 'false') {
 		return false;
-	} // stop the lookup
+	}
+	// stop the lookup
 	if (el.contentEditable === 'true') {
 		return true;
-	} // found a contentEditable element in the chain
+	}
+	// found a contentEditable element in the chain
 	return isEditable(getParent(el)); // contentEditable is set to 'inherit'
+}
+
+function lookUpByElm(sourceArray, elm) {
+
+	var len = sourceArray.length;
+
+	for (var i = 0; i < len; i++) {
+
+		if (sourceArray[i].elm == elm) return i;
+	}
+
+	return -1;
 }
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
@@ -608,7 +641,6 @@ var Dragon = (_class = function () {
 		};
 		this.id = config.id || 'dragonID_' + Date.now();
 		this.containers = [];
-		this.containersLookUp = [];
 
 		// init
 		this.addContainers();
@@ -636,31 +668,38 @@ var Dragon = (_class = function () {
 
 			if (!containerElms) return;
 
-			var self = this;
-			containerElms.forEach(function (elm) {
-				if (self.containersLookUp.indexOf(elm) > -1) {
+			var len = containerElms.length;
+
+			for (var i = 0, elm; i < len; i++) {
+
+				elm = containerElms[i];
+
+				if (this.getContainer(elm)) {
+
 					console.warn('container already registered', elm);
-					return;
+				} else {
+
+					this.containers.push(new _container2.default(this, elm, config));
 				}
-
-				var container = new _container2.default(self, elm, config);
-
-				self.containers.push(container);
-				self.containersLookUp.push(elm);
-			});
+			}
 		}
 	}, {
 		key: 'getContainer',
-		value: function getContainer(el, own) {
+		value: function getContainer(elm, own) {
 
-			if (own) return this.containers[this.containersLookUp.indexOf(el)];
+			if (own) return this.containers[(0, _utils.lookUpByElm)(this.containers, elm)];
 
-			var container = null;
-			space.dragons.forEach(function (dragon) {
-				if (dragon.containersLookUp.indexOf(el) != -1) container = dragon.containers[dragon.containersLookUp.indexOf(el)];
-			});
+			var dragons = space.dragons;
+			var dragonsLen = dragons.length;
 
-			return container;
+			for (var i = 0, ii; i < dragonsLen; i++) {
+
+				ii = (0, _utils.lookUpByElm)(dragons[i].containers, elm);
+
+				if (ii > -1) return dragons[i].containers[ii];
+			}
+
+			return null;
 		}
 	}, {
 		key: 'grab',
@@ -685,7 +724,7 @@ var Dragon = (_class = function () {
 				return;
 			}
 
-			index = this.containersLookUp.indexOf(source);
+			index = (0, _utils.lookUpByElm)(this.containers, source);
 			container = this.containers[index];
 			return container.grab(e, item, source);
 		}
@@ -702,8 +741,6 @@ var Dragon = (_class = function () {
 	}, {
 		key: 'getConfig',
 		value: function getConfig(prop) {
-
-			if (!prop) return this.config;
 
 			prop = this.config.hasOwnProperty(prop) ? this.config[prop] : this.defaults[prop];
 			return typeof prop == 'function' ? prop() : prop;
@@ -820,7 +857,6 @@ var Container = (_class = function () {
 		this.id = config.id || 'containerID_' + Date.now();
 		this.dragon = dragon;
 		this.items = [];
-		this.itemsLookUp = [];
 		this.elm = elm;
 
 		this.initItems();
@@ -830,7 +866,7 @@ var Container = (_class = function () {
 		key: 'grab',
 		value: function grab(e, itemElm) {
 
-			return this.items[this.itemsLookUp.indexOf(itemElm)].grab(e);
+			return this.items[(0, _utils.lookUpByElm)(this.items, itemElm)].grab(e);
 		}
 	}, {
 		key: 'addItem',
@@ -838,22 +874,18 @@ var Container = (_class = function () {
 
 			index = index || 0;
 
-			var item = void 0,
-			    elm = void 0;
+			var item = void 0;
 
 			if (itemOrElm instanceof _item2.default) {
 
 				itemOrElm.container = this;
 				item = itemOrElm;
-				elm = itemOrElm.elm;
 			} else {
 
 				item = new _item2.default(this, itemOrElm, config);
-				elm = itemOrElm;
 			}
 
 			this.items.splice(index, 0, item);
-			this.itemsLookUp.splice(index, 0, elm);
 			return this;
 		}
 	}, {
@@ -865,31 +897,29 @@ var Container = (_class = function () {
 			if (itemOrElm instanceof _item2.default) {
 
 				itemOrElm.container = null;
-				index = this.itemsLookUp.indexOf(itemOrElm.elm);
+				index = this.items.indexOf(itemOrElm);
 			} else {
 
-				index = this.itemsLookUp.indexOf(itemOrElm);
+				index = (0, _utils.lookUpByElm)(this.items, itemOrElm);
 			}
 
 			this.items.splice(index, 1);
-			this.itemsLookUp.splice(index, 1);
 			return this;
 		}
 	}, {
 		key: 'initItems',
 		value: function initItems() {
 
-			var self = this;
+			var arr = (0, _utils.toArray)(this.elm.children);
+			var len = arr.length;
 
-			(0, _utils.toArray)(this.elm.children).forEach(function (itemElm) {
-				self.addItem(itemElm);
-			});
+			for (var i = 0; i < len; i++) {
+				this.addItem(arr[i]);
+			}
 		}
 	}, {
 		key: 'getConfig',
 		value: function getConfig(prop) {
-
-			if (!prop) return this.config;
 
 			prop = this.config.hasOwnProperty(prop) ? this.config[prop] : this.dragon.getConfig(prop);
 			return typeof prop == 'function' ? prop() : prop;
@@ -970,17 +1000,17 @@ var Drag = (_class = function () {
 	function Drag(e, item, container) {
 		_classCallCheck(this, Drag);
 
-		// this.mirror; // mirror image
-		// this.source; // source container element
-		// this.source; // source Container object
-		// this.itemElm; // item element being dragged
-		// this.offsetX; // reference x
-		// this.offsetY; // reference y
-		// this.moveX; // reference move x
-		// this.moveY; // reference move y
-		// this.initialSibling; // reference sibling when grabbed
-		// this.currentSibling; // reference sibling now
-		// this.state; // holds Drag state (grabbed, dragging, dropped...)
+		// this.mirror // mirror image
+		// this.source // source container element
+		// this.source // source Container object
+		// this.itemElm // item element being dragged
+		// this.offsetX // reference x
+		// this.offsetY // reference y
+		// this.moveX // reference move x
+		// this.moveY // reference move y
+		// this.initialSibling // reference sibling when grabbed
+		// this.currentSibling // reference sibling now
+		// this.state // holds Drag state (grabbed, dragging, dropped...)
 
 		e.preventDefault(); // fixes github.com/bevacqua/dragula/issues/155
 		this.moveX = e.clientX;
@@ -1095,8 +1125,8 @@ var Drag = (_class = function () {
 		value: function startByMovement(e) {
 
 			// if (whichMouseButton(e) === 0) {
-			//   release({});
-			//   return; // when text is selected on an input and then dragged, mouseup doesn't fire. this is our only hope
+			//   release({})
+			//   return // when text is selected on an input and then dragged, mouseup doesn't fire. this is our only hope
 			// }
 
 			// truthy check fixes github.com/bevacqua/dragula/issues/239, equality fixes github.com/bevacqua/dragula/issues/207
@@ -1216,13 +1246,18 @@ var Drag = (_class = function () {
 		value: function isInitialPlacement(target, s) {
 
 			var sibling = void 0;
+
 			if (s !== void 0) {
+
 				sibling = s;
 			} else if (this.mirror) {
+
 				sibling = this.currentSibling;
 			} else {
+
 				sibling = (0, _utils.nextEl)(this.itemElm);
 			}
+
 			return target === this.source && sibling === this.initialSibling;
 		}
 	}, {
@@ -1314,8 +1349,6 @@ var Item = (_class = function () {
 	}, {
 		key: 'getConfig',
 		value: function getConfig(prop) {
-
-			if (!prop) return this.config;
 
 			prop = this.config.hasOwnProperty(prop) ? this.config[prop] : this.container.getConfig(prop);
 			return typeof prop == 'function' ? prop() : prop;
@@ -1417,15 +1450,16 @@ if (!Date.now) {
 	};
 }
 
-// Simple version of polyfill Array.prototype.forEach()
-if (![].forEach) {
-	Array.prototype.forEach = function (callback, thisArg) {
-		var len = this.length;
-		for (var _i3 = 0; _i3 < len; _i3++) {
-			callback.call(thisArg, this[_i3], _i3, this);
-		}
-	};
-}
+// // Simple version of polyfill Array.prototype.forEach()
+// if ( ![].forEach ) {
+// 	Array.prototype.forEach = function ( callback, thisArg ) {
+// 		let len = this.length;
+// 		for ( let i = 0; i < len; i++ ) {
+// 			callback.call( thisArg, this[ i ], i, this )
+// 		}
+// 	};
+// }
+
 
 /**
  * Polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Polyfill
