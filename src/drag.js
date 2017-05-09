@@ -37,6 +37,15 @@ export default class Drag {
 		this.dragon = this.sourceContainer.dragon;
 		this.findDropTarget = this.dragon.findDropTarget.bind( this.dragon );
 
+		if ( window.requestAnimationFrame ) {
+
+			this._drag = this._dragAF;
+			this.drag_e = false;
+		}
+		else
+
+			this._drag = this.drag;
+
 		this.events();
 	}
 
@@ -51,7 +60,7 @@ export default class Drag {
 
 		let op = remove ? 'remove' : 'add';
 		touchy( docElm, op, 'mouseup', bind( this, 'release' ) );
-		touchy( docElm, op, 'mousemove', bind( this, 'drag' ) );
+		touchy( docElm, op, 'mousemove', bind( this, '_drag' ) );
 		touchy( docElm, op, 'selectstart', bind( this, 'protectGrab' ) ); // IE8
 		touchy( docElm, op, 'click', bind( this, 'protectGrab' ) );
 	}
@@ -64,17 +73,35 @@ export default class Drag {
 		}
 	}
 
+	_dragAF( e ) {
+
+		if ( !this.drag_e )
+			this.actualFrame = window.requestAnimationFrame( this.drag );
+
+		this.drag_e = e;
+	}
+
 	@middle
 	drag( e ) {
 
+		if ( !e.target ) {
+
+			e = this.drag_e;
+			this.drag_e = false;
+		}
+
 		if ( this.state == 'grabbed' ) {
+
 			this.startByMovement( e );
 			return;
 		}
+
 		if ( this.state !== 'moved' && this.state !== 'dragging' ) {
+
 			this.cancel();
 			return;
 		}
+
 		this.state = 'dragging';
 
 		e.preventDefault();
@@ -94,15 +121,20 @@ export default class Drag {
 			immediate = getImmediateChild( dropTarget, elementBehindCursor );
 
 		if ( immediate !== null ) {
+
 			reference = getReference( dropTarget, immediate, clientX, clientY );
 		} else {
+
 			return;
 		}
+
 		if (
+
 			reference === null ||
 			reference !== this.itemElm &&
 			reference !== nextEl( this.itemElm )
 		) {
+
 			this.currentSibling = reference;
 			dropTarget.insertBefore( this.itemElm, reference );
 		}
@@ -156,6 +188,11 @@ export default class Drag {
 
 	@middle
 	release( e ) {
+
+		if ( this.actualFrame ) {
+			window.cancelAnimationFrame( this.actualFrame );
+			this.actualFrame = false;
+		}
 
 		touchy( docElm, 'remove', 'mouseup', this.release );
 

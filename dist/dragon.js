@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -105,6 +105,159 @@ module.exports = g;
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(true)
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define("Middle", [], factory);
+	else if(typeof exports === 'object')
+		exports["Middle"] = factory();
+	else
+		root["Middle"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = middle;
+exports.decorator = decorator;
+function middle(fn, ctx) {
+
+	var enhanced = function middle_enhanced_fn() {
+
+		var arg = Array.prototype.slice.call(arguments);
+
+		if (enhanced._m_ctx === undefined) enhanced._m_ctx = this;
+
+		if (enhanced._m_stack.length === enhanced._m_index) {
+
+			enhanced._m_index = 0;
+			return fn.apply(enhanced._m_ctx, arg);
+		}
+
+		arg.unshift(middle_enhanced_fn);
+		return enhanced._m_stack[enhanced._m_index++].apply(enhanced._m_ctx, arg);
+	};
+
+	enhanced._m_stack = [];
+	enhanced._m_index = 0;
+	enhanced._m_ctx = ctx;
+
+	enhanced.use = function (fn, ctx) {
+
+		enhanced._m_stack.push(fn.bind(ctx));
+	};
+
+	return enhanced;
+}
+
+// ES7 decorator
+function decorator(target, keyOrCtx, descriptor) {
+
+	if (!target) return;
+
+	var writable = descriptor.writable,
+	    enumerable = descriptor.enumerable;
+
+
+	return {
+		get: function get() {
+
+			var enhanced = middle(descriptor.value, this);
+			Object.defineProperty(this, keyOrCtx, {
+				value: enhanced,
+				writable: writable,
+				enumerable: enumerable
+			});
+
+			return enhanced;
+		}
+	};
+}
+
+/***/ })
+/******/ ]);
+});
+//# sourceMappingURL=middle.js.map
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -324,13 +477,13 @@ function isEditable(el) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {
 
-var crossvent = __webpack_require__(10);
+var crossvent = __webpack_require__(11);
 
 module.exports = function touchy(el, op, type, fn) {
     var touch = {
@@ -363,7 +516,7 @@ module.exports = function touchy(el, op, type, fn) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -380,19 +533,19 @@ var _desc, _value, _class; // Element.classList polyfill
 // cross event
 
 
-__webpack_require__(8);
+__webpack_require__(9);
 
-var _touchy = __webpack_require__(2);
+var _touchy = __webpack_require__(3);
 
 var _touchy2 = _interopRequireDefault(_touchy);
 
-var _utils = __webpack_require__(1);
+var _utils = __webpack_require__(2);
 
-var _container = __webpack_require__(5);
+var _container = __webpack_require__(6);
 
 var _container2 = _interopRequireDefault(_container);
 
-var _middle = __webpack_require__(13);
+var _middle = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -562,7 +715,7 @@ var Dragon = (_class = function () {
 exports.default = Dragon;
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -601,7 +754,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -616,13 +769,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _desc, _value, _class;
 
-var _item = __webpack_require__(7);
+var _item = __webpack_require__(8);
 
 var _item2 = _interopRequireDefault(_item);
 
-var _utils = __webpack_require__(1);
+var _utils = __webpack_require__(2);
 
-var _middle = __webpack_require__(13);
+var _middle = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -748,7 +901,7 @@ var Container = (_class = function () {
 exports.default = Container;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -766,17 +919,17 @@ var _desc, _value, _class; // cross event
 // cross event
 
 
-var _touchy = __webpack_require__(2);
+var _touchy = __webpack_require__(3);
 
 var _touchy2 = _interopRequireDefault(_touchy);
 
-var _classes = __webpack_require__(4);
+var _classes = __webpack_require__(5);
 
 var _classes2 = _interopRequireDefault(_classes);
 
-var _utils = __webpack_require__(1);
+var _utils = __webpack_require__(2);
 
-var _middle = __webpack_require__(13);
+var _middle = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -842,6 +995,12 @@ var Drag = (_class = function () {
 		this.dragon = this.sourceContainer.dragon;
 		this.findDropTarget = this.dragon.findDropTarget.bind(this.dragon);
 
+		if (window.requestAnimationFrame) {
+
+			this._drag = this._dragAF;
+			this.drag_e = false;
+		} else this._drag = this.drag;
+
 		this.events();
 	}
 
@@ -857,7 +1016,7 @@ var Drag = (_class = function () {
 
 			var op = remove ? 'remove' : 'add';
 			(0, _touchy2.default)(docElm, op, 'mouseup', (0, _utils.bind)(this, 'release'));
-			(0, _touchy2.default)(docElm, op, 'mousemove', (0, _utils.bind)(this, 'drag'));
+			(0, _touchy2.default)(docElm, op, 'mousemove', (0, _utils.bind)(this, '_drag'));
 			(0, _touchy2.default)(docElm, op, 'selectstart', (0, _utils.bind)(this, 'protectGrab')); // IE8
 			(0, _touchy2.default)(docElm, op, 'click', (0, _utils.bind)(this, 'protectGrab'));
 		}
@@ -870,17 +1029,35 @@ var Drag = (_class = function () {
 			}
 		}
 	}, {
+		key: '_dragAF',
+		value: function _dragAF(e) {
+
+			if (!this.drag_e) this.actualFrame = window.requestAnimationFrame(this.drag);
+
+			this.drag_e = e;
+		}
+	}, {
 		key: 'drag',
 		value: function drag(e) {
 
+			if (!e.target) {
+
+				e = this.drag_e;
+				this.drag_e = false;
+			}
+
 			if (this.state == 'grabbed') {
+
 				this.startByMovement(e);
 				return;
 			}
+
 			if (this.state !== 'moved' && this.state !== 'dragging') {
+
 				this.cancel();
 				return;
 			}
+
 			this.state = 'dragging';
 
 			e.preventDefault();
@@ -900,11 +1077,15 @@ var Drag = (_class = function () {
 			    immediate = (0, _utils.getImmediateChild)(dropTarget, elementBehindCursor);
 
 			if (immediate !== null) {
+
 				reference = (0, _utils.getReference)(dropTarget, immediate, clientX, clientY);
 			} else {
+
 				return;
 			}
+
 			if (reference === null || reference !== this.itemElm && reference !== (0, _utils.nextEl)(this.itemElm)) {
+
 				this.currentSibling = reference;
 				dropTarget.insertBefore(this.itemElm, reference);
 			}
@@ -958,6 +1139,11 @@ var Drag = (_class = function () {
 	}, {
 		key: 'release',
 		value: function release(e) {
+
+			if (this.actualFrame) {
+				window.cancelAnimationFrame(this.actualFrame);
+				this.actualFrame = false;
+			}
 
 			(0, _touchy2.default)(docElm, 'remove', 'mouseup', this.release);
 
@@ -1052,7 +1238,7 @@ var Drag = (_class = function () {
 exports.default = Drag;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1067,11 +1253,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _desc, _value, _class;
 
-var _drag = __webpack_require__(6);
+var _drag = __webpack_require__(7);
 
 var _drag2 = _interopRequireDefault(_drag);
 
-var _middle = __webpack_require__(13);
+var _middle = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1141,7 +1327,7 @@ var Item = (_class = function () {
 exports.default = Item;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1271,24 +1457,24 @@ if (!Function.prototype.bind) {
 }
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 // workaround from https://github.com/webpack/webpack/issues/3929
-module.exports = __webpack_require__(3).default;
+module.exports = __webpack_require__(4).default;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {
 
-var customEvent = __webpack_require__(12);
-var eventmap = __webpack_require__(11);
+var customEvent = __webpack_require__(13);
+var eventmap = __webpack_require__(12);
 var doc = global.document;
 var addEvent = addEventEasy;
 var removeEvent = removeEventEasy;
@@ -1390,7 +1576,7 @@ function find (el, type, fn) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1411,7 +1597,7 @@ module.exports = eventmap;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {
@@ -1464,159 +1650,6 @@ function CustomEvent (type, params) {
 }
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(true)
-		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
-		define("Middle", [], factory);
-	else if(typeof exports === 'object')
-		exports["Middle"] = factory();
-	else
-		root["Middle"] = factory();
-})(this, function() {
-return /******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.default = middle;
-exports.decorator = decorator;
-function middle(fn, ctx) {
-
-	var enhanced = function middle_enhanced_fn() {
-
-		var arg = Array.apply(null, arguments);
-
-		if (enhanced._m_ctx === undefined) enhanced._m_ctx = this;
-
-		if (enhanced._m_stack.length === enhanced._m_index) {
-
-			enhanced._m_index = 0;
-			return fn.apply(enhanced._m_ctx, arg);
-		}
-
-		arg.unshift(middle_enhanced_fn);
-		return enhanced._m_stack[enhanced._m_index++].apply(enhanced._m_ctx, arg);
-	};
-
-	enhanced._m_stack = [];
-	enhanced._m_index = 0;
-	enhanced._m_ctx = ctx;
-
-	enhanced.use = function (fn, ctx) {
-
-		enhanced._m_stack.push(fn.bind(ctx));
-	};
-
-	return enhanced;
-}
-
-// ES7 decorator
-function decorator(target, keyOrCtx, descriptor) {
-
-	if (!target) return;
-
-	var writable = descriptor.writable,
-	    enumerable = descriptor.enumerable;
-
-
-	return {
-		get: function get() {
-
-			var enhanced = middle(descriptor.value, this);
-			Object.defineProperty(this, keyOrCtx, {
-				value: enhanced,
-				writable: writable,
-				enumerable: enumerable
-			});
-
-			return enhanced;
-		}
-	};
-}
-
-/***/ })
-/******/ ]);
-});
-//# sourceMappingURL=middle.js.map
 
 /***/ })
 /******/ ]);
