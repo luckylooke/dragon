@@ -193,12 +193,7 @@ button:hover {
   display: block;
   text-align: center;
 }
-.slack-join {
-  position: absolute;
-  font-weight: normal;
-  font-size: 14px;
-  right: 10px;
-  top: 50%;
-  margin-top: -8px;
-  line-height: 16px;
+.image-thing img {
+  max-height: 200px;
+  max-width: 200px;
 }
