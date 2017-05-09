@@ -1,11 +1,10 @@
 import Item from './item';
 import { toArray } from './utils';
+import { decorator as middle } from 'middle.js';
 
 export default class Container {
 
 	constructor( dragon, elm, config ) {
-
-		console.log( 'Container instance created, dragon, config:', dragon, config, this );
 
 		if ( !config )
 			config = {};
@@ -20,16 +19,14 @@ export default class Container {
 		this.initItems();
 	}
 
+	@middle
 	grab( e, itemElm ) {
-
-		console.log( 'container.grab called, e, itemElm:', e, itemElm, this );
 
 		return this.items[ this.itemsLookUp.indexOf( itemElm ) ].grab( e );
 	}
 
+	@middle
 	addItem( itemOrElm, index, config ) {
-
-		console.log( 'dragon.addItem called, itemOrElm, index, config: ', itemOrElm, index, config, this );
 
 		index = index || 0;
 
@@ -51,9 +48,8 @@ export default class Container {
 		return this;
 	}
 
+	@middle
 	removeItem( itemOrElm ) {
-
-		console.log( 'dragon.removeItem called, itemOrElm: ', itemOrElm, this );
 
 		let index;
 
@@ -71,6 +67,7 @@ export default class Container {
 		return this;
 	}
 
+	@middle
 	initItems() {
 
 		let self = this;
@@ -80,9 +77,8 @@ export default class Container {
 		} );
 	}
 
+	@middle
 	getConfig( prop ) {
-
-		console.log( 'container.getConfig called, prop', prop, this );
 
 		prop = typeof this.config[ prop ] != 'undefined' ? this.config[ prop ] : this.dragon.getConfig( prop );
 		return typeof prop == 'function' ? prop() : prop;

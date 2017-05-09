@@ -4,6 +4,7 @@ import './polyfills.js'; // Element.classList polyfill
 import touchy from './touchy.js'; // cross event
 import { getParent, toArray } from './utils';
 import Container from './container';
+import { decorator as middle } from 'middle.js';
 
 let doc = document;
 
@@ -19,7 +20,7 @@ export default class Dragon {
 
 	constructor( config ) {
 
-		console.log( 'Dragon instance created, config: ', config, this );
+		config = config || {};
 
 		if ( typeof config.length !== 'undefined' ) // is array-like
 			config = { containers: toArray( config ) };
@@ -28,7 +29,7 @@ export default class Dragon {
 		this.space = space;
 		space.dragons.push( this );
 
-		this.config = config || {};
+		this.config = config;
 		this.defaults = {
 			mirrorContainer: doc.body
 		};
@@ -40,6 +41,7 @@ export default class Dragon {
 		this.addContainers();
 	}
 
+	@middle
 	initSpace( newSpace ) {
 
 		if ( newSpace )
@@ -54,9 +56,8 @@ export default class Dragon {
 			space.Dragon = Dragon;
 	}
 
+	@middle
 	addContainers( containerElms, config ) {
-
-		console.log( 'dragon.addContainers called config: ', config, this );
 
 		containerElms = containerElms || this.config.containers;
 
@@ -76,9 +77,8 @@ export default class Dragon {
 		} );
 	}
 
+	@middle
 	getContainer( el, own ) {
-
-		console.log( 'dragon.getContainer called, el, own:', el, own, this );
 
 		if ( own )
 			return this.containers[ this.containersLookUp.indexOf( el ) ];
@@ -92,9 +92,8 @@ export default class Dragon {
 		return container;
 	}
 
+	@middle
 	grab( e ) {
-
-		console.log( 'dragon.grab called, e:', e, this );
 
 		let item = e.target;
 		let source;
@@ -119,9 +118,8 @@ export default class Dragon {
 		return container.grab( e, item, source );
 	}
 
+	@middle
 	findDropTarget( elementBehindCursor ) {
-
-		console.log( 'dragon.findDropTarget called, prop', elementBehindCursor, this );
 
 		let target = elementBehindCursor;
 		while ( target && !this.getContainer( target ) ) {
@@ -130,9 +128,8 @@ export default class Dragon {
 		return target;
 	}
 
+	@middle
 	getConfig( prop ) {
-
-		console.log( 'dragon.getConfig called, prop', prop, this );
 
 		if ( !prop )
 			return this.config;

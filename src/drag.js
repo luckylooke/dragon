@@ -4,14 +4,13 @@ import {
 	bind, nextEl, domIndexOf, getOffset, getCoord, getRectWidth, getRectHeight,
 	getElementBehindPoint, getImmediateChild, getReference, getParent
 } from './utils'; // cross event
+import { decorator as middle } from 'middle.js';
 
 let docElm = document.documentElement;
 
 export default class Drag {
 
 	constructor( e, item, container ) {
-
-		console.log( 'Drag instance created, params:', e, item, container );
 
 		// this.mirror; // mirror image
 		// this.source; // source container element
@@ -28,8 +27,6 @@ export default class Drag {
 		e.preventDefault(); // fixes github.com/bevacqua/dragula/issues/155
 		this.moveX = e.clientX;
 		this.moveY = e.clientY;
-
-		console.log( '*** Changing state: ', this.state, ' -> grabbed' );
 		this.state = 'grabbed';
 
 		this.item = item;
@@ -45,16 +42,14 @@ export default class Drag {
 		this.events();
 	}
 
+	@middle
 	destroy() {
-
-		console.log( 'Drag.destroy called' );
 
 		this.release( {} );
 	}
 
+	@middle
 	events( remove ) {
-
-		console.log( 'Drag.events called, "remove" param:', remove );
 
 		let op = remove ? 'remove' : 'add';
 		touchy( docElm, op, 'mouseup', bind( this, 'release' ) );
@@ -63,18 +58,16 @@ export default class Drag {
 		touchy( docElm, op, 'click', bind( this, 'protectGrab' ) );
 	}
 
+	@middle
 	protectGrab( e ) {
-
-		console.log( 'Drag.protectGrab called, e:', e );
 
 		if ( this.state == 'grabbed' ) {
 			e.preventDefault();
 		}
 	}
 
+	@middle
 	drag( e ) {
-
-		console.log( 'Drag.drag called, e:', e );
 
 		if ( this.state == 'grabbed' ) {
 			this.startByMovement( e );
@@ -84,8 +77,6 @@ export default class Drag {
 			this.cancel();
 			return;
 		}
-
-		console.log( '*** Changing state: ', this.state, ' -> dragging' );
 		this.state = 'dragging';
 
 		e.preventDefault();
@@ -119,9 +110,8 @@ export default class Drag {
 		}
 	}
 
+	@middle
 	startByMovement( e ) {
-
-		console.log( 'Drag.startByMovement called, e:', e );
 
 		// if (whichMouseButton(e) === 0) {
 		//   release({});
@@ -141,14 +131,11 @@ export default class Drag {
 
 		classes.add( this.itemElm, 'gu-transit' );
 		this.renderMirrorImage( this.config.mirrorContainer );
-
-		console.log( '*** Changing state: ', this.state, ' -> moved' );
 		this.state = 'moved';
 	}
 
+	@middle
 	renderMirrorImage( mirrorContainer ) {
-
-		console.log( 'Drag.renderMirrorImage called, e:', mirrorContainer );
 
 		let rect = this.itemElm.getBoundingClientRect();
 		let mirror = this.mirror = this.itemElm.cloneNode( true );
@@ -161,6 +148,7 @@ export default class Drag {
 		classes.add( mirrorContainer, 'gu-unselectable' );
 	}
 
+	@middle
 	removeMirrorImage() {
 
 		let mirrorContainer = getParent( this.mirror );
@@ -168,9 +156,8 @@ export default class Drag {
 		mirrorContainer.removeChild( this.mirror );
 	}
 
+	@middle
 	release( e ) {
-
-		console.log( 'Drag.release called, e:', e );
 
 		touchy( docElm, 'remove', 'mouseup', this.release );
 
@@ -186,29 +173,24 @@ export default class Drag {
 		}
 	}
 
+	@middle
 	drop( dropTarget ) {
 
-		console.log( 'Drag.drop called' );
-		if ( this.state != 'dragging' )
+		if ( this.state !== 'dragging' )
 			return;
 
 		let container = this.dragon.getContainer( dropTarget );
 		container.addItem( this.item, domIndexOf( dropTarget, this.itemElm ) );
-
-		console.log( '*** Changing state: ', this.state, ' -> dropped' );
 		this.state = 'dropped';
 
 		this.cleanup();
 	}
 
+	@middle
 	remove() {
-
-		console.log( 'Drag.remove called' );
 
 		if ( this.state !== 'dragging' )
 			return;
-
-		console.log( '*** Changing state: ', this.state, ' -> dragging' );
 		this.state = 'removed';
 
 		let parent = getParent( this.itemElm );
@@ -218,27 +200,23 @@ export default class Drag {
 		this.cleanup();
 	}
 
+	@middle
 	cancel( reverts ) {
 
-		console.log( 'Drag.cancel called, reverts:', reverts );
-
-		if ( this.state == 'dragging' ) {
+		if ( this.state === 'dragging' ) {
 			let parent = getParent( this.itemElm );
 			let initial = this.isInitialPlacement( parent );
 			if ( initial === false && reverts ) {
 				this.source.insertBefore( this.itemElm, this.initialSibling );
 			}
 		}
-
-		console.log( '*** Changing state: ', this.state, ' -> cancelled' );
 		this.state = 'cancelled';
 
 		this.cleanup();
 	}
 
+	@middle
 	cleanup() {
-
-		console.log( 'Drag.cleanup called' );
 
 		this.events( 'remove' );
 
@@ -248,11 +226,10 @@ export default class Drag {
 		if ( this.itemElm ) {
 			classes.rm( this.itemElm, 'gu-transit' );
 		}
-
-		console.log( '*** Changing state: ', this.state, ' -> cleaned' );
 		this.state = 'cleaned';
 	}
 
+	@middle
 	isInitialPlacement( target, s ) {
 
 		let sibling;
