@@ -9,7 +9,7 @@ export default class Item {
 			config = {}
 
 		this.config = config
-		this.id = config.id || 'containerID_' + Date.now()
+		this.id = config.id || 'itemID_' + Date.now()
 		this.container = container
 		this.elm = elm
 	}
