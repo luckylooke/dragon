@@ -131,17 +131,17 @@ export function getScroll( scrollProp, offsetProp ) {
 	return doc.body[ scrollProp ]
 }
 
-export function getElementBehindPoint( mirror, x, y ) {
+export function getElementBehindPoint( elmToHide, x, y ) {
 
-	let state = mirror.className
+	let state = elmToHide.className
 	let el
 
-	// hide mirror
-	mirror.className += ' gu-hide'
+	// hide elmToHide
+	elmToHide.className += ' gu-hide'
 	// look at the position
 	el = doc.elementFromPoint( x, y )
-	// show mirror back
-	mirror.className = state
+	// show elmToHide back
+	elmToHide.className = state
 
 	return el
 }

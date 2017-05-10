@@ -10,23 +10,22 @@ let docElm = document.documentElement
 
 export default class Drag {
 
-	constructor( e, item ) {
+	constructor( x, y, item ) {
 
 		// this.mirror // mirror image
 		// this.source // source container element
 		// this.source // source Container object
 		// this.itemElm // item element being dragged
-		// this.offsetX // reference x offset event from itemElement corner
-		// this.offsetY // reference y
-		// this.moveX // reference move x - clientX of first event occurrence starting the drag
-		// this.moveY // reference move y
+		// this.itemOffsetX // reference x offset event from itemElement corner
+		// this.itemOffsetY // reference y
+		// this.x // reference move x - clientX of first event occurrence starting the drag
+		// this.y // reference move y
 		// this.initialSibling // reference sibling when grabbed
 		// this.currentSibling // reference sibling now
 		// this.state // holds Drag state (grabbed, dragging, dropped...)
 
-		e.preventDefault() // fixes github.com/bevacqua/dragula/issues/155
-		this.moveX = e.clientX
-		this.moveY = e.clientY
+		this.x = x
+		this.y = y
 		this.state = 'grabbed'
 
 		this.item = item
@@ -40,12 +39,12 @@ export default class Drag {
 		// use requestAnimationFrame while dragging if available
 		if ( window.requestAnimationFrame ) {
 
-			this._drag = this._dragAF
-			this.drag_e = false
+			this._mousemove = this._mousemoveAF
+			this.move_e = false
 		}
 		else
 
-			this._drag = this.drag
+			this._mousemove = this.mousemove
 
 		this.events()
 	}
@@ -53,15 +52,15 @@ export default class Drag {
 	@middle
 	destroy() {
 
-		this.release( {} )
+		this.release( this.x, this.y )
 	}
 
 	@middle
 	events( remove ) {
 
 		let op = remove ? 'remove' : 'add'
-		touchy( docElm, op, 'mouseup', bind( this, 'release' ) )
-		touchy( docElm, op, 'mousemove', bind( this, '_drag' ) )
+		touchy( docElm, op, 'mouseup', bind( this, 'mouseup' ) )
+		touchy( docElm, op, 'mousemove', bind( this, '_mousemove' ) )
 		touchy( docElm, op, 'selectstart', bind( this, 'protectGrab' ) ) // IE8
 		touchy( docElm, op, 'click', bind( this, 'protectGrab' ) )
 	}
@@ -74,57 +73,67 @@ export default class Drag {
 		}
 	}
 
-	_dragAF( e ) {
-
-		if ( !this.drag_e )
-			this.actualFrame = window.requestAnimationFrame( this.drag )
-
-		this.drag_e = e
-	}
-
 	@middle
-	drag( e ) {
+	mousemove( e ) {
 
 		if ( !e.target ) {
 
-			e = this.drag_e
-			this.drag_e = false
+			e = this.move_e
+			this.move_e = false
 		}
 
 		if ( this.state == 'grabbed' ) {
 
-			this.startByMovement( e )
+			this.startByMouseMove( e )
 			return
 		}
 
-		if ( this.state !== 'moved' && this.state !== 'dragging' ) {
+		if ( this.state != 'dragging' ) {
 
 			this.cancel()
 			return
 		}
 
-		this.state = 'dragging'
-
 		e.preventDefault()
 
-		let clientX = getCoord( 'clientX', e ),
-			clientY = getCoord( 'clientY', e ),
-			x = clientX - this.offsetX,
-			y = clientY - this.offsetY,
+		this.drag(
+
+			getCoord( 'clientX', e ),
+			getCoord( 'clientY', e )
+		)
+	}
+
+	_mousemoveAF( e ) {
+
+		if ( !this.move_e )
+			this.actualFrame = window.requestAnimationFrame( this.mousemove )
+
+		this.move_e = e
+	}
+
+	@middle
+	drag( x, y ) {
+
+		if ( this.state != 'dragging' )
+			return
+
+		let mirrorX = x - this.itemOffsetX,
+			mirrorY = y - this.itemOffsetY,
 			mirror = this.mirror
 
-		mirror.style.left = x + 'px'
-		mirror.style.top = y + 'px'
+		mirror.style.left = mirrorX + 'px'
+		mirror.style.top = mirrorY + 'px'
 
-		let elementBehindCursor = getElementBehindPoint( mirror, clientX, clientY ),
+		let elementBehindCursor = getElementBehindPoint( mirror, x, y ),
 			dropTarget = this.findDropTarget( elementBehindCursor ),
 			reference,
-			immediate = getImmediateChild( dropTarget, elementBehindCursor )
+			immediate = dropTarget && getImmediateChild( dropTarget, elementBehindCursor )
 
-		if ( immediate !== null ) {
+		if ( immediate ) {
 
-			reference = getReference( dropTarget, immediate, clientX, clientY )
-		} else {
+			reference = getReference( dropTarget, immediate, x, y )
+		}
+		else {
 
 			return
 		}
@@ -142,7 +151,7 @@ export default class Drag {
 	}
 
 	@middle
-	startByMovement( e ) {
+	startByMouseMove( e ) {
 
 		// if (whichMouseButton(e) === 0) {
 		//   release({})
@@ -150,21 +159,36 @@ export default class Drag {
 		// }
 
 		// truthy check fixes github.com/bevacqua/dragula/issues/239, equality fixes github.com/bevacqua/dragula/issues/207
-		if ( e.clientX !== void 0 && e.clientX === this.moveX && e.clientY !== void 0 && e.clientY === this.moveY ) {
+		if ( e.clientX !== void 0 && e.clientX === this.x && e.clientY !== void 0 && e.clientY === this.y ) {
 			return
 		}
+
+		console.log('START', this, e);
+
+		this.start(
+			getCoord( 'pageX', e ),
+			getCoord( 'pageY', e )
+		)
+	}
+
+	@middle
+	start( x, y ) {
+
+		if ( this.state != 'grabbed' )
+			return
 
 		this.initialSibling = this.currentSibling = nextEl( this.itemElm )
 
 		let offset = getOffset( this.itemElm )
 
 		// offset of mouse event from top left corner of the itemElm
-		this.offsetX = getCoord( 'pageX', e ) - offset.left
-		this.offsetY = getCoord( 'pageY', e ) - offset.top
+		this.itemOffsetX = x - offset.left
+		this.itemOffsetY = y - offset.top
 
 		classes.add( this.itemElm, 'gu-transit' )
 		this.mirror = this.renderMirrorImage( this.itemElm, this.getConfig( 'mirrorContainer' ) )
-		this.state = 'moved'
+
+		this.state = 'dragging'
 	}
 
 	@middle
@@ -192,7 +216,20 @@ export default class Drag {
 	}
 
 	@middle
-	release( e ) {
+	mouseup( e ) {
+
+		this.release(
+
+			getCoord( 'clientX', e ),
+			getCoord( 'clientY', e )
+		)
+	}
+
+	@middle
+	release( x, y ) {
+
+		if ( this.state != 'dragging' )
+			return
 
 		// if requestAnimationFrame mode is used, cancel latest request
 		if ( this.actualFrame ) {
@@ -200,12 +237,7 @@ export default class Drag {
 			this.actualFrame = false
 		}
 
-		touchy( docElm, 'remove', 'mouseup', this.release )
-
-		let clientX = getCoord( 'clientX', e )
-		let clientY = getCoord( 'clientY', e )
-
-		let elementBehindCursor = getElementBehindPoint( this.mirror, clientX, clientY )
+		let elementBehindCursor = getElementBehindPoint( this.mirror, x, y )
 		let dropTarget = this.findDropTarget( elementBehindCursor )
 
 		if ( dropTarget && dropTarget !== this.source ) {
@@ -221,7 +253,7 @@ export default class Drag {
 	@middle
 	drop( dropTarget ) {
 
-		if ( this.state !== 'dragging' )
+		if ( this.state != 'dragging' )
 			return
 
 		let container = this.dragon.getContainer( dropTarget )
@@ -234,27 +266,31 @@ export default class Drag {
 	@middle
 	remove() {
 
-		if ( this.state !== 'dragging' )
+		if ( this.state != 'dragging' )
 			return
-		this.state = 'removed'
 
 		let parent = getParent( this.itemElm )
 		if ( parent ) {
 			parent.removeChild( this.itemElm )
 		}
+
+		this.state = 'removed'
+
 		this.cleanup()
 	}
 
 	@middle
 	cancel( reverts ) {
 
-		if ( this.state === 'dragging' ) {
+		if ( this.state == 'dragging' ) {
+
 			let parent = getParent( this.itemElm )
 			let initial = this.isInitialPlacement( parent )
 			if ( initial === false && reverts ) {
 				this.source.insertBefore( this.itemElm, this.initialSibling )
 			}
 		}
+
 		this.state = 'cancelled'
 
 		this.cleanup()
@@ -271,7 +307,6 @@ export default class Drag {
 		if ( this.itemElm ) {
 			classes.rm( this.itemElm, 'gu-transit' )
 		}
-		this.state = 'cleaned'
 	}
 
 	@middle

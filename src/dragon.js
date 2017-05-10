@@ -50,7 +50,11 @@ export default class Dragon {
 		if ( !space.dragons ) { // initialisation
 
 			space.dragons = []
-			touchy( document.documentElement, 'add', 'mousedown', this.grab.bind( this ) )
+			touchy( document.documentElement, 'add', 'mousedown', e => {
+
+				e.preventDefault() // fixes github.com/bevacqua/dragula/issues/155
+				this.grab( e.target, e.clientX, e.clientY )
+			} )
 		}
 
 		if ( !space.Dragon )
@@ -103,10 +107,10 @@ export default class Dragon {
 	}
 
 	@middle
-	grab( e ) {
+	grab( elm, x, y ) {
 
-		let itemElm = e.target
-		let parentElm = e.target
+		let itemElm = elm
+		let parentElm = elm
 		let container
 		let index
 
@@ -129,7 +133,7 @@ export default class Dragon {
 
 		index = lookUpByElm( this.containers, parentElm )
 		container = this.containers[ index ]
-		return container.grab( e, itemElm )
+		return container.grab( x, y, itemElm )
 	}
 
 	@middle

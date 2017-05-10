@@ -417,17 +417,17 @@ function getScroll(scrollProp, offsetProp) {
 	return doc.body[scrollProp];
 }
 
-function getElementBehindPoint(mirror, x, y) {
+function getElementBehindPoint(elmToHide, x, y) {
 
-	var state = mirror.className;
+	var state = elmToHide.className;
 	var el = void 0;
 
-	// hide mirror
-	mirror.className += ' gu-hide';
+	// hide elmToHide
+	elmToHide.className += ' gu-hide';
 	// look at the position
 	el = doc.elementFromPoint(x, y);
-	// show mirror back
-	mirror.className = state;
+	// show elmToHide back
+	elmToHide.className = state;
 
 	return el;
 }
@@ -655,6 +655,7 @@ var Dragon = (_class = function () {
 	_createClass(Dragon, [{
 		key: 'initSpace',
 		value: function initSpace(newSpace) {
+			var _this = this;
 
 			if (newSpace) space = newSpace;
 
@@ -662,7 +663,11 @@ var Dragon = (_class = function () {
 				// initialisation
 
 				space.dragons = [];
-				(0, _touchy2.default)(document.documentElement, 'add', 'mousedown', this.grab.bind(this));
+				(0, _touchy2.default)(document.documentElement, 'add', 'mousedown', function (e) {
+
+					e.preventDefault(); // fixes github.com/bevacqua/dragula/issues/155
+					_this.grab(e.target, e.clientX, e.clientY);
+				});
 			}
 
 			if (!space.Dragon) space.Dragon = Dragon;
@@ -710,10 +715,10 @@ var Dragon = (_class = function () {
 		}
 	}, {
 		key: 'grab',
-		value: function grab(e) {
+		value: function grab(elm, x, y) {
 
-			var itemElm = e.target;
-			var parentElm = e.target;
+			var itemElm = elm;
+			var parentElm = elm;
 			var container = void 0;
 			var index = void 0;
 
@@ -735,7 +740,7 @@ var Dragon = (_class = function () {
 
 			index = (0, _utils.lookUpByElm)(this.containers, parentElm);
 			container = this.containers[index];
-			return container.grab(e, itemElm);
+			return container.grab(x, y, itemElm);
 		}
 	}, {
 		key: 'findDropTarget',
@@ -875,9 +880,9 @@ var Container = (_class = function () {
 
 	_createClass(Container, [{
 		key: 'grab',
-		value: function grab(e, itemElm) {
+		value: function grab(x, y, itemElm) {
 
-			return this.items[(0, _utils.lookUpByElm)(this.items, itemElm)].grab(e);
+			return this.items[(0, _utils.lookUpByElm)(this.items, itemElm)].grab(x, y);
 		}
 	}, {
 		key: 'addItem',
@@ -1008,24 +1013,23 @@ function _applyDecoratedDescriptor(target, property, decorators, descriptor, con
 var docElm = document.documentElement;
 
 var Drag = (_class = function () {
-	function Drag(e, item) {
+	function Drag(x, y, item) {
 		_classCallCheck(this, Drag);
 
 		// this.mirror // mirror image
 		// this.source // source container element
 		// this.source // source Container object
 		// this.itemElm // item element being dragged
-		// this.offsetX // reference x offset event from itemElement corner
-		// this.offsetY // reference y
-		// this.moveX // reference move x - clientX of first event occurrence starting the drag
-		// this.moveY // reference move y
+		// this.itemOffsetX // reference x offset event from itemElement corner
+		// this.itemOffsetY // reference y
+		// this.x // reference move x - clientX of first event occurrence starting the drag
+		// this.y // reference move y
 		// this.initialSibling // reference sibling when grabbed
 		// this.currentSibling // reference sibling now
 		// this.state // holds Drag state (grabbed, dragging, dropped...)
 
-		e.preventDefault(); // fixes github.com/bevacqua/dragula/issues/155
-		this.moveX = e.clientX;
-		this.moveY = e.clientY;
+		this.x = x;
+		this.y = y;
 		this.state = 'grabbed';
 
 		this.item = item;
@@ -1039,9 +1043,9 @@ var Drag = (_class = function () {
 		// use requestAnimationFrame while dragging if available
 		if (window.requestAnimationFrame) {
 
-			this._drag = this._dragAF;
-			this.drag_e = false;
-		} else this._drag = this.drag;
+			this._mousemove = this._mousemoveAF;
+			this.move_e = false;
+		} else this._mousemove = this.mousemove;
 
 		this.events();
 	}
@@ -1050,15 +1054,15 @@ var Drag = (_class = function () {
 		key: 'destroy',
 		value: function destroy() {
 
-			this.release({});
+			this.release(this.x, this.y);
 		}
 	}, {
 		key: 'events',
 		value: function events(remove) {
 
 			var op = remove ? 'remove' : 'add';
-			(0, _touchy2.default)(docElm, op, 'mouseup', (0, _utils.bind)(this, 'release'));
-			(0, _touchy2.default)(docElm, op, 'mousemove', (0, _utils.bind)(this, '_drag'));
+			(0, _touchy2.default)(docElm, op, 'mouseup', (0, _utils.bind)(this, 'mouseup'));
+			(0, _touchy2.default)(docElm, op, 'mousemove', (0, _utils.bind)(this, '_mousemove'));
 			(0, _touchy2.default)(docElm, op, 'selectstart', (0, _utils.bind)(this, 'protectGrab')); // IE8
 			(0, _touchy2.default)(docElm, op, 'click', (0, _utils.bind)(this, 'protectGrab'));
 		}
@@ -1071,56 +1075,60 @@ var Drag = (_class = function () {
 			}
 		}
 	}, {
-		key: '_dragAF',
-		value: function _dragAF(e) {
-
-			if (!this.drag_e) this.actualFrame = window.requestAnimationFrame(this.drag);
-
-			this.drag_e = e;
-		}
-	}, {
-		key: 'drag',
-		value: function drag(e) {
+		key: 'mousemove',
+		value: function mousemove(e) {
 
 			if (!e.target) {
 
-				e = this.drag_e;
-				this.drag_e = false;
+				e = this.move_e;
+				this.move_e = false;
 			}
 
 			if (this.state == 'grabbed') {
 
-				this.startByMovement(e);
+				this.startByMouseMove(e);
 				return;
 			}
 
-			if (this.state !== 'moved' && this.state !== 'dragging') {
+			if (this.state != 'dragging') {
 
 				this.cancel();
 				return;
 			}
 
-			this.state = 'dragging';
-
 			e.preventDefault();
 
-			var clientX = (0, _utils.getCoord)('clientX', e),
-			    clientY = (0, _utils.getCoord)('clientY', e),
-			    x = clientX - this.offsetX,
-			    y = clientY - this.offsetY,
+			this.drag((0, _utils.getCoord)('clientX', e), (0, _utils.getCoord)('clientY', e));
+		}
+	}, {
+		key: '_mousemoveAF',
+		value: function _mousemoveAF(e) {
+
+			if (!this.move_e) this.actualFrame = window.requestAnimationFrame(this.mousemove);
+
+			this.move_e = e;
+		}
+	}, {
+		key: 'drag',
+		value: function drag(x, y) {
+
+			if (this.state != 'dragging') return;
+
+			var mirrorX = x - this.itemOffsetX,
+			    mirrorY = y - this.itemOffsetY,
 			    mirror = this.mirror;
 
-			mirror.style.left = x + 'px';
-			mirror.style.top = y + 'px';
+			mirror.style.left = mirrorX + 'px';
+			mirror.style.top = mirrorY + 'px';
 
-			var elementBehindCursor = (0, _utils.getElementBehindPoint)(mirror, clientX, clientY),
+			var elementBehindCursor = (0, _utils.getElementBehindPoint)(mirror, x, y),
 			    dropTarget = this.findDropTarget(elementBehindCursor),
 			    reference = void 0,
-			    immediate = (0, _utils.getImmediateChild)(dropTarget, elementBehindCursor);
+			    immediate = dropTarget && (0, _utils.getImmediateChild)(dropTarget, elementBehindCursor);
 
-			if (immediate !== null) {
+			if (immediate) {
 
-				reference = (0, _utils.getReference)(dropTarget, immediate, clientX, clientY);
+				reference = (0, _utils.getReference)(dropTarget, immediate, x, y);
 			} else {
 
 				return;
@@ -1133,8 +1141,8 @@ var Drag = (_class = function () {
 			}
 		}
 	}, {
-		key: 'startByMovement',
-		value: function startByMovement(e) {
+		key: 'startByMouseMove',
+		value: function startByMouseMove(e) {
 
 			// if (whichMouseButton(e) === 0) {
 			//   release({})
@@ -1142,21 +1150,32 @@ var Drag = (_class = function () {
 			// }
 
 			// truthy check fixes github.com/bevacqua/dragula/issues/239, equality fixes github.com/bevacqua/dragula/issues/207
-			if (e.clientX !== void 0 && e.clientX === this.moveX && e.clientY !== void 0 && e.clientY === this.moveY) {
+			if (e.clientX !== void 0 && e.clientX === this.x && e.clientY !== void 0 && e.clientY === this.y) {
 				return;
 			}
+
+			console.log('START', this, e);
+
+			this.start((0, _utils.getCoord)('pageX', e), (0, _utils.getCoord)('pageY', e));
+		}
+	}, {
+		key: 'start',
+		value: function start(x, y) {
+
+			if (this.state != 'grabbed') return;
 
 			this.initialSibling = this.currentSibling = (0, _utils.nextEl)(this.itemElm);
 
 			var offset = (0, _utils.getOffset)(this.itemElm);
 
 			// offset of mouse event from top left corner of the itemElm
-			this.offsetX = (0, _utils.getCoord)('pageX', e) - offset.left;
-			this.offsetY = (0, _utils.getCoord)('pageY', e) - offset.top;
+			this.itemOffsetX = x - offset.left;
+			this.itemOffsetY = y - offset.top;
 
 			_classes2.default.add(this.itemElm, 'gu-transit');
 			this.mirror = this.renderMirrorImage(this.itemElm, this.getConfig('mirrorContainer'));
-			this.state = 'moved';
+
+			this.state = 'dragging';
 		}
 	}, {
 		key: 'renderMirrorImage',
@@ -1183,8 +1202,16 @@ var Drag = (_class = function () {
 			mirrorContainer.removeChild(mirror);
 		}
 	}, {
+		key: 'mouseup',
+		value: function mouseup(e) {
+
+			this.release((0, _utils.getCoord)('clientX', e), (0, _utils.getCoord)('clientY', e));
+		}
+	}, {
 		key: 'release',
-		value: function release(e) {
+		value: function release(x, y) {
+
+			if (this.state != 'dragging') return;
 
 			// if requestAnimationFrame mode is used, cancel latest request
 			if (this.actualFrame) {
@@ -1192,12 +1219,7 @@ var Drag = (_class = function () {
 				this.actualFrame = false;
 			}
 
-			(0, _touchy2.default)(docElm, 'remove', 'mouseup', this.release);
-
-			var clientX = (0, _utils.getCoord)('clientX', e);
-			var clientY = (0, _utils.getCoord)('clientY', e);
-
-			var elementBehindCursor = (0, _utils.getElementBehindPoint)(this.mirror, clientX, clientY);
+			var elementBehindCursor = (0, _utils.getElementBehindPoint)(this.mirror, x, y);
 			var dropTarget = this.findDropTarget(elementBehindCursor);
 
 			if (dropTarget && dropTarget !== this.source) {
@@ -1212,7 +1234,7 @@ var Drag = (_class = function () {
 		key: 'drop',
 		value: function drop(dropTarget) {
 
-			if (this.state !== 'dragging') return;
+			if (this.state != 'dragging') return;
 
 			var container = this.dragon.getContainer(dropTarget);
 			container.addItem(this.item, (0, _utils.domIndexOf)(dropTarget, this.itemElm));
@@ -1224,26 +1246,30 @@ var Drag = (_class = function () {
 		key: 'remove',
 		value: function remove() {
 
-			if (this.state !== 'dragging') return;
-			this.state = 'removed';
+			if (this.state != 'dragging') return;
 
 			var parent = (0, _utils.getParent)(this.itemElm);
 			if (parent) {
 				parent.removeChild(this.itemElm);
 			}
+
+			this.state = 'removed';
+
 			this.cleanup();
 		}
 	}, {
 		key: 'cancel',
 		value: function cancel(reverts) {
 
-			if (this.state === 'dragging') {
+			if (this.state == 'dragging') {
+
 				var parent = (0, _utils.getParent)(this.itemElm);
 				var initial = this.isInitialPlacement(parent);
 				if (initial === false && reverts) {
 					this.source.insertBefore(this.itemElm, this.initialSibling);
 				}
 			}
+
 			this.state = 'cancelled';
 
 			this.cleanup();
@@ -1259,7 +1285,6 @@ var Drag = (_class = function () {
 			if (this.itemElm) {
 				_classes2.default.rm(this.itemElm, 'gu-transit');
 			}
-			this.state = 'cleaned';
 		}
 	}, {
 		key: 'isInitialPlacement',
@@ -1289,7 +1314,7 @@ var Drag = (_class = function () {
 	}]);
 
 	return Drag;
-}(), (_applyDecoratedDescriptor(_class.prototype, 'destroy', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'destroy'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'events', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'events'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'protectGrab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'protectGrab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'drag', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'drag'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'startByMovement', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'startByMovement'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'renderMirrorImage', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'renderMirrorImage'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'removeMirrorImage', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'removeMirrorImage'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'release', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'release'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'drop', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'drop'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'remove', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'remove'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'cancel', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'cancel'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'cleanup', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'cleanup'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'isInitialPlacement', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'isInitialPlacement'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'getConfig', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'getConfig'), _class.prototype)), _class);
+}(), (_applyDecoratedDescriptor(_class.prototype, 'destroy', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'destroy'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'events', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'events'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'protectGrab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'protectGrab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'mousemove', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'mousemove'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'drag', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'drag'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'startByMouseMove', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'startByMouseMove'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'start', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'start'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'renderMirrorImage', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'renderMirrorImage'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'removeMirrorImage', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'removeMirrorImage'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'mouseup', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'mouseup'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'release', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'release'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'drop', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'drop'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'remove', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'remove'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'cancel', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'cancel'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'cleanup', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'cleanup'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'isInitialPlacement', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'isInitialPlacement'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'getConfig', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'getConfig'), _class.prototype)), _class);
 exports.default = Drag;
 
 /***/ }),
@@ -1361,9 +1386,9 @@ var Item = (_class = function () {
 
 	_createClass(Item, [{
 		key: 'grab',
-		value: function grab(e) {
+		value: function grab(x, y) {
 
-			this.drag = new _drag2.default(e, this);
+			this.drag = new _drag2.default(x, y, this);
 			return this.drag;
 		}
 	}, {
