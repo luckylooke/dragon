@@ -229,7 +229,7 @@ export default class Drag {
 	release( x, y ) {
 
 		if ( this.state != 'dragging' )
-			return
+			return this.cancel()
 
 		// if requestAnimationFrame mode is used, cancel latest request
 		if ( this.actualFrame ) {

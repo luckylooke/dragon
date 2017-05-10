@@ -1211,7 +1211,7 @@ var Drag = (_class = function () {
 		key: 'release',
 		value: function release(x, y) {
 
-			if (this.state != 'dragging') return;
+			if (this.state != 'dragging') return this.cancel();
 
 			// if requestAnimationFrame mode is used, cancel latest request
 			if (this.actualFrame) {

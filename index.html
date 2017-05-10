@@ -3,81 +3,43 @@
 <link href='dist/dragon.css' rel='stylesheet' type='text/css'/>
 <link href='example/example.css' rel='stylesheet' type='text/css'/>
 <title>dragon</title>
-<h1>Dragon DEMO</h1>
+<body>
+    <h1>Dragon DEMO</h1>
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
-<div class='examples'>
-    <div class='parent'>
-        <label for='hy'>Move stuff between these two containers. Note how the stuff gets inserted near the mouse
-            pointer? Great stuff.</label>
-        <div class='wrapper'>
-            <div id='left-defaults' class='container'>
-                <div>You can move these elements between these two containers</div>
-                <div>Moving them anywhere else isn't quite possible</div>
-                <div>Anything can be moved around. That includes images, <a href='https://github.com/luckylooke/dragon'
-                                                                            target="_blank">links</a>, or any other
-                    nested elements.
-                    <div class='image-thing'><img src='resources/toothless.jpg' alt='dragon'/></div>
-                    <sub>(You can still click on links, as usual!)</sub>
+    <div class='examples'>
+        <div class='parent'>
+            <label for='hy'>Move stuff between these two containers. Note how the stuff gets inserted near the mouse
+                pointer? Great stuff.</label>
+            <div class='wrapper'>
+                <div id='left-defaults' class='container'>
+                    <div>You can move these elements between these two containers</div>
+                    <div>Moving them anywhere else isn't quite possible</div>
+                    <div>Anything can be moved around. That includes images, <a href='https://github.com/luckylooke/dragon'
+                                                                                target="_blank">links</a>, or any other
+                        nested elements.
+                        <div class='image-thing'><img src='resources/toothless.jpg' alt='dragon'/></div>
+                        <sub>(You can still click on links, as usual!)</sub>
+                    </div>
+                </div>
+                <div id='right-defaults' class='container'>
+                    <div>There's also the possibility of moving elements around in the same container, changing their
+                        position
+                    </div>
+                    <div>This is the default use case. You only need to specify the containers you want to use</div>
+                    <div>More interactive use cases lie ahead</div>
+                    <div>Moving <code>&lt;input/&gt;</code> elements works just fine. You can still focus them, too. <input
+                            placeholder='See?'/></div>
+                    <div>Make sure to check out the <a href='https://github.com/luckylooke/dragon#readme'>documentation on
+                        GitHub!</a></div>
                 </div>
             </div>
-            <div id='right-defaults' class='container'>
-                <div>There's also the possibility of moving elements around in the same container, changing their
-                    position
-                </div>
-                <div>This is the default use case. You only need to specify the containers you want to use</div>
-                <div>More interactive use cases lie ahead</div>
-                <div>Moving <code>&lt;input/&gt;</code> elements works just fine. You can still focus them, too. <input
-                        placeholder='See?'/></div>
-                <div>Make sure to check out the <a href='https://github.com/luckylooke/dragon#readme'>documentation on
-                    GitHub!</a></div>
-            </div>
-        </div>
-        <pre>
-      <code>
+            <pre>
+          <code>
 new Dragon( document.getElementsByClassName('container') );
-      </code>
-    </pre>
+          </code>
+        </pre>
+        </div>
     </div>
-</div>
+</body>
 <script src='dist/dragon.js'></script>
 <script src='example/example.js'></script>
