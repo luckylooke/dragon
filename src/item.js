@@ -17,7 +17,7 @@ export default class Item {
 	@middle
 	grab( e ) {
 
-		this.drag = new Drag( e, this, this.container )
+		this.drag = new Drag( e, this )
 		return this.drag
 	}
 

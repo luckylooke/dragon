@@ -393,9 +393,11 @@ function getEventHost(e) {
 //   }
 // }
 
+// get offset of element from top left corner of document
 function getOffset(el) {
 
 	var rect = el.getBoundingClientRect();
+
 	return {
 		left: rect.left + getScroll('scrollLeft', 'pageXOffset'),
 		top: rect.top + getScroll('scrollTop', 'pageYOffset')
@@ -415,14 +417,18 @@ function getScroll(scrollProp, offsetProp) {
 	return doc.body[scrollProp];
 }
 
-function getElementBehindPoint(point, x, y) {
+function getElementBehindPoint(mirror, x, y) {
 
-	var p = point || {},
-	    state = p.className,
-	    el = void 0;
-	p.className += ' gu-hide';
+	var state = mirror.className;
+	var el = void 0;
+
+	// hide mirror
+	mirror.className += ' gu-hide';
+	// look at the position
 	el = doc.elementFromPoint(x, y);
-	p.className = state;
+	// show mirror back
+	mirror.className = state;
+
 	return el;
 }
 
@@ -621,7 +627,7 @@ var space = window.dragonSpace;
 // ==============================================================================================================================================================
 // Dragon =====================================================================================================================================================
 // =============================================================================================================================================================
-/** is group of containers with same settings */
+/** is group of containers */
 var Dragon = (_class = function () {
 	function Dragon(config) {
 		_classCallCheck(this, Dragon);
@@ -654,6 +660,7 @@ var Dragon = (_class = function () {
 
 			if (!space.dragons) {
 				// initialisation
+
 				space.dragons = [];
 				(0, _touchy2.default)(document.documentElement, 'add', 'mousedown', this.grab.bind(this));
 			}
@@ -705,37 +712,41 @@ var Dragon = (_class = function () {
 		key: 'grab',
 		value: function grab(e) {
 
-			var item = e.target;
-			var source = void 0;
+			var itemElm = e.target;
+			var parentElm = e.target;
 			var container = void 0;
 			var index = void 0;
 
-			if ((0, _utils.isInput)(item)) {
+			if ((0, _utils.isInput)(itemElm)) {
 				// see also: github.com/bevacqua/dragula/issues/208
 				e.target.focus(); // fixes github.com/bevacqua/dragula/issues/176
 				return;
 			}
 
-			while ((0, _utils.getParent)(item) && !this.getContainer((0, _utils.getParent)(item), item, e)) {
-				item = (0, _utils.getParent)(item); // drag target should be a top element
-			}
-			source = (0, _utils.getParent)(item);
-			if (!source) {
+			do {
+				itemElm = parentElm; // drag target should be a top element
+				parentElm = (0, _utils.getParent)(itemElm);
+			} while (parentElm && !this.getContainer(parentElm));
+
+			if (!parentElm) {
+				// container not found, so don't grab
 				return;
 			}
 
-			index = (0, _utils.lookUpByElm)(this.containers, source);
+			index = (0, _utils.lookUpByElm)(this.containers, parentElm);
 			container = this.containers[index];
-			return container.grab(e, item, source);
+			return container.grab(e, itemElm);
 		}
 	}, {
 		key: 'findDropTarget',
 		value: function findDropTarget(elementBehindCursor) {
 
 			var target = elementBehindCursor;
+
 			while (target && !this.getContainer(target)) {
 				target = (0, _utils.getParent)(target);
 			}
+
 			return target;
 		}
 	}, {
@@ -997,16 +1008,16 @@ function _applyDecoratedDescriptor(target, property, decorators, descriptor, con
 var docElm = document.documentElement;
 
 var Drag = (_class = function () {
-	function Drag(e, item, container) {
+	function Drag(e, item) {
 		_classCallCheck(this, Drag);
 
 		// this.mirror // mirror image
 		// this.source // source container element
 		// this.source // source Container object
 		// this.itemElm // item element being dragged
-		// this.offsetX // reference x
+		// this.offsetX // reference x offset event from itemElement corner
 		// this.offsetY // reference y
-		// this.moveX // reference move x
+		// this.moveX // reference move x - clientX of first event occurrence starting the drag
 		// this.moveY // reference move y
 		// this.initialSibling // reference sibling when grabbed
 		// this.currentSibling // reference sibling now
@@ -1019,12 +1030,13 @@ var Drag = (_class = function () {
 
 		this.item = item;
 		this.itemElm = item.elm;
-		this.sourceContainer = container;
-		this.source = container.elm;
+		this.sourceContainer = item.container;
+		this.source = item.container.elm;
 		//noinspection JSUnresolvedVariable
 		this.dragon = this.sourceContainer.dragon;
 		this.findDropTarget = this.dragon.findDropTarget.bind(this.dragon);
 
+		// use requestAnimationFrame while dragging if available
 		if (window.requestAnimationFrame) {
 
 			this._drag = this._dragAF;
@@ -1102,7 +1114,7 @@ var Drag = (_class = function () {
 			mirror.style.top = y + 'px';
 
 			var elementBehindCursor = (0, _utils.getElementBehindPoint)(mirror, clientX, clientY),
-			    dropTarget = this.findDropTarget(elementBehindCursor, clientX, clientY),
+			    dropTarget = this.findDropTarget(elementBehindCursor),
 			    reference = void 0,
 			    immediate = (0, _utils.getImmediateChild)(dropTarget, elementBehindCursor);
 
@@ -1137,19 +1149,21 @@ var Drag = (_class = function () {
 			this.initialSibling = this.currentSibling = (0, _utils.nextEl)(this.itemElm);
 
 			var offset = (0, _utils.getOffset)(this.itemElm);
+
+			// offset of mouse event from top left corner of the itemElm
 			this.offsetX = (0, _utils.getCoord)('pageX', e) - offset.left;
 			this.offsetY = (0, _utils.getCoord)('pageY', e) - offset.top;
 
 			_classes2.default.add(this.itemElm, 'gu-transit');
-			this.renderMirrorImage(this.getConfig('mirrorContainer'));
+			this.mirror = this.renderMirrorImage(this.itemElm, this.getConfig('mirrorContainer'));
 			this.state = 'moved';
 		}
 	}, {
 		key: 'renderMirrorImage',
-		value: function renderMirrorImage(mirrorContainer) {
+		value: function renderMirrorImage(itemElm, mirrorContainer) {
 
-			var rect = this.itemElm.getBoundingClientRect();
-			var mirror = this.mirror = this.itemElm.cloneNode(true);
+			var rect = itemElm.getBoundingClientRect();
+			var mirror = itemElm.cloneNode(true);
 
 			mirror.style.width = (0, _utils.getRectWidth)(rect) + 'px';
 			mirror.style.height = (0, _utils.getRectHeight)(rect) + 'px';
@@ -1157,19 +1171,22 @@ var Drag = (_class = function () {
 			_classes2.default.add(mirror, 'gu-mirror');
 			mirrorContainer.appendChild(mirror);
 			_classes2.default.add(mirrorContainer, 'gu-unselectable');
+
+			return mirror;
 		}
 	}, {
 		key: 'removeMirrorImage',
-		value: function removeMirrorImage() {
+		value: function removeMirrorImage(mirror) {
 
-			var mirrorContainer = (0, _utils.getParent)(this.mirror);
+			var mirrorContainer = (0, _utils.getParent)(mirror);
 			_classes2.default.rm(mirrorContainer, 'gu-unselectable');
-			mirrorContainer.removeChild(this.mirror);
+			mirrorContainer.removeChild(mirror);
 		}
 	}, {
 		key: 'release',
 		value: function release(e) {
 
+			// if requestAnimationFrame mode is used, cancel latest request
 			if (this.actualFrame) {
 				window.cancelAnimationFrame(this.actualFrame);
 				this.actualFrame = false;
@@ -1181,10 +1198,13 @@ var Drag = (_class = function () {
 			var clientY = (0, _utils.getCoord)('clientY', e);
 
 			var elementBehindCursor = (0, _utils.getElementBehindPoint)(this.mirror, clientX, clientY);
-			var dropTarget = this.findDropTarget(elementBehindCursor, clientX, clientY);
+			var dropTarget = this.findDropTarget(elementBehindCursor);
+
 			if (dropTarget && dropTarget !== this.source) {
+
 				this.drop(dropTarget);
 			} else {
+
 				this.cancel();
 			}
 		}
@@ -1234,7 +1254,7 @@ var Drag = (_class = function () {
 
 			this.events('remove');
 
-			if (this.mirror) this.removeMirrorImage();
+			if (this.mirror) this.removeMirrorImage(this.mirror);
 
 			if (this.itemElm) {
 				_classes2.default.rm(this.itemElm, 'gu-transit');
@@ -1343,7 +1363,7 @@ var Item = (_class = function () {
 		key: 'grab',
 		value: function grab(e) {
 
-			this.drag = new _drag2.default(e, this, this.container);
+			this.drag = new _drag2.default(e, this);
 			return this.drag;
 		}
 	}, {

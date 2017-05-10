@@ -107,9 +107,11 @@ export function getEventHost( e ) {
 //   }
 // }
 
+// get offset of element from top left corner of document
 export function getOffset( el ) {
 
 	let rect = el.getBoundingClientRect()
+
 	return {
 		left: rect.left + getScroll( 'scrollLeft', 'pageXOffset' ),
 		top: rect.top + getScroll( 'scrollTop', 'pageYOffset' )
@@ -129,14 +131,18 @@ export function getScroll( scrollProp, offsetProp ) {
 	return doc.body[ scrollProp ]
 }
 
-export function getElementBehindPoint( point, x, y ) {
+export function getElementBehindPoint( mirror, x, y ) {
 
-	let p = point || {},
-		state = p.className,
-		el
-	p.className += ' gu-hide'
+	let state = mirror.className
+	let el
+
+	// hide mirror
+	mirror.className += ' gu-hide'
+	// look at the position
 	el = doc.elementFromPoint( x, y )
-	p.className = state
+	// show mirror back
+	mirror.className = state
+
 	return el
 }
 

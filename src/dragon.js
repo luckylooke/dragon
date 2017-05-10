@@ -15,7 +15,7 @@ let space = window.dragonSpace
 // ==============================================================================================================================================================
 // Dragon =====================================================================================================================================================
 // =============================================================================================================================================================
-/** is group of containers with same settings */
+/** is group of containers */
 export default class Dragon {
 
 	constructor( config ) {
@@ -44,14 +44,17 @@ export default class Dragon {
 	initSpace( newSpace ) {
 
 		if ( newSpace )
+
 			space = newSpace
 
 		if ( !space.dragons ) { // initialisation
+
 			space.dragons = []
 			touchy( document.documentElement, 'add', 'mousedown', this.grab.bind( this ) )
 		}
 
 		if ( !space.Dragon )
+
 			space.Dragon = Dragon
 	}
 
@@ -64,9 +67,9 @@ export default class Dragon {
 
 		let len = containerElms.length
 
-		for( let i = 0, elm; i < len; i++) {
+		for ( let i = 0, elm; i < len; i++ ) {
 
-			elm = containerElms[i]
+			elm = containerElms[ i ]
 
 			if ( this.getContainer( elm ) ) {
 
@@ -102,36 +105,42 @@ export default class Dragon {
 	@middle
 	grab( e ) {
 
-		let item = e.target
-		let source
+		let itemElm = e.target
+		let parentElm = e.target
 		let container
 		let index
 
-		if ( isInput( item ) ) { // see also: github.com/bevacqua/dragula/issues/208
+		if ( isInput( itemElm ) ) {
+			// see also: github.com/bevacqua/dragula/issues/208
 			e.target.focus() // fixes github.com/bevacqua/dragula/issues/176
 			return
 		}
 
-		while ( getParent( item ) && !this.getContainer( getParent( item ), item, e ) ) {
-			item = getParent( item ) // drag target should be a top element
+		do {
+			itemElm = parentElm // drag target should be a top element
+			parentElm = getParent( itemElm )
 		}
-		source = getParent( item )
-		if ( !source ) {
+		while ( parentElm && !this.getContainer( parentElm ) )
+
+		if ( !parentElm ) {
+			// container not found, so don't grab
 			return
 		}
 
-		index = lookUpByElm( this.containers, source )
+		index = lookUpByElm( this.containers, parentElm )
 		container = this.containers[ index ]
-		return container.grab( e, item, source )
+		return container.grab( e, itemElm )
 	}
 
 	@middle
 	findDropTarget( elementBehindCursor ) {
 
 		let target = elementBehindCursor
+
 		while ( target && !this.getContainer( target ) ) {
 			target = getParent( target )
 		}
+
 		return target
 	}
 

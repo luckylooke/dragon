@@ -10,15 +10,15 @@ let docElm = document.documentElement
 
 export default class Drag {
 
-	constructor( e, item, container ) {
+	constructor( e, item ) {
 
 		// this.mirror // mirror image
 		// this.source // source container element
 		// this.source // source Container object
 		// this.itemElm // item element being dragged
-		// this.offsetX // reference x
+		// this.offsetX // reference x offset event from itemElement corner
 		// this.offsetY // reference y
-		// this.moveX // reference move x
+		// this.moveX // reference move x - clientX of first event occurrence starting the drag
 		// this.moveY // reference move y
 		// this.initialSibling // reference sibling when grabbed
 		// this.currentSibling // reference sibling now
@@ -31,12 +31,13 @@ export default class Drag {
 
 		this.item = item
 		this.itemElm = item.elm
-		this.sourceContainer = container
-		this.source = container.elm
+		this.sourceContainer = item.container
+		this.source = item.container.elm
 		//noinspection JSUnresolvedVariable
 		this.dragon = this.sourceContainer.dragon
 		this.findDropTarget = this.dragon.findDropTarget.bind( this.dragon )
 
+		// use requestAnimationFrame while dragging if available
 		if ( window.requestAnimationFrame ) {
 
 			this._drag = this._dragAF
@@ -116,7 +117,7 @@ export default class Drag {
 		mirror.style.top = y + 'px'
 
 		let elementBehindCursor = getElementBehindPoint( mirror, clientX, clientY ),
-			dropTarget = this.findDropTarget( elementBehindCursor, clientX, clientY ),
+			dropTarget = this.findDropTarget( elementBehindCursor ),
 			reference,
 			immediate = getImmediateChild( dropTarget, elementBehindCursor )
 
@@ -156,19 +157,21 @@ export default class Drag {
 		this.initialSibling = this.currentSibling = nextEl( this.itemElm )
 
 		let offset = getOffset( this.itemElm )
+
+		// offset of mouse event from top left corner of the itemElm
 		this.offsetX = getCoord( 'pageX', e ) - offset.left
 		this.offsetY = getCoord( 'pageY', e ) - offset.top
 
 		classes.add( this.itemElm, 'gu-transit' )
-		this.renderMirrorImage( this.getConfig( 'mirrorContainer' ) )
+		this.mirror = this.renderMirrorImage( this.itemElm, this.getConfig( 'mirrorContainer' ) )
 		this.state = 'moved'
 	}
 
 	@middle
-	renderMirrorImage( mirrorContainer ) {
+	renderMirrorImage( itemElm, mirrorContainer ) {
 
-		let rect = this.itemElm.getBoundingClientRect()
-		let mirror = this.mirror = this.itemElm.cloneNode( true )
+		let rect = itemElm.getBoundingClientRect()
+		let mirror = itemElm.cloneNode( true )
 
 		mirror.style.width = getRectWidth( rect ) + 'px'
 		mirror.style.height = getRectHeight( rect ) + 'px'
@@ -176,19 +179,22 @@ export default class Drag {
 		classes.add( mirror, 'gu-mirror' )
 		mirrorContainer.appendChild( mirror )
 		classes.add( mirrorContainer, 'gu-unselectable' )
+
+		return mirror
 	}
 
 	@middle
-	removeMirrorImage() {
+	removeMirrorImage( mirror ) {
 
-		let mirrorContainer = getParent( this.mirror )
+		let mirrorContainer = getParent( mirror )
 		classes.rm( mirrorContainer, 'gu-unselectable' )
-		mirrorContainer.removeChild( this.mirror )
+		mirrorContainer.removeChild( mirror )
 	}
 
 	@middle
 	release( e ) {
 
+		// if requestAnimationFrame mode is used, cancel latest request
 		if ( this.actualFrame ) {
 			window.cancelAnimationFrame( this.actualFrame )
 			this.actualFrame = false
@@ -200,10 +206,14 @@ export default class Drag {
 		let clientY = getCoord( 'clientY', e )
 
 		let elementBehindCursor = getElementBehindPoint( this.mirror, clientX, clientY )
-		let dropTarget = this.findDropTarget( elementBehindCursor, clientX, clientY )
+		let dropTarget = this.findDropTarget( elementBehindCursor )
+
 		if ( dropTarget && dropTarget !== this.source ) {
+
 			this.drop( dropTarget )
-		} else {
+		}
+		else {
+
 			this.cancel()
 		}
 	}
@@ -256,7 +266,7 @@ export default class Drag {
 		this.events( 'remove' )
 
 		if ( this.mirror )
-			this.removeMirrorImage()
+			this.removeMirrorImage( this.mirror )
 
 		if ( this.itemElm ) {
 			classes.rm( this.itemElm, 'gu-transit' )
