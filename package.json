@@ -4,8 +4,10 @@
   "description": "Drag and drop SOLID",
   "main": "dragon.js",
   "scripts": {
-    "dev": "rollup -c -w",
-    "rollup": "rollup -c"
+    "dev": "webpack -w",
+    "build": "webpack",
+    "dev:rollup": "rollup -c -w",
+    "build:rollup": "rollup -c"
   },
   "repository": {
     "type": "git",

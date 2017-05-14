@@ -163,8 +163,6 @@ export default class Drag {
 			return
 		}
 
-		console.log('START', this, e);
-
 		this.start(
 			getCoord( 'pageX', e ),
 			getCoord( 'pageY', e )

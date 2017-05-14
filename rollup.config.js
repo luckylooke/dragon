@@ -13,13 +13,13 @@ export default {
 	format: 'es',
 	sourceMap: true,
 	plugins: [
+		eslint(),
 		resolve({
 			jsnext: true,
 			main: true,
 			browser: true,
 		}),
 		commonjs(),
-		eslint(),
 		babel({
 			exclude: 'node_modules/**',
 		}),

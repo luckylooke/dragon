@@ -4,74 +4,75 @@
 
 (function () {
 
-	if ( typeof window.Element === "undefined" || "classList" in document.documentElement ) return;
+	if ( typeof window.Element === 'undefined' || 'classList' in document.documentElement ) return
 
 	let prototype = Array.prototype,
 		push = prototype.push,
 		splice = prototype.splice,
-		join = prototype.join;
+		join = prototype.join
 
 	function DOMTokenList( el ) {
-		this.el = el;
+		this.el = el
 		// The className needs to be trimmed and split on whitespace
 		// to retrieve a list of classes.
-		let classes = el.className.replace( /^\s+|\s+$/g, '' ).split( /\s+/ );
+		let classes = el.className.replace( /^\s+|\s+$/g, '' ).split( /\s+/ )
 		for ( let i = 0; i < classes.length; i++ ) {
-			push.call( this, classes[ i ] );
+			push.call( this, classes[ i ] )
 		}
 	}
 
 	DOMTokenList.prototype = {
 		add: function ( token ) {
-			if ( this.contains( token ) ) return;
-			push.call( this, token );
-			this.el.className = this.toString();
+			if ( this.contains( token ) ) return
+			push.call( this, token )
+			this.el.className = this.toString()
 		},
 		contains: function ( token ) {
-			return this.el.className.indexOf( token ) != -1;
+			return this.el.className.indexOf( token ) != -1
 		},
 		item: function ( index ) {
-			return this[ index ] || null;
+			return this[ index ] || null
 		},
 		remove: function ( token ) {
-			if ( !this.contains( token ) ) return;
-			for ( let i = 0; i < this.length; i++ ) {
-				if ( this[ i ] == token ) break;
+			if ( !this.contains( token ) ) return
+			let i
+			for ( i = 0; i < this.length; i++ ) {
+				if ( this[ i ] == token ) break
 			}
-			splice.call( this, i, 1 );
-			this.el.className = this.toString();
+			splice.call( this, i, 1 )
+			this.el.className = this.toString()
 		},
 		toString: function () {
-			return join.call( this, ' ' );
+			return join.call( this, ' ' )
 		},
 		toggle: function ( token ) {
 			if ( !this.contains( token ) ) {
-				this.add( token );
+				this.add( token )
 			} else {
-				this.remove( token );
+				this.remove( token )
 			}
 
-			return this.contains( token );
+			return this.contains( token )
 		}
-	};
+	}
 
-	window.DOMTokenList = DOMTokenList;
+	window.DOMTokenList = DOMTokenList
 
 	function defineElementGetter( obj, prop, getter ) {
 		if ( Object.defineProperty ) {
 			Object.defineProperty( obj, prop, {
 				get: getter
-			} );
+			} )
 		} else {
-			obj.__defineGetter__( prop, getter );
+			obj.__defineGetter__( prop, getter )
 		}
 	}
 
 	defineElementGetter( Element.prototype, 'classList', function () {
-		return new DOMTokenList( this );
-	} );
+		return new DOMTokenList( this )
+	} )
 
-})();
+})()
 
 
 /**
@@ -80,8 +81,8 @@
 
 if (!Date.now) {
 	Date.now = function now() {
-		return new Date().getTime();
-	};
+		return new Date().getTime()
+	}
 }
 
 
@@ -105,7 +106,7 @@ if (!Function.prototype.bind) {
 		if (typeof this !== 'function') {
 			// closest thing possible to the ECMAScript 5
 			// internal IsCallable function
-			throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
+			throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable')
 		}
 
 		let aArgs   = Array.prototype.slice.call(arguments, 1),
@@ -115,15 +116,15 @@ if (!Function.prototype.bind) {
 				return fToBind.apply(this instanceof fNOP
 						? this
 						: oThis,
-					aArgs.concat(Array.prototype.slice.call(arguments)));
-			};
+					aArgs.concat(Array.prototype.slice.call(arguments)))
+			}
 
 		if (this.prototype) {
 			// Function.prototype doesn't have a prototype property
-			fNOP.prototype = this.prototype;
+			fNOP.prototype = this.prototype
 		}
-		fBound.prototype = new fNOP();
+		fBound.prototype = new fNOP()
 
-		return fBound;
-	};
+		return fBound
+	}
 }

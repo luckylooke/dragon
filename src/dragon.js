@@ -53,6 +53,13 @@ export default class Dragon {
 			touchy( document.documentElement, 'add', 'mousedown', e => {
 
 				e.preventDefault() // fixes github.com/bevacqua/dragula/issues/155
+
+				if ( isInput( e.target ) ) {
+					// see also: github.com/bevacqua/dragula/issues/208
+					e.target.focus() // fixes github.com/bevacqua/dragula/issues/176
+					return
+				}
+
 				this.grab( e.target, e.clientX, e.clientY )
 			} )
 		}
@@ -77,7 +84,9 @@ export default class Dragon {
 
 			if ( this.getContainer( elm ) ) {
 
+				/* eslint-disable no-console */
 				console.warn( 'container already registered', elm )
+				/* eslint-enable no-console */
 			}
 			else {
 
@@ -103,7 +112,7 @@ export default class Dragon {
 				return dragons[ i ].containers[ ii ]
 		}
 
-		return null;
+		return null
 	}
 
 	@middle
@@ -113,12 +122,6 @@ export default class Dragon {
 		let parentElm = elm
 		let container
 		let index
-
-		if ( isInput( itemElm ) ) {
-			// see also: github.com/bevacqua/dragula/issues/208
-			e.target.focus() // fixes github.com/bevacqua/dragula/issues/176
-			return
-		}
 
 		do {
 			itemElm = parentElm // drag target should be a top element

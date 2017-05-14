@@ -1,3 +1,6 @@
+/* global global */
+'use strict'
+
 let doc = document
 let docElm = doc.documentElement
 
