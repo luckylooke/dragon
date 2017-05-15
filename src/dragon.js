@@ -3,6 +3,7 @@
 import './polyfills.js' // Element.classList polyfill
 import touchy from './touchy.js' // cross event
 import { getParent, toArray, isInput, lookUpByElm } from './utils'
+import * as utils from './utils'
 import Container from './container'
 import { decorator as middle } from 'middle.js'
 
@@ -31,6 +32,8 @@ export default class Dragon {
 
 		this.config = config
 		this.defaults = {
+			mouseEvents: true,
+			mirrorAbsolute: false,
 			mirrorContainer: doc.body
 		}
 		this.id = config.id || 'dragonID_' + Date.now()
@@ -50,6 +53,9 @@ export default class Dragon {
 		if ( !space.dragons ) { // initialisation
 
 			space.dragons = []
+			space.drags = []
+			space.utils = utils
+
 			touchy( document.documentElement, 'add', 'mousedown', e => {
 
 				e.preventDefault() // fixes github.com/bevacqua/dragula/issues/155
@@ -60,7 +66,7 @@ export default class Dragon {
 					return
 				}
 
-				this.grab( e.target, e.clientX, e.clientY )
+				this.grab( e.clientX, e.clientY, e.target )
 			} )
 		}
 
@@ -116,12 +122,13 @@ export default class Dragon {
 	}
 
 	@middle
-	grab( elm, x, y ) {
+	grab( xOrElm, y ) {
 
-		let itemElm = elm
-		let parentElm = elm
+		let itemElm = y == undefined ? xOrElm : doc.elementFromPoint( xOrElm, y )
+		let parentElm = itemElm
 		let container
 		let index
+		let drag
 
 		do {
 			itemElm = parentElm // drag target should be a top element
@@ -136,7 +143,9 @@ export default class Dragon {
 
 		index = lookUpByElm( this.containers, parentElm )
 		container = this.containers[ index ]
-		return container.grab( x, y, itemElm )
+		drag = container.grab( itemElm )
+		space.drags.push( drag )
+		return drag
 	}
 
 	@middle

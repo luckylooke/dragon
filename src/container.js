@@ -19,9 +19,9 @@ export default class Container {
 	}
 
 	@middle
-	grab( x, y, itemElm ) {
+	grab( itemElm ) {
 
-		return this.items[ lookUpByElm( this.items, itemElm ) ].grab( x, y )
+		return this.items[ lookUpByElm( this.items, itemElm ) ].grab()
 	}
 
 	@middle

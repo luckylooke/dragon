@@ -155,7 +155,7 @@ button:hover {
  * you're better off giving the draggable elements a unique class and styling that directly!
  */
 .container > div,
-.gu-mirror {
+.gu-mirror, .gu-mirror-abs {
   margin: 10px;
   padding: 10px;
   background-color: rgba(0, 0, 0, 0.2);
@@ -167,7 +167,7 @@ button:hover {
   cursor: -moz-grab;
   cursor: -webkit-grab;
 }
-.gu-mirror {
+.gu-mirror, .gu-mirror-abs {
   cursor: grabbing;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;

@@ -1,7 +1,41 @@
 'use strict';
 /* global dragon */
 
-var testDragon = new Dragon( document.getElementsByClassName('container') );
-// dragon([$('left-copy'), $('right-copy')], { copy: true });
+setTimeout( () => {
 
-console.log( 'testDragon', testDragon );
+	var testDragon = new Dragon( {
+		containers: document.getElementsByClassName( 'container' ),
+		mouseEvents: false,
+		mirrorAbsolute: true,
+	} )
+
+	let test1item = document.getElementById( 'test1' )
+	// let test2item = document.getElementById( 'test2' )
+	//
+	// let getOffset = testDragon.space.utils.getOffset
+	//
+	// let test1offset = getOffset( test1item )
+
+	animate( testDragon, test1item )
+
+	console.log( 'testDragon', testDragon )
+
+}, 10 )
+
+function animate( dragon, itemElm ) {
+	let drag = dragon.grab( itemElm )
+	drag.start()
+
+	step( drag, 25, 10, 15 )
+}
+
+function step( drag, stepX, stepY, steps ) {
+
+	// console.log('dingdong', drag, stepX, stepY, steps );
+	console.log('dingdong', drag.x, drag.y );
+	drag.drag( drag.x + stepX, drag.y + stepY )
+	steps--
+
+	if ( steps )
+		setTimeout( step.bind( null, drag, stepX, stepY, steps ), 50 );
+}
