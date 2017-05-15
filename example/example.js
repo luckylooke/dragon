@@ -26,10 +26,12 @@ function animate( dragon, itemElm ) {
 	let drag = dragon.grab( itemElm )
 	drag.start()
 
-	step( drag, 25, 10, 15 )
+	step( drag, 25, 10, 15, () => {
+		drag.release();
+	} )
 }
 
-function step( drag, stepX, stepY, steps ) {
+function step( drag, stepX, stepY, steps, cb ) {
 
 	// console.log('dingdong', drag, stepX, stepY, steps );
 	console.log('dingdong', drag.x, drag.y );
@@ -37,5 +39,7 @@ function step( drag, stepX, stepY, steps ) {
 	steps--
 
 	if ( steps )
-		setTimeout( step.bind( null, drag, stepX, stepY, steps ), 50 );
+		setTimeout( step.bind( null, drag, stepX, stepY, steps, cb ), 50 );
+	else
+		cb()
 }

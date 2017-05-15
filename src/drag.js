@@ -139,7 +139,9 @@ export default class Drag {
 		if ( this.state != 'grabbed' )
 			return
 
-		let itemPosition = this.getConfig( 'mirrorAbsolute' ) ? getOffset( this.itemElm ) : this.itemElm.getBoundingClientRect()
+		this._cachedAbs = this.getConfig( 'mirrorAbsolute' )
+
+		let itemPosition = this._cachedAbs ? getOffset( this.itemElm ) : this.itemElm.getBoundingClientRect()
 
 		if ( this.x == undefined )
 			this.x = itemPosition.left
@@ -174,7 +176,7 @@ export default class Drag {
 		mirror.style.left = mirrorX + 'px'
 		mirror.style.top = mirrorY + 'px'
 
-		let elementBehindPoint = getElementBehindPoint( mirror, x, y )
+		let elementBehindPoint = getElementBehindPoint( mirror, x, y, this._cachedAbs )
 		let dropTarget = this.findDropTarget( elementBehindPoint )
 		let reference
 		let immediate = dropTarget && getImmediateChild( dropTarget, elementBehindPoint )
@@ -242,6 +244,12 @@ export default class Drag {
 	@middle
 	release( x, y ) {
 
+		if ( x == undefined )
+			x = this.x
+
+		if ( y == undefined )
+			y = this.y
+
 		if ( this.state != 'dragging' )
 			return this.cancel()
 
@@ -251,7 +259,7 @@ export default class Drag {
 			this.actualFrame = false
 		}
 
-		let elementBehindPoint = getElementBehindPoint( this.mirror, x, y )
+		let elementBehindPoint = getElementBehindPoint( this.mirror, x, y, this._cachedAbs )
 		let dropTarget = this.findDropTarget( elementBehindPoint )
 
 		if ( dropTarget && dropTarget !== this.source ) {

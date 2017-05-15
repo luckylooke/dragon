@@ -134,7 +134,7 @@ export function getScroll( scrollProp, offsetProp ) {
 	return doc.body[ scrollProp ]
 }
 
-export function getElementBehindPoint( elmToHide, x, y ) {
+export function getElementBehindPoint( elmToHide, x, y, abs ) {
 
 	let state = elmToHide.className
 	let el
@@ -142,7 +142,10 @@ export function getElementBehindPoint( elmToHide, x, y ) {
 	// hide elmToHide
 	elmToHide.className += ' gu-hide'
 	// look at the position
-	el = doc.elementFromPoint( x, y )
+	el = doc.elementFromPoint(
+		abs ? x - getScroll( 'scrollLeft', 'pageXOffset' ) : x,
+		abs ? y - getScroll( 'scrollTop', 'pageYOffset' ) : y
+	)
 	// show elmToHide back
 	elmToHide.className = state
 

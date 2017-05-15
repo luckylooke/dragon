@@ -149,9 +149,9 @@ export default class Dragon {
 	}
 
 	@middle
-	findDropTarget( elementBehindCursor ) {
+	findDropTarget( elementBehindPoint ) {
 
-		let target = elementBehindCursor
+		let target = elementBehindPoint
 
 		while ( target && !this.getContainer( target ) ) {
 			target = getParent( target )

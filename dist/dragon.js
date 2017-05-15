@@ -276,7 +276,7 @@ function getScroll(scrollProp, offsetProp) {
 	return doc.body[scrollProp];
 }
 
-function getElementBehindPoint(elmToHide, x, y) {
+function getElementBehindPoint(elmToHide, x, y, abs) {
 
 	var state = elmToHide.className;
 	var el = void 0;
@@ -284,7 +284,7 @@ function getElementBehindPoint(elmToHide, x, y) {
 	// hide elmToHide
 	elmToHide.className += ' gu-hide';
 	// look at the position
-	el = doc.elementFromPoint(x, y);
+	el = doc.elementFromPoint(abs ? x - getScroll('scrollLeft', 'pageXOffset') : x, abs ? y - getScroll('scrollTop', 'pageYOffset') : y);
 	// show elmToHide back
 	elmToHide.className = state;
 
@@ -619,9 +619,9 @@ var Dragon = (_class = function () {
 		}
 	}, {
 		key: 'findDropTarget',
-		value: function findDropTarget(elementBehindCursor) {
+		value: function findDropTarget(elementBehindPoint) {
 
-			var target = elementBehindCursor;
+			var target = elementBehindPoint;
 
 			while (target && !this.getContainer(target)) {
 				target = (0, _utils.getParent)(target);
@@ -1009,7 +1009,9 @@ var Drag = (_class = function () {
 
 			if (this.state != 'grabbed') return;
 
-			var itemPosition = this.getConfig('mirrorAbsolute') ? (0, _utils.getOffset)(this.itemElm) : this.itemElm.getBoundingClientRect();
+			this._cachedAbs = this.getConfig('mirrorAbsolute');
+
+			var itemPosition = this._cachedAbs ? (0, _utils.getOffset)(this.itemElm) : this.itemElm.getBoundingClientRect();
 
 			if (this.x == undefined) this.x = itemPosition.left;
 
@@ -1041,7 +1043,7 @@ var Drag = (_class = function () {
 			mirror.style.left = mirrorX + 'px';
 			mirror.style.top = mirrorY + 'px';
 
-			var elementBehindPoint = (0, _utils.getElementBehindPoint)(mirror, x, y);
+			var elementBehindPoint = (0, _utils.getElementBehindPoint)(mirror, x, y, this._cachedAbs);
 			var dropTarget = this.findDropTarget(elementBehindPoint);
 			var reference = void 0;
 			var immediate = dropTarget && (0, _utils.getImmediateChild)(dropTarget, elementBehindPoint);
@@ -1096,6 +1098,10 @@ var Drag = (_class = function () {
 		key: 'release',
 		value: function release(x, y) {
 
+			if (x == undefined) x = this.x;
+
+			if (y == undefined) y = this.y;
+
 			if (this.state != 'dragging') return this.cancel();
 
 			// if requestAnimationFrame mode is used, cancel latest request
@@ -1104,7 +1110,7 @@ var Drag = (_class = function () {
 				this.actualFrame = false;
 			}
 
-			var elementBehindPoint = (0, _utils.getElementBehindPoint)(this.mirror, x, y);
+			var elementBehindPoint = (0, _utils.getElementBehindPoint)(this.mirror, x, y, this._cachedAbs);
 			var dropTarget = this.findDropTarget(elementBehindPoint);
 
 			if (dropTarget && dropTarget !== this.source) {
