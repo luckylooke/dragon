@@ -5,7 +5,8 @@
   "main": "dragon.js",
   "scripts": {
     "dev": "webpack -w",
-    "build": "webpack",
+    "build": "cross-env NODE_ENV=PROD webpack",
+    "test": "cross-env NODE_ENV=DEV karma start",
     "dev:rollup": "rollup -c -w",
     "build:rollup": "rollup -c",
     "styles": "stylus dragon.styl --import node_modules/nib -o dist && cleancss dist/dragon.css -o dist/dragon.min.css"
@@ -22,7 +23,7 @@
   "homepage": "https://github.com/luckylooke/dragon",
   "dependencies": {
     "contra": "1.9.4",
-    "crossvent": "1.5.4",
+    "crossvent": "^1.5.5",
     "middle.js": "^3.0.3"
   },
   "devDependencies": {
@@ -34,10 +35,22 @@
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-preset-env": "^1.4.0",
     "clean-css-cli": "^4.1.2",
+    "cross-env": "^5.0.0",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-node": "^4.2.2",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
+    "jasmine-core": "^2.6.1",
+    "karma": "^1.7.0",
+    "karma-chrome-launcher": "^2.1.1",
+    "karma-coverage": "^1.1.1",
+    "karma-firefox-launcher": "^1.0.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "karma-safari-launcher": "^1.0.0",
+    "karma-webpack": "^2.0.3",
     "nib": "^1.1.2",
     "rollup": "^0.41.6",
     "rollup-plugin-babel": "^2.7.1",
