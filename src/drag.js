@@ -136,8 +136,6 @@ export default class Drag {
 	@middle
 	start( x, y ) {
 
-		console.log('dingdong', x, y);
-
 		if ( this.state != 'grabbed' )
 			return
 

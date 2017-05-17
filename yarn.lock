@@ -1608,7 +1608,7 @@ eslint-plugin-standard@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/eslint-plugin-standard/-/eslint-plugin-standard-3.0.1.tgz#34d0c915b45edc6f010393c7eef3823b08565cf2"
 
-eslint@^3.19.0, eslint@^3.4.0:
+eslint@>=0.24.0, eslint@^3.19.0, eslint@^3.4.0:
   version "3.19.0"
   resolved "https://registry.yarnpkg.com/eslint/-/eslint-3.19.0.tgz#c8fc6201c7f40dd08941b87c085767386a679acc"
   dependencies:
@@ -2514,6 +2514,13 @@ karma-coverage@^1.1.1:
     lodash "^3.8.0"
     minimatch "^3.0.0"
     source-map "^0.5.1"
+
+karma-eslint@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/karma-eslint/-/karma-eslint-2.2.0.tgz#d55080e66dea7ba64bc6ca8df128493dbc606caa"
+  dependencies:
+    chalk "^1.1.0"
+    eslint ">=0.24.0"
 
 karma-firefox-launcher@^1.0.1:
   version "1.0.1"

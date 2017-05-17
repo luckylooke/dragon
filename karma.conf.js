@@ -41,7 +41,11 @@ module.exports = function ( config ) {
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
 			'src/**': [ 'webpack', 'coverage' ],
-			'test/**': [ 'webpack', 'coverage' ]
+			'test/**': [ 'webpack', 'coverage', 'eslint' ]
+		},
+
+		eslint: {
+			stopOnError: false,
 		},
 
 		// test results reporter to use

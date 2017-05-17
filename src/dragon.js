@@ -82,6 +82,9 @@ export default class Dragon {
 
 		if ( !containerElms ) return
 
+		if ( !Array.isArray( containerElms ) )
+			containerElms = [ containerElms ]
+
 		let len = containerElms.length
 
 		for ( let i = 0, elm; i < len; i++ ) {
