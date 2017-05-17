@@ -29,7 +29,7 @@ setTimeout( () => {
 // duration in seconds!
 function animate( dragon, itemElm, destElm, duration ) {
 
-	duration = duration || 3;
+	duration = duration || 2;
 
 	let getOffset = dragon.space.utils.getOffset
 	let itemOffset = getOffset( itemElm, true )
@@ -41,8 +41,7 @@ function animate( dragon, itemElm, destElm, duration ) {
 	let distanceX = destX - startX
 	let distanceY = destY - startY
 	let steps = duration * 60
-	let stepX = ( destX - startX ) / steps
-	let stepY = ( destY - startY ) / steps
+	let i = 0
 
 	animationRunning = true;
 
@@ -55,18 +54,21 @@ function animate( dragon, itemElm, destElm, duration ) {
 		animationRunning = false;
 	}
 
-	step( stepX, stepY, 16 )
+	step( 16 )
 
-	function step( stepX, stepY, time ) {
+	function step( time ) {
 
 		// console.log( 'step', drag.x, drag.y );
 
-		if ( drag.x < destX || drag.y < destY ) {
+		if ( i < steps ) {
 
 			setTimeout( () => {
 
-				drag.drag( drag.x + stepX, drag.y + stepY )
-				step( stepX, stepY, time )
+				let ease = easeInOutQuadDiff( i++ / steps, i-- / steps )
+				let ease2 = easeInOutQuartDiff( i++ / steps, i / steps )
+				// console.log( 'step', distanceX * ease, distanceY * ease2 )
+				drag.drag( drag.x + distanceX * ease, drag.y + distanceY * ease2 )
+				step( time )
 			}, time )
 
 			return
@@ -83,4 +85,16 @@ function animate( dragon, itemElm, destElm, duration ) {
 // https://gist.github.com/gre/1650294
 function easeInOutQuad( t ) {
 	return t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t
+}
+
+function easeInOutQuadDiff( t0, t1 ) {
+	return easeInOutQuad( t1 ) - easeInOutQuad( t0 )
+}
+
+function easeInOutQuart( t ) {
+	return t < .5 ? 8 * t * t * t * t : 1 - 8 * (--t) * t * t * t
+}
+
+function easeInOutQuartDiff( t0, t1 ) {
+	return easeInOutQuart( t1 ) - easeInOutQuart( t0 )
 }
