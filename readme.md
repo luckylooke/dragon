@@ -12,7 +12,7 @@ npm install dragon
 
 Projects **with** module bundler:
 ```js
-import Dragon from 'dragons';
+import Dragon from 'dragon';
 new Dragon( config );
 ```
 
@@ -25,7 +25,7 @@ Projects **without** module bundler:
 
 Projects **with** module bundler:
 ```js
-import Dragon from 'dragons';
+import Dragon from 'dragon';
 new Dragon( document.getElementsByClassName('container') );
 ```
 

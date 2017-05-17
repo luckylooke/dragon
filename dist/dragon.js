@@ -163,9 +163,14 @@ function getImmediateChild(dropTarget, target) {
 	return immediate;
 }
 
-function getReference(dropTarget, target, x, y, direction) {
+function getReference(dropTarget, target, x, y, direction, abs) {
 
 	var horizontal = direction === 'horizontal';
+
+	if (abs) {
+		x = x - getScroll('scrollLeft', 'pageXOffset');
+		y = y - getScroll('scrollTop', 'pageYOffset');
+	}
 	return target !== dropTarget ? inside() : outside(); // reference
 
 	function outside() {
@@ -253,14 +258,21 @@ function getEventHost(e) {
 // }
 
 // get offset of element from top left corner of document
-function getOffset(el) {
+function getOffset(el, size) {
 
 	var rect = el.getBoundingClientRect();
-
-	return {
+	var result = {
 		left: rect.left + getScroll('scrollLeft', 'pageXOffset'),
 		top: rect.top + getScroll('scrollTop', 'pageYOffset')
 	};
+
+	if (size) {
+
+		result.width = rect.width || rect.right - rect.left;
+		result.height = rect.height || rect.bottom - rect.top;
+	}
+
+	return result;
 }
 
 function getScroll(scrollProp, offsetProp) {
@@ -1007,19 +1019,25 @@ var Drag = (_class = function () {
 		key: 'start',
 		value: function start(x, y) {
 
+			console.log('dingdong', x, y);
+
 			if (this.state != 'grabbed') return;
 
+			x = x || 0;
+			y = y || 0;
+
 			this._cachedAbs = this.getConfig('mirrorAbsolute');
+			this._cachedDir = this.getConfig('direction');
 
 			var itemPosition = this._cachedAbs ? (0, _utils.getOffset)(this.itemElm) : this.itemElm.getBoundingClientRect();
 
-			if (this.x == undefined) this.x = itemPosition.left;
+			if (this.x == undefined) this.x = itemPosition.left + x;
 
-			if (this.y == undefined) this.y = itemPosition.top;
+			if (this.y == undefined) this.y = itemPosition.top + y;
 
 			// offset of mouse event from top left corner of the itemElm
-			this.itemOffsetX = x || 0;
-			this.itemOffsetY = y || 0;
+			this.itemOffsetX = x;
+			this.itemOffsetY = y;
 
 			this.initialSibling = this.currentSibling = (0, _utils.nextEl)(this.itemElm);
 			_classes2.default.add(this.itemElm, 'gu-transit');
@@ -1050,7 +1068,7 @@ var Drag = (_class = function () {
 
 			if (immediate) {
 
-				reference = (0, _utils.getReference)(dropTarget, immediate, x, y);
+				reference = (0, _utils.getReference)(dropTarget, immediate, x, y, this._cachedDir, this._cachedAbs);
 			} else {
 
 				return;

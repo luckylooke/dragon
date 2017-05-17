@@ -23,9 +23,14 @@ export function getImmediateChild( dropTarget, target ) {
 	return immediate
 }
 
-export function getReference( dropTarget, target, x, y, direction ) {
+export function getReference( dropTarget, target, x, y, direction, abs ) {
 
 	let horizontal = direction === 'horizontal'
+
+	if ( abs ) {
+		x = x - getScroll( 'scrollLeft', 'pageXOffset' )
+		y = y - getScroll( 'scrollTop', 'pageYOffset' )
+	}
 	return target !== dropTarget ? inside() : outside() // reference
 
 	function outside() { // slower, but able to figure out any position
@@ -111,14 +116,21 @@ export function getEventHost( e ) {
 // }
 
 // get offset of element from top left corner of document
-export function getOffset( el ) {
+export function getOffset( el, size ) {
 
 	let rect = el.getBoundingClientRect()
-
-	return {
+	let result = {
 		left: rect.left + getScroll( 'scrollLeft', 'pageXOffset' ),
 		top: rect.top + getScroll( 'scrollTop', 'pageYOffset' )
 	}
+
+	if ( size ) {
+
+		result.width = rect.width || rect.right - rect.left
+		result.height = rect.height || rect.bottom - rect.top
+	}
+
+	return result
 }
 
 export function getScroll( scrollProp, offsetProp ) {

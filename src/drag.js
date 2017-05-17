@@ -136,22 +136,28 @@ export default class Drag {
 	@middle
 	start( x, y ) {
 
+		console.log('dingdong', x, y);
+
 		if ( this.state != 'grabbed' )
 			return
 
+		x = x || 0
+		y = y || 0
+
 		this._cachedAbs = this.getConfig( 'mirrorAbsolute' )
+		this._cachedDir = this.getConfig( 'direction' )
 
 		let itemPosition = this._cachedAbs ? getOffset( this.itemElm ) : this.itemElm.getBoundingClientRect()
 
 		if ( this.x == undefined )
-			this.x = itemPosition.left
+			this.x = itemPosition.left + x
 
 		if ( this.y == undefined )
-			this.y = itemPosition.top
+			this.y = itemPosition.top + y
 
 		// offset of mouse event from top left corner of the itemElm
-		this.itemOffsetX = x || 0
-		this.itemOffsetY = y || 0
+		this.itemOffsetX = x
+		this.itemOffsetY = y
 
 		this.initialSibling = this.currentSibling = nextEl( this.itemElm )
 		classes.add( this.itemElm, 'gu-transit' )
@@ -183,7 +189,7 @@ export default class Drag {
 
 		if ( immediate ) {
 
-			reference = getReference( dropTarget, immediate, x, y )
+			reference = getReference( dropTarget, immediate, x, y, this._cachedDir, this._cachedAbs )
 		}
 		else {
 
