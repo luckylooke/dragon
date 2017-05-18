@@ -235,7 +235,7 @@ export function isEditable( el ) {
 	return isEditable( getParent( el ) ) // contentEditable is set to 'inherit'
 }
 
-export function lookUpByElm( sourceArray, elm ) {
+export function getIndexByElm( sourceArray, elm ) {
 
 	let len = sourceArray.length
 

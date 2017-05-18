@@ -1,5 +1,5 @@
 import Item from './item'
-import { toArray, lookUpByElm } from './utils'
+import { toArray, getIndexByElm, getParent } from './utils'
 import { decorator as middle } from 'middle.js'
 
 export default class Container {
@@ -15,17 +15,23 @@ export default class Container {
 		this.items = []
 		this.elm = elm
 
-		this.initItems()
+		this._initItems()
 	}
 
 	@middle
 	grab( itemElm ) {
 
-		return this.items[ lookUpByElm( this.items, itemElm ) ].grab()
+		let item = this.items[ getIndexByElm( this.items, itemElm ) ]
+		return item ? item.grab() : null
+	}
+
+	_initItem( itemOrElm ) {
+
+		this.addItem( itemOrElm, this.items.length, null, true )
 	}
 
 	@middle
-	addItem( itemOrElm, index, config ) {
+	addItem( itemOrElm, index, config, init ) {
 
 		index = index || 0
 
@@ -41,13 +47,25 @@ export default class Container {
 		}
 
 		this.items.splice( index, 0, item )
-		return this
+
+		if ( !init && !this.elm.contains( item.elm ) ) {
+			// sync DOM
+			let reference = this.elm.children[ index ]
+
+			if ( reference )
+				this.elm.insertBefore( item.elm, reference )
+			else
+				this.elm.appendChild( item.elm )
+		}
+
+		return item
 	}
 
 	@middle
 	removeItem( itemOrElm ) {
 
 		let index
+		let item
 
 		if ( itemOrElm instanceof Item ) {
 
@@ -55,21 +73,26 @@ export default class Container {
 			index = this.items.indexOf( itemOrElm )
 		} else {
 
-			index = lookUpByElm( this.items, itemOrElm )
+			index = getIndexByElm( this.items, itemOrElm )
 		}
 
-		this.items.splice( index, 1 )
-		return this
+		item = this.items.splice( index, 1 )[0]
+
+		if ( this.elm.contains( item.elm ) ) {
+			// sync DOM
+			this.elm.removeChild( item.elm )
+		}
+
+		return item
 	}
 
-	@middle
-	initItems() {
+	_initItems() {
 
 		let arr = toArray( this.elm.children )
 		let len = arr.length
 
 		for ( let i = 0; i < len; i++ ) {
-			this.addItem( arr[ i ] )
+			this._initItem( arr[ i ] )
 		}
 	}
 

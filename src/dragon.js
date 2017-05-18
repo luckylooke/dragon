@@ -2,7 +2,7 @@
 
 import './polyfills.js' // Element.classList polyfill
 import touchy from './touchy.js' // cross event
-import { getParent, toArray, isInput, lookUpByElm } from './utils'
+import { getParent, toArray, isInput, getIndexByElm } from './utils'
 import * as utils from './utils'
 import Container from './container'
 import { decorator as middle } from 'middle.js'
@@ -22,6 +22,9 @@ export default class Dragon {
 	constructor( config ) {
 
 		config = config || {}
+
+		if ( config.nodeType == 1 ) // is DOM Element
+			config = { containers: [ config ] }
 
 		if ( typeof config.length !== 'undefined' ) // is array-like
 			config = { containers: toArray( config ) }
@@ -86,8 +89,9 @@ export default class Dragon {
 			containerElms = [ containerElms ]
 
 		let len = containerElms.length
+		let addedContainers = []
 
-		for ( let i = 0, elm; i < len; i++ ) {
+		for ( let i = 0, elm, container; i < len; i++ ) {
 
 			elm = containerElms[ i ]
 
@@ -99,23 +103,27 @@ export default class Dragon {
 			}
 			else {
 
-				this.containers.push( new Container( this, elm, config ) )
+				container = new Container( this, elm, config )
+				this.containers.push( container )
+				addedContainers.push( container )
 			}
 		}
+
+		return addedContainers
 	}
 
 	@middle
 	getContainer( elm, own ) {
 
 		if ( own )
-			return this.containers[ lookUpByElm( this.containers, elm ) ]
+			return this.containers[ getIndexByElm( this.containers, elm ) ]
 
 		let dragons = space.dragons
 		let dragonsLen = dragons.length
 
 		for ( let i = 0, ii; i < dragonsLen; i++ ) {
 
-			ii = lookUpByElm( dragons[ i ].containers, elm )
+			ii = getIndexByElm( dragons[ i ].containers, elm )
 
 			if ( ii > -1 )
 				return dragons[ i ].containers[ ii ]
@@ -144,7 +152,7 @@ export default class Dragon {
 			return
 		}
 
-		index = lookUpByElm( this.containers, parentElm )
+		index = getIndexByElm( this.containers, parentElm )
 		container = this.containers[ index ]
 		drag = container.grab( itemElm )
 		space.drags.push( drag )
@@ -152,9 +160,7 @@ export default class Dragon {
 	}
 
 	@middle
-	findDropTarget( elementBehindPoint ) {
-
-		let target = elementBehindPoint
+	findDropTarget( target ) {
 
 		while ( target && !this.getContainer( target ) ) {
 			target = getParent( target )

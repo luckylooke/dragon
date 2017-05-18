@@ -142,7 +142,7 @@ exports.bind = bind;
 exports.domIndexOf = domIndexOf;
 exports.isInput = isInput;
 exports.isEditable = isEditable;
-exports.lookUpByElm = lookUpByElm;
+exports.getIndexByElm = getIndexByElm;
 var doc = document;
 var docElm = doc.documentElement;
 
@@ -373,7 +373,7 @@ function isEditable(el) {
 	return isEditable(getParent(el)); // contentEditable is set to 'inherit'
 }
 
-function lookUpByElm(sourceArray, elm) {
+function getIndexByElm(sourceArray, elm) {
 
 	var len = sourceArray.length;
 
@@ -510,6 +510,9 @@ var Dragon = (_class = function () {
 
 		config = config || {};
 
+		if (config.nodeType == 1) // is DOM Element
+			config = { containers: [config] };
+
 		if (typeof config.length !== 'undefined') // is array-like
 			config = { containers: (0, _utils.toArray)(config) };
 
@@ -568,9 +571,12 @@ var Dragon = (_class = function () {
 
 			if (!containerElms) return;
 
-			var len = containerElms.length;
+			if (!Array.isArray(containerElms)) containerElms = [containerElms];
 
-			for (var i = 0, elm; i < len; i++) {
+			var len = containerElms.length;
+			var addedContainers = [];
+
+			for (var i = 0, elm, container; i < len; i++) {
 
 				elm = containerElms[i];
 
@@ -581,22 +587,26 @@ var Dragon = (_class = function () {
 					/* eslint-enable no-console */
 				} else {
 
-					this.containers.push(new _container2.default(this, elm, config));
+					container = new _container2.default(this, elm, config);
+					this.containers.push(container);
+					addedContainers.push(container);
 				}
 			}
+
+			return addedContainers;
 		}
 	}, {
 		key: 'getContainer',
 		value: function getContainer(elm, own) {
 
-			if (own) return this.containers[(0, _utils.lookUpByElm)(this.containers, elm)];
+			if (own) return this.containers[(0, _utils.getIndexByElm)(this.containers, elm)];
 
 			var dragons = space.dragons;
 			var dragonsLen = dragons.length;
 
 			for (var i = 0, ii; i < dragonsLen; i++) {
 
-				ii = (0, _utils.lookUpByElm)(dragons[i].containers, elm);
+				ii = (0, _utils.getIndexByElm)(dragons[i].containers, elm);
 
 				if (ii > -1) return dragons[i].containers[ii];
 			}
@@ -623,7 +633,7 @@ var Dragon = (_class = function () {
 				return;
 			}
 
-			index = (0, _utils.lookUpByElm)(this.containers, parentElm);
+			index = (0, _utils.getIndexByElm)(this.containers, parentElm);
 			container = this.containers[index];
 			drag = container.grab(itemElm);
 			space.drags.push(drag);
@@ -631,9 +641,7 @@ var Dragon = (_class = function () {
 		}
 	}, {
 		key: 'findDropTarget',
-		value: function findDropTarget(elementBehindPoint) {
-
-			var target = elementBehindPoint;
+		value: function findDropTarget(target) {
 
 			while (target && !this.getContainer(target)) {
 				target = (0, _utils.getParent)(target);
@@ -763,18 +771,25 @@ var Container = (_class = function () {
 		this.items = [];
 		this.elm = elm;
 
-		this.initItems();
+		this._initItems();
 	}
 
 	_createClass(Container, [{
 		key: 'grab',
 		value: function grab(itemElm) {
 
-			return this.items[(0, _utils.lookUpByElm)(this.items, itemElm)].grab();
+			var item = this.items[(0, _utils.getIndexByElm)(this.items, itemElm)];
+			return item ? item.grab() : null;
+		}
+	}, {
+		key: '_initItem',
+		value: function _initItem(itemOrElm) {
+
+			this.addItem(itemOrElm, this.items.length, null, true);
 		}
 	}, {
 		key: 'addItem',
-		value: function addItem(itemOrElm, index, config) {
+		value: function addItem(itemOrElm, index, config, init) {
 
 			index = index || 0;
 
@@ -790,13 +805,22 @@ var Container = (_class = function () {
 			}
 
 			this.items.splice(index, 0, item);
-			return this;
+
+			if (!init && !this.elm.contains(item.elm)) {
+				// sync DOM
+				var reference = this.elm.children[index];
+
+				if (reference) this.elm.insertBefore(item.elm, reference);else this.elm.appendChild(item.elm);
+			}
+
+			return item;
 		}
 	}, {
 		key: 'removeItem',
 		value: function removeItem(itemOrElm) {
 
 			var index = void 0;
+			var item = void 0;
 
 			if (itemOrElm instanceof _item2.default) {
 
@@ -804,21 +828,27 @@ var Container = (_class = function () {
 				index = this.items.indexOf(itemOrElm);
 			} else {
 
-				index = (0, _utils.lookUpByElm)(this.items, itemOrElm);
+				index = (0, _utils.getIndexByElm)(this.items, itemOrElm);
 			}
 
-			this.items.splice(index, 1);
-			return this;
+			item = this.items.splice(index, 1)[0];
+
+			if (this.elm.contains(item.elm)) {
+				// sync DOM
+				this.elm.removeChild(item.elm);
+			}
+
+			return item;
 		}
 	}, {
-		key: 'initItems',
-		value: function initItems() {
+		key: '_initItems',
+		value: function _initItems() {
 
 			var arr = (0, _utils.toArray)(this.elm.children);
 			var len = arr.length;
 
 			for (var i = 0; i < len; i++) {
-				this.addItem(arr[i]);
+				this._initItem(arr[i]);
 			}
 		}
 	}, {
@@ -831,7 +861,7 @@ var Container = (_class = function () {
 	}]);
 
 	return Container;
-}(), (_applyDecoratedDescriptor(_class.prototype, 'grab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'grab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'addItem', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'addItem'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'removeItem', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'removeItem'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'initItems', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'initItems'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'getConfig', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'getConfig'), _class.prototype)), _class);
+}(), (_applyDecoratedDescriptor(_class.prototype, 'grab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'grab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'addItem', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'addItem'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'removeItem', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'removeItem'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'getConfig', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'getConfig'), _class.prototype)), _class);
 exports.default = Container;
 
 /***/ }),
@@ -1018,8 +1048,6 @@ var Drag = (_class = function () {
 	}, {
 		key: 'start',
 		value: function start(x, y) {
-
-			console.log('dingdong', x, y);
 
 			if (this.state != 'grabbed') return;
 
@@ -1444,6 +1472,27 @@ if (!Function.prototype.bind) {
 		return fBound;
 	};
 }
+
+// Overwrites native 'children' prototype.
+// Adds Document & DocumentFragment support for IE9 & Safari.
+// Returns array instead of HTMLCollection.
+// (function ( constructor ) {
+// 	if ( constructor &&
+// 		constructor.prototype &&
+// 		constructor.prototype.children == null ) {
+// 		Object.defineProperty( constructor.prototype, 'children', {
+// 			get: function () {
+// 				let i = 0, node, nodes = this.childNodes || [], children = []
+// 				while ( node = nodes[ i++ ] ) {
+// 					if ( node.nodeType === 1 ) {
+// 						children.push( node )
+// 					}
+// 				}
+// 				return children
+// 			}
+// 		} )
+// 	}
+// })( window.Node || window.Element )
 
 /***/ }),
 /* 10 */

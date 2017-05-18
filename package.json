@@ -5,7 +5,7 @@
   "main": "dragon.js",
   "scripts": {
     "dev": "webpack -w",
-    "build": "cross-env NODE_ENV=PROD webpack",
+    "build": "cross-env NODE_ENV=PROD karma start && webpack",
     "test": "cross-env NODE_ENV=DEV karma start",
     "dev:rollup": "rollup -c -w",
     "build:rollup": "rollup -c",
