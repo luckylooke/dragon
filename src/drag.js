@@ -24,6 +24,7 @@ export default class Drag {
 		// this.currentSibling // reference sibling now
 		// this.state // holds Drag state (grabbed, dragging, dropped...)
 
+		this.id = 'dragID_' + Date.now()
 		this.state = 'grabbed'
 		this.item = item
 		this.itemElm = item.elm
@@ -31,15 +32,6 @@ export default class Drag {
 		this.source = item.container.elm
 		this.dragon = this.sourceContainer.dragon
 		this.findDropTarget = this.dragon.findDropTarget.bind( this.dragon )
-
-		// use requestAnimationFrame while dragging if available
-		if ( window.requestAnimationFrame ) {
-
-			this._mousemove = this._mousemoveAF
-			this.move_e = false
-		}
-		else
-			this._mousemove = this.mousemove
 
 		if ( this.getConfig( 'mouseEvents' ) )
 			this.mouseEvents()
@@ -53,6 +45,16 @@ export default class Drag {
 
 	@middle
 	mouseEvents( remove ) {
+
+		if ( !this._mousemove ) // if not initialised yet
+		// use requestAnimationFrame while dragging if available
+			if ( window.requestAnimationFrame && false ) {
+
+				this.move_e = null
+				this._mousemove = this._mousemoveAF
+			}
+			else
+				this._mousemove = this.mousemove
 
 		let op = remove ? 'remove' : 'add'
 		touchy( docElm, op, 'mouseup', bind( this, 'mouseup' ) )
@@ -159,7 +161,7 @@ export default class Drag {
 
 		this.initialSibling = this.currentSibling = nextEl( this.itemElm )
 		classes.add( this.itemElm, 'gu-transit' )
-		this.mirror = this.renderMirrorImage( this.itemElm, this.getConfig( 'mirrorContainer' ) )
+		this.renderMirrorImage( this.itemElm, this.getConfig( 'mirrorContainer' ) )
 
 		this.state = 'dragging'
 	}
@@ -225,15 +227,16 @@ export default class Drag {
 		mirrorContainer.appendChild( mirror )
 		classes.add( mirrorContainer, 'gu-unselectable' )
 
-		return mirror
+		this.mirror = mirror
 	}
 
 	@middle
-	removeMirrorImage( mirror ) {
+	removeMirrorImage() {
 
-		let mirrorContainer = getParent( mirror )
+		let mirrorContainer = getParent( this.mirror )
 		classes.rm( mirrorContainer, 'gu-unselectable' )
-		mirrorContainer.removeChild( mirror )
+		mirrorContainer.removeChild( this.mirror )
+		this.mirror = null
 	}
 
 	@middle
@@ -328,7 +331,7 @@ export default class Drag {
 		this.mouseEvents( 'remove' )
 
 		if ( this.mirror )
-			this.removeMirrorImage( this.mirror )
+			this.removeMirrorImage()
 
 		if ( this.itemElm ) {
 			classes.rm( this.itemElm, 'gu-transit' )
