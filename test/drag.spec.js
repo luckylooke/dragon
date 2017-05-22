@@ -159,7 +159,7 @@ describe( 'Drag Spec', function () {
 			let dragon = new Dragon( { test: 'testVal' } )
 			let container = new Container( dragon, div, { test2: 'testVal2' } )
 			let item = new Item( container, itemElm, { test3: 'testVal3' } )
-			let drag = item.grab();
+			let drag = item.grab()
 
 			// Act
 			let configVal = drag.getConfig( 'test' )
@@ -171,7 +171,7 @@ describe( 'Drag Spec', function () {
 			expect( configVal2 ).toEqual( 'testVal2' )
 			expect( configVal3 ).toEqual( 'testVal3' )
 		} )
-	})
+	} )
 
 
 } )

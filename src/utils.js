@@ -126,8 +126,8 @@ export function getOffset( el, size ) {
 
 	if ( size ) {
 
-		result.width = rect.width || rect.right - rect.left
-		result.height = rect.height || rect.bottom - rect.top
+		result.width = getRectWidth( rect )
+		result.height = getRectHeight( rect )
 	}
 
 	return result
@@ -199,11 +199,11 @@ export function toArray( obj ) {
 
 export function bind( obj, methodName ) {
 
-	let bindedName = 'binded' + methodName
+	let bindedName = '_binded_' + methodName
 
 	if ( !obj[ bindedName ] )
 		obj[ bindedName ] = function () {
-			obj[ methodName ].apply( obj, arguments )
+			return obj[ methodName ].apply( obj, arguments )
 		}
 
 	return obj[ bindedName ]
