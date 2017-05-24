@@ -1,12 +1,13 @@
-var CopyWebpackPlugin = require( 'copy-webpack-plugin' );
+const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
+const CleanWebpackPlugin = require( 'clean-webpack-plugin' )
 
 module.exports = {
-	entry: __dirname + "/src/webpack.entry.js",
+	entry: __dirname + '/src/webpack.entry.js',
 	output: {
 		library: 'Dragon',
 		libraryTarget: 'umd',
-		path: __dirname + "/dist",
-		filename: "dragon.js"
+		path: __dirname + '/dist',
+		filename: 'dragon.js'
 	},
 	module: {
 		loaders: [
@@ -17,8 +18,8 @@ module.exports = {
 				query: {
 					presets: [ 'env' ],
 					plugins: [
-						"transform-decorators-legacy",
-						"transform-class-properties"
+						'transform-decorators-legacy',
+						'transform-class-properties'
 					],
 					babelrc: false
 				}
@@ -27,7 +28,9 @@ module.exports = {
 	},
 	plugins: [
 		new CopyWebpackPlugin( [
-			{ from: './dragon-web/dist', to: './../docs' }
-		] )
+			{ from: './dragon-web/dist/dragon', to: './../docs' },
+			{ from: './dragon-web/dist/index.html', to: './../docs/index.html' }
+		] ),
+		new CleanWebpackPlugin( __dirname + '/docs' ),
 	]
 };
