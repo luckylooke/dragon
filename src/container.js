@@ -1,5 +1,5 @@
 import Item from './item'
-import { toArray, getIndexByElm, getParent } from './utils'
+import { toArray, getIndexByElm } from './utils'
 import { decorator as middle } from 'middle.js'
 
 export default class Container {

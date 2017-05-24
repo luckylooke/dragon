@@ -268,8 +268,8 @@ function getOffset(el, size) {
 
 	if (size) {
 
-		result.width = rect.width || rect.right - rect.left;
-		result.height = rect.height || rect.bottom - rect.top;
+		result.width = getRectWidth(rect);
+		result.height = getRectHeight(rect);
 	}
 
 	return result;
@@ -338,10 +338,10 @@ function toArray(obj) {
 
 function bind(obj, methodName) {
 
-	var bindedName = 'binded' + methodName;
+	var bindedName = '_binded_' + methodName;
 
 	if (!obj[bindedName]) obj[bindedName] = function () {
-		obj[methodName].apply(obj, arguments);
+		return obj[methodName].apply(obj, arguments);
 	};
 
 	return obj[bindedName];
@@ -946,6 +946,7 @@ var Drag = (_class = function () {
 		// this.currentSibling // reference sibling now
 		// this.state // holds Drag state (grabbed, dragging, dropped...)
 
+		this.id = 'dragID_' + Date.now();
 		this.state = 'grabbed';
 		this.item = item;
 		this.itemElm = item.elm;
@@ -953,13 +954,6 @@ var Drag = (_class = function () {
 		this.source = item.container.elm;
 		this.dragon = this.sourceContainer.dragon;
 		this.findDropTarget = this.dragon.findDropTarget.bind(this.dragon);
-
-		// use requestAnimationFrame while dragging if available
-		if (window.requestAnimationFrame) {
-
-			this._mousemove = this._mousemoveAF;
-			this.move_e = false;
-		} else this._mousemove = this.mousemove;
 
 		if (this.getConfig('mouseEvents')) this.mouseEvents();
 	}
@@ -973,6 +967,14 @@ var Drag = (_class = function () {
 	}, {
 		key: 'mouseEvents',
 		value: function mouseEvents(remove) {
+
+			if (!this._mousemove) // if not initialised yet
+				// use requestAnimationFrame while dragging if available
+				if (window.requestAnimationFrame) {
+
+					this.move_e = null;
+					this._mousemove = this._mousemoveAF;
+				} else this._mousemove = this.mousemove;
 
 			var op = remove ? 'remove' : 'add';
 			(0, _touchy2.default)(docElm, op, 'mouseup', (0, _utils.bind)(this, 'mouseup'));
@@ -1069,7 +1071,7 @@ var Drag = (_class = function () {
 
 			this.initialSibling = this.currentSibling = (0, _utils.nextEl)(this.itemElm);
 			_classes2.default.add(this.itemElm, 'gu-transit');
-			this.mirror = this.renderMirrorImage(this.itemElm, this.getConfig('mirrorContainer'));
+			this.renderMirrorImage(this.itemElm, this.getConfig('mirrorContainer'));
 
 			this.state = 'dragging';
 		}
@@ -1124,15 +1126,16 @@ var Drag = (_class = function () {
 			mirrorContainer.appendChild(mirror);
 			_classes2.default.add(mirrorContainer, 'gu-unselectable');
 
-			return mirror;
+			this.mirror = mirror;
 		}
 	}, {
 		key: 'removeMirrorImage',
-		value: function removeMirrorImage(mirror) {
+		value: function removeMirrorImage() {
 
-			var mirrorContainer = (0, _utils.getParent)(mirror);
+			var mirrorContainer = (0, _utils.getParent)(this.mirror);
 			_classes2.default.rm(mirrorContainer, 'gu-unselectable');
-			mirrorContainer.removeChild(mirror);
+			mirrorContainer.removeChild(this.mirror);
+			this.mirror = null;
 		}
 	}, {
 		key: 'mouseup',
@@ -1217,7 +1220,7 @@ var Drag = (_class = function () {
 
 			this.mouseEvents('remove');
 
-			if (this.mirror) this.removeMirrorImage(this.mirror);
+			if (this.mirror) this.removeMirrorImage();
 
 			if (this.itemElm) {
 				_classes2.default.rm(this.itemElm, 'gu-transit');
@@ -1472,27 +1475,6 @@ if (!Function.prototype.bind) {
 		return fBound;
 	};
 }
-
-// Overwrites native 'children' prototype.
-// Adds Document & DocumentFragment support for IE9 & Safari.
-// Returns array instead of HTMLCollection.
-// (function ( constructor ) {
-// 	if ( constructor &&
-// 		constructor.prototype &&
-// 		constructor.prototype.children == null ) {
-// 		Object.defineProperty( constructor.prototype, 'children', {
-// 			get: function () {
-// 				let i = 0, node, nodes = this.childNodes || [], children = []
-// 				while ( node = nodes[ i++ ] ) {
-// 					if ( node.nodeType === 1 ) {
-// 						children.push( node )
-// 					}
-// 				}
-// 				return children
-// 			}
-// 		} )
-// 	}
-// })( window.Node || window.Element )
 
 /***/ }),
 /* 10 */

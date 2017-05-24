@@ -48,7 +48,7 @@ export default class Drag {
 
 		if ( !this._mousemove ) // if not initialised yet
 		// use requestAnimationFrame while dragging if available
-			if ( window.requestAnimationFrame && false ) {
+			if ( window.requestAnimationFrame ) {
 
 				this.move_e = null
 				this._mousemove = this._mousemoveAF
