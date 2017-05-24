@@ -10,7 +10,8 @@
     "test": "cross-env NODE_ENV=DEV karma start",
     "dev:rollup": "rollup -c -w",
     "build:rollup": "rollup -c",
-    "styles": "stylus dragon.styl --import node_modules/nib -o dist && cleancss dist/dragon.css -o dist/dragon.min.css"
+    "styles": "stylus dragon.styl --import node_modules/nib -o dist && cleancss dist/dragon.css -o dist/dragon.min.css",
+    "update:web": "cd dragon-web && yarn && yarn build"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,7 @@
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-preset-env": "^1.4.0",
     "clean-css-cli": "^4.1.2",
+    "copy-webpack-plugin": "^4.0.1",
     "cross-env": "^5.0.0",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.1",

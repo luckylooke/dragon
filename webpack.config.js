@@ -1,3 +1,5 @@
+var CopyWebpackPlugin = require( 'copy-webpack-plugin' );
+
 module.exports = {
 	entry: __dirname + "/src/webpack.entry.js",
 	output: {
@@ -22,5 +24,10 @@ module.exports = {
 				}
 			}
 		]
-	}
+	},
+	plugins: [
+		new CopyWebpackPlugin( [
+			{ from: './dragon-web/dist', to: './../docs' }
+		] )
+	]
 };
