@@ -2,7 +2,8 @@
   "name": "dragon",
   "version": "0.1.1",
   "description": "Drag and drop SOLID",
-  "main": "dragon.js",
+  "main": "dist/dragon.js",
+  "module": "dragon.es.js",
   "scripts": {
     "dev": "webpack -w",
     "build": "cross-env NODE_ENV=PROD karma start && webpack",

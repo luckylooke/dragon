@@ -1,5 +1,9 @@
 # Changelog
 
+
+## 0.1.2 Fixed paths
+- fixed paths to main files in package.json
+
 ## 0.1.1 Some fixes
 - some bugfixes and rollup build into es module
 
