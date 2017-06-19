@@ -4,8 +4,10 @@
 let animationRunning = false;
 
 setTimeout( () => {
+	
+	console.log('dingdong', dragon);
 
-	let testDragon = new Dragon( {
+	let testDragon = dragon( {
 		containers: document.getElementsByClassName( 'container' ),
 		mouseEvents: () => !animationRunning,
 		mirrorAbsolute: () => animationRunning,

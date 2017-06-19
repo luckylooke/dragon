@@ -4,7 +4,7 @@
 
 // import Dragon from './../src/dragon.js'
 // import Container from './../src/container.js'
-import * as utils from './../src/utils.js'
+import * as utils from '../../packages/utils/utils.js'
 
 describe( 'utils.getImmediateChild', function () {
 

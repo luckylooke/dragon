@@ -1,0 +1,25 @@
+{
+  "name": "@dragon/touchy",
+  "version": "0.1.1",
+  "description": "Vanilla js DOM event manager for dragon",
+  "main": "touchy.js",
+  "module": "touchy.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luckylooke/dragon.git"
+  },
+  "author": "Ctibor Laky <luckylooke@gmail.com> (github.com/luckylooke)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/luckylooke/dragon/issues"
+  },
+  "homepage": "https://github.com/luckylooke/dragon",
+  "dependencies": {
+    "crossvent": "^1.5.5"
+  },
+  "devDependencies": {},
+  "peerDependencies": {
+    "@dragon/core": "^0.1"
+  }
+}

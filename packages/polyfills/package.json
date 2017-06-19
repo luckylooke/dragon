@@ -1,0 +1,22 @@
+{
+  "name": "@dragon/polyfills",
+  "version": "0.1.1",
+  "description": "Compatibility Polyfills for dragon",
+  "main": "polyfills.js",
+  "module": "polyfills.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luckylooke/dragon.git"
+  },
+  "author": "Ctibor Laky <luckylooke@gmail.com> (github.com/luckylooke)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/luckylooke/dragon/issues"
+  },
+  "homepage": "https://github.com/luckylooke/dragon",
+  "devDependencies": {},
+  "peerDependencies": {
+    "@dragon/core": "^0.1"
+  }
+}

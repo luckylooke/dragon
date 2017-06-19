@@ -2,10 +2,10 @@
 
 /* global describe, it, expect, it, spyOn */
 
-import Dragon from './../src/dragon.js'
-import Container from './../src/container.js'
-import Item from './../src/item.js'
-import Drag from './../src/drag.js'
+import Dragon from '../../packages/core/dragon.js'
+import Container from '../../packages/core/container.js'
+import Item from '../../packages/core/item.js'
+import Drag from '../../packages/core/drag.js'
 import crossvent from 'crossvent'
 
 describe( 'Drag Spec', function () {

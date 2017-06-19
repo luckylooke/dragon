@@ -1,11 +1,26 @@
-/* global global */
-'use strict'
-
 let doc = document
 let docElm = doc.documentElement
 
-export default function Utils() {
+export default {
 
+	// getImmediateChild: getImmediateChild,
+	// getReference: getReference,
+	// getCoord: getCoord,
+	// getEventHost: getEventHost,
+	// getOffset: getOffset,
+	// getScroll: getScroll,
+	// getElementBehindPoint: getElementBehindPoint,
+	// getRectWidth: getRectWidth,
+	// getRectHeight: getRectHeight,
+	// getParent: getParent,
+	// nextEl: nextEl,
+	// toArray: toArray,
+	// bind: bind,
+	// domIndexOf: domIndexOf,
+	// isInput: isInput,
+	// isEditable: isEditable,
+	// getIndexByElm: getIndexByElm,
+	// ensureArray: ensureArray,
 }
 
 export function getImmediateChild( dropTarget, target ) {
@@ -195,6 +210,21 @@ export function nextEl( el ) {
 export function toArray( obj ) {
 
 	return [].slice.call( obj )
+}
+
+export function ensureArray( it ) {
+
+	if ( Array.isArray( it ) )
+
+		return it
+
+	else if ( it.length && it.length != 0 )
+
+		return toArray( it )
+
+	else
+
+		return [ it ]
 }
 
 export function bind( obj, methodName ) {

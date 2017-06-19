@@ -1,5 +1,6 @@
 /**
- * Polyfill from https://github.com/remy/polyfills/blob/master/classList.js
+ * Element.classList polyfill for IE<10
+ * Polyfill from https://github.com/remy/polyfills/blob/master/classList.js#Polyfill
  */
 
 (function () {
@@ -73,59 +74,3 @@
 	} )
 
 })()
-
-
-/**
- * Polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now#Polyfill
- */
-
-if ( !Date.now ) {
-	Date.now = function now() {
-		return new Date().getTime()
-	}
-}
-
-
-// // Simple version of polyfill Array.prototype.forEach()
-// if ( ![].forEach ) {
-// 	Array.prototype.forEach = function ( callback, thisArg ) {
-// 		let len = this.length;
-// 		for ( let i = 0; i < len; i++ ) {
-// 			callback.call( thisArg, this[ i ], i, this )
-// 		}
-// 	};
-// }
-
-
-/**
- * Polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Polyfill
- */
-
-if ( !Function.prototype.bind ) {
-	Function.prototype.bind = function ( oThis ) {
-		if ( typeof this !== 'function' ) {
-			// closest thing possible to the ECMAScript 5
-			// internal IsCallable function
-			throw new TypeError( 'Function.prototype.bind - what is trying to be bound is not callable' )
-		}
-
-		let aArgs = Array.prototype.slice.call( arguments, 1 ),
-			fToBind = this,
-			fNOP = function () {
-			},
-			fBound = function () {
-				return fToBind.apply( this instanceof fNOP
-						? this
-						: oThis,
-					aArgs.concat( Array.prototype.slice.call( arguments ) ) )
-			}
-
-		if ( this.prototype ) {
-			// Function.prototype doesn't have a prototype property
-			fNOP.prototype = this.prototype
-		}
-		fBound.prototype = new fNOP()
-
-		return fBound
-	}
-}

@@ -1,5 +1,4 @@
 import Item from './item'
-import { toArray, getIndexByElm } from './utils'
 import { decorator as middle } from 'middle.js'
 
 export default class Container {
@@ -12,6 +11,7 @@ export default class Container {
 		this.config = config
 		this.id = config.id || 'containerID_' + Date.now()
 		this.dragon = dragon
+		this.utils = dragon.utils
 		this.items = []
 		this.elm = elm
 
@@ -21,7 +21,7 @@ export default class Container {
 	@middle
 	grab( itemElm ) {
 
-		let item = this.items[ getIndexByElm( this.items, itemElm ) ]
+		let item = this.items[ this.utils.getIndexByElm( this.items, itemElm ) ]
 		return item ? item.grab() : null
 	}
 
@@ -73,7 +73,7 @@ export default class Container {
 			index = this.items.indexOf( itemOrElm )
 		} else {
 
-			index = getIndexByElm( this.items, itemOrElm )
+			index = this.utils.getIndexByElm( this.items, itemOrElm )
 		}
 
 		item = this.items.splice( index, 1 )[0]
@@ -88,7 +88,7 @@ export default class Container {
 
 	_initItems() {
 
-		let arr = toArray( this.elm.children )
+		let arr = this.utils.toArray( this.elm.children )
 		let len = arr.length
 
 		for ( let i = 0; i < len; i++ ) {

@@ -2,8 +2,8 @@
 
 /* global describe, it, expect, it */
 
-import Dragon from './../src/dragon.js'
-import Container from './../src/container.js'
+import Dragon from '../../packages/core/dragon.js'
+import Container from '../../packages/core/container.js'
 
 describe( 'Container Spec', function () {
 
