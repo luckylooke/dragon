@@ -73,8 +73,10 @@ module.exports = function ( config ) {
 
 		// start these browsers
 		// available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-		browsers: isDev ? [ 'PhantomJS' ] : [ 'PhantomJS', 'Chrome', 'Firefox', 'Safari' ],
-
+		browsers: isDev ? [ 'PhantomJS' ] : [ 'PhantomJS', 'Chrome', 'Firefox' ],
+		// Safari has error cutrently https://github.com/jasmine/jasmine/issues/1327
+		// browsers: isDev ? [ 'PhantomJS' ] : [ 'PhantomJS', 'Chrome', 'Firefox', 'Safari' ],
+		//
 
 		// Continuous Integration mode
 		// if true, Karma captures browsers, runs the tests and exits

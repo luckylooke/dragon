@@ -789,10 +789,11 @@ var Dragon = (_class = function () {
 		if (config.nodeType == 1) // is DOM Element
 			config = { containers: [config] };
 
-		if (typeof config.length !== 'undefined') // is array-like
-			config = { containers: toArray(config) };
-
 		this.utils = utils;
+
+		if (typeof config.length !== 'undefined') // is array-like
+			config = { containers: this.utils.ensureArray(config) };
+
 		this.domEventManager = domEventManager;
 		this.domClassManager = domClassManager;
 		this.using = []; // array of plugins using by this dragon

@@ -26,11 +26,11 @@
   },
   "homepage": "https://github.com/luckylooke/dragon",
   "dependencies": {
-    "@dragon/core": "^0.1.4",
-    "@dragon/dom-classes": "^0.1.1",
-    "@dragon/polyfills": "^0.1.1",
-    "@dragon/touchy": "^0.1.1",
-    "@dragon/utils": "^0.1.1",
+    "@dragon/core": "^0.1.5",
+    "@dragon/dom-classes": "^0.1.2",
+    "@dragon/polyfills": "^0.1.2",
+    "@dragon/touchy": "^0.1.2",
+    "@dragon/utils": "^0.1.2",
     "middle.js": "^3.0.3"
   },
   "devDependencies": {

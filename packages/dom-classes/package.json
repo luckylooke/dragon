@@ -1,6 +1,6 @@
 {
   "name": "@dragon/dom-classes",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "DOM element css classs manager for dragon",
   "main": "classes.js",
   "module": "classes.js",
