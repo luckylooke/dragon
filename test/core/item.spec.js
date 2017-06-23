@@ -5,6 +5,9 @@
 import Dragon from '../../packages/core/dragon.js'
 import Container from '../../packages/core/container.js'
 import Item from '../../packages/core/item.js'
+import * as utils from '../../packages/utils/utils'
+import touchy from '../../packages/touchy/touchy'
+import classes from '../../packages/dom-classes/classes'
 
 describe( 'Item Spec', function () {
 
@@ -16,7 +19,7 @@ describe( 'Item Spec', function () {
 		div.appendChild( itemElm )
 		document.body.appendChild( div )
 
-		let dragon = new Dragon()
+		let dragon = new Dragon( {}, utils, touchy, classes )
 		let container = new Container( dragon, div )
 		let item = new Item( container, itemElm )
 
@@ -38,7 +41,7 @@ describe( 'Item Spec', function () {
 			div.appendChild( itemElm )
 			document.body.appendChild( div )
 
-			let dragon = new Dragon()
+			let dragon = new Dragon( {}, utils, touchy, classes )
 			let container = new Container( dragon, div )
 			let item = new Item( container, itemElm )
 
@@ -63,7 +66,7 @@ describe( 'Item Spec', function () {
 			div.appendChild( itemElm )
 			document.body.appendChild( div )
 
-			let dragon = new Dragon( { test: 'testVal' } )
+			let dragon = new Dragon( { test: 'testVal' }, utils, touchy, classes )
 			let container = new Container( dragon, div, { test2: 'testVal2' } )
 			let item = new Item( container, itemElm, { test3: 'testVal3' } )
 
@@ -86,7 +89,7 @@ describe( 'Item Spec', function () {
 			div.appendChild( itemElm )
 			document.body.appendChild( div )
 
-			let dragon = new Dragon()
+			let dragon = new Dragon( {}, utils, touchy, classes )
 			let container = new Container( dragon, div )
 			let item = new Item( container, itemElm, { test: () => 'testVal' } )
 

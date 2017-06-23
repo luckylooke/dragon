@@ -4,12 +4,15 @@
 
 import Dragon from '../../packages/core/dragon.js'
 import Container from '../../packages/core/container.js'
+import * as utils from '../../packages/utils/utils'
+import touchy from '../../packages/touchy/touchy'
+import classes from '../../packages/dom-classes/classes'
 
 describe( 'Dragon Spec', function () {
 
 	it( 'should have been initialised properly', function () {
 		// Arrange
-		let dragon = new Dragon()
+		let dragon = new Dragon( {}, utils, touchy, classes )
 
 		// Assert
 		expect( dragon.id ).toBeDefined()
@@ -20,7 +23,7 @@ describe( 'Dragon Spec', function () {
 
 	it( 'should have default space property initialised properly', function () {
 		// Arrange
-		let dragon = new Dragon()
+		let dragon = new Dragon( {}, utils, touchy, classes )
 		let space = dragon.space
 
 		// Assert
@@ -35,7 +38,7 @@ describe( 'Dragon Spec', function () {
 	it( 'should have correctly defined space property', function () {
 		// Arrange
 		let mySpace = {}
-		let dragon = new Dragon( { space: mySpace } )
+		let dragon = new Dragon( { space: mySpace }, utils, touchy, classes )
 
 		// Assert
 		expect( dragon.space ).toEqual( mySpace )
@@ -46,7 +49,7 @@ describe( 'Dragon Spec', function () {
 		// Arrange
 		let containerElm = document.createElement( 'div' )
 		let containerElm2 = document.createElement( 'div' )
-		let dragon = new Dragon( [ containerElm, containerElm2 ] )
+		let dragon = new Dragon( [ containerElm, containerElm2 ], utils, touchy, classes )
 
 		// Assert
 		expect( dragon.containers.length ).toEqual( 2 )
@@ -56,7 +59,7 @@ describe( 'Dragon Spec', function () {
 		// Arrange
 		let containerElm = document.createElement( 'div' )
 		let containerElm2 = document.createElement( 'div' )
-		let dragon = new Dragon( { containers: [ containerElm, containerElm2 ] } )
+		let dragon = new Dragon( { containers: [ containerElm, containerElm2 ] }, utils, touchy, classes )
 
 		// Assert
 		expect( dragon.containers.length ).toEqual( 2 )
@@ -69,22 +72,22 @@ describe( 'Dragon Spec', function () {
 			let containerElm = document.createElement( 'div' )
 			let containerElm2 = document.createElement( 'div' )
 			let containerElm3 = document.createElement( 'div' )
-			let dragon = new Dragon()
+			let dragon = new Dragon( {}, utils, touchy, classes )
 
 			// Act
 			let addedContainers = dragon.addContainers( containerElm )
 
 			// Assert
 			expect( dragon.containers.length ).toEqual( 1 )
-			expect( addedContainers[0].elm ).toEqual( containerElm )
+			expect( addedContainers[ 0 ].elm ).toEqual( containerElm )
 
 			// Act
 			let addedContainers2 = dragon.addContainers( [ containerElm2, containerElm3 ] )
 
 			// Assert
 			expect( dragon.containers.length ).toEqual( 3 )
-			expect( addedContainers2[0].elm ).toEqual( containerElm2 )
-			expect( addedContainers2[1].elm ).toEqual( containerElm3 )
+			expect( addedContainers2[ 0 ].elm ).toEqual( containerElm2 )
+			expect( addedContainers2[ 1 ].elm ).toEqual( containerElm3 )
 		} )
 	} )
 
@@ -94,7 +97,7 @@ describe( 'Dragon Spec', function () {
 			// Arrange
 			let containerElm = document.createElement( 'div' )
 			let containerElm2 = document.createElement( 'div' )
-			let dragon = new Dragon( [ containerElm ] )
+			let dragon = new Dragon( [ containerElm ], utils, touchy, classes )
 
 			// Act
 			let containerInstance = dragon.getContainer( containerElm )
@@ -117,7 +120,7 @@ describe( 'Dragon Spec', function () {
 			containerElm.appendChild( itemElm )
 			document.body.appendChild( containerElm )
 
-			let dragon = new Dragon( [ containerElm ] )
+			let dragon = new Dragon( [ containerElm ], utils, touchy, classes )
 
 			// Act
 			let drag = dragon.grab( itemElm )
@@ -141,7 +144,7 @@ describe( 'Dragon Spec', function () {
 			containerElm.appendChild( itemElm2 )
 			document.body.appendChild( containerElm )
 
-			let dragon = new Dragon( [ containerElm ] )
+			let dragon = new Dragon( [ containerElm ], utils, touchy, classes )
 
 			// Act
 			let drag = dragon.grab( 50, 150 )
@@ -159,7 +162,7 @@ describe( 'Dragon Spec', function () {
 			let div1 = document.createElement( 'div' )
 			let div2 = document.createElement( 'div' )
 			let div3 = document.createElement( 'div' )
-			let dragon = new Dragon( div1 )
+			let dragon = new Dragon( div1, utils, touchy, classes )
 
 			div.appendChild( div1 )
 			div1.appendChild( div2 )
@@ -181,8 +184,8 @@ describe( 'Dragon Spec', function () {
 
 		it( 'should return config value or default if not set by input config ', function () {
 			// Arrange
-			let dragon = new Dragon()
-			let dragon2 = new Dragon( { mouseEvents: false } )
+			let dragon = new Dragon( {}, utils, touchy, classes )
+			let dragon2 = new Dragon( { mouseEvents: false }, utils, touchy, classes )
 
 			// Act
 			let configVal = dragon.getConfig( 'mouseEvents' )
@@ -195,7 +198,7 @@ describe( 'Dragon Spec', function () {
 
 		it( 'should return config value and get value from function if provided instead of value', function () {
 			// Arrange
-			let dragon = new Dragon( { mouseEvents: () => false } )
+			let dragon = new Dragon( { mouseEvents: () => false }, utils, touchy, classes )
 
 			// Act
 			let configVal = dragon.getConfig( 'mouseEvents' )

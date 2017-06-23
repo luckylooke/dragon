@@ -7,6 +7,9 @@ import Container from '../../packages/core/container.js'
 import Item from '../../packages/core/item.js'
 import Drag from '../../packages/core/drag.js'
 import crossvent from 'crossvent'
+import * as utils from '../../packages/utils/utils'
+import touchy from '../../packages/touchy/touchy'
+import classes from '../../packages/dom-classes/classes'
 
 describe( 'Drag Spec', function () {
 
@@ -17,7 +20,7 @@ describe( 'Drag Spec', function () {
 	div.appendChild( itemElm )
 	document.body.appendChild( div )
 
-	let dragon = new Dragon()
+	let dragon = new Dragon( {}, utils, touchy, classes )
 	let container = new Container( dragon, div )
 	let item = new Item( container, itemElm )
 	let drag = new Drag( item )
@@ -156,7 +159,7 @@ describe( 'Drag Spec', function () {
 			div.appendChild( itemElm )
 			document.body.appendChild( div )
 
-			let dragon = new Dragon( { test: 'testVal' } )
+			let dragon = new Dragon( { test: 'testVal' }, utils, touchy, classes )
 			let container = new Container( dragon, div, { test2: 'testVal2' } )
 			let item = new Item( container, itemElm, { test3: 'testVal3' } )
 			let drag = item.grab()

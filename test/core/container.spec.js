@@ -2,15 +2,18 @@
 
 /* global describe, it, expect, it */
 
-import Dragon from '../../packages/core/dragon.js'
-import Container from '../../packages/core/container.js'
+import Dragon from '../../packages/core/dragon'
+import Container from '../../packages/core/container'
+import * as utils from '../../packages/utils/utils'
+import touchy from '../../packages/touchy/touchy'
+import classes from '../../packages/dom-classes/classes'
 
 describe( 'Container Spec', function () {
 
 	it( 'should have been initialised properly', function () {
 		// Arrange
 		let div = document.createElement( 'div' )
-		let dragon = new Dragon()
+		let dragon = new Dragon( {}, utils, touchy, classes )
 		let container = new Container( dragon, div )
 
 		// Assert
@@ -29,7 +32,7 @@ describe( 'Container Spec', function () {
 			let itemElm = document.createElement( 'div' )
 			let itemElm1 = document.createElement( 'div' )
 			let itemElm2 = document.createElement( 'div' )
-			let dragon = new Dragon()
+			let dragon = new Dragon( {}, utils, touchy, classes )
 
 			div.appendChild( itemElm )
 			div.appendChild( itemElm1 )
@@ -56,7 +59,7 @@ describe( 'Container Spec', function () {
 			let itemElm = document.createElement( 'div' )
 			let itemElm1 = document.createElement( 'div' )
 			let itemElm2 = document.createElement( 'div' )
-			let dragon = new Dragon()
+			let dragon = new Dragon( {}, utils, touchy, classes )
 
 			div.appendChild( itemElm )
 			div.appendChild( itemElm1 )
@@ -89,7 +92,7 @@ describe( 'Container Spec', function () {
 			let itemElm = document.createElement( 'div' )
 			let itemElm1 = document.createElement( 'div' )
 			let itemElm2 = document.createElement( 'div' )
-			let dragon = new Dragon()
+			let dragon = new Dragon( {}, utils, touchy, classes )
 
 			div.appendChild( itemElm )
 			div.appendChild( itemElm1 )
@@ -118,13 +121,13 @@ describe( 'Container Spec', function () {
 			let div2 = document.createElement( 'div' )
 			let div3 = document.createElement( 'div' )
 			let div4 = document.createElement( 'div' )
-			let dragon = new Dragon( { containers: [ div ] } )
-			let dragon2 = new Dragon( { containers: [ div2 ], mouseEvents: false } )
-			let dragon3 = new Dragon()
-			let dragon4 = new Dragon()
+			let dragon = new Dragon( { containers: [ div ] }, utils, touchy, classes )
+			let dragon2 = new Dragon( { containers: [ div2 ], mouseEvents: false }, utils, touchy, classes )
+			let dragon3 = new Dragon( {}, utils, touchy, classes )
+			let dragon4 = new Dragon( {}, utils, touchy, classes )
 
-			let cont = dragon3.addContainers( div3 )[0]
-			let cont2 = dragon4.addContainers( div4, { mouseEvents: false } )[0]
+			let cont = dragon3.addContainers( div3 )[ 0 ]
+			let cont2 = dragon4.addContainers( div4, { mouseEvents: false } )[ 0 ]
 
 			// Act
 			let configVal = dragon.containers[ 0 ].getConfig( 'mouseEvents' )
@@ -142,9 +145,9 @@ describe( 'Container Spec', function () {
 		it( 'should return config value and get value from function if provided instead of value', function () {
 			// Arrange
 			let div = document.createElement( 'div' )
-			let dragon = new Dragon()
+			let dragon = new Dragon( {}, utils, touchy, classes )
 
-			let cont = dragon.addContainers( div, { mouseEvents: () => false } )[0]
+			let cont = dragon.addContainers( div, { mouseEvents: () => false } )[ 0 ]
 
 			// Act
 			let configVal = cont.getConfig( 'mouseEvents' )
