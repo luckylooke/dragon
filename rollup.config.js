@@ -8,7 +8,7 @@ import uglify from 'rollup-plugin-uglify-es';
 
 
 export default {
-	entry: 'src/dragon.js',
+	entry: 'src/dragon.lib.js',
 	dest: 'dist/dragon.es.js',
 	format: 'es',
 	sourceMap: true,
@@ -21,7 +21,7 @@ export default {
 		}),
 		commonjs(),
 		babel({
-			exclude: 'node_modules/**',
+			// exclude: 'node_modules/**',
 		}),
 		uglify()
 	],

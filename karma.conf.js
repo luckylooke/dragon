@@ -24,7 +24,7 @@ module.exports = function ( config ) {
 		files: [
 			'src/**',
 			'test/**',
-			'dist/dragon.css'
+			'dist/dragon.css',
 		],
 
 
