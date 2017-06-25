@@ -12,7 +12,7 @@
     "dev:rollup": "rollup -c -w",
     "build:rollup": "rollup -c",
     "styles": "stylus dragon.styl --import node_modules/nib -o dist && cleancss dist/dragon.css -o dist/dragon.min.css",
-    "update:web": "cd dragon-web && git pull && yarn && yarn build",
+    "update:web": "cd dragon-web && git pull && npm i && npm run build",
     "patch:packages": "cd packages/core && npm version patch && npm publish && cd ../.. && cd packages/dom-classes && npm version patch && npm publish && cd ../.. && cd packages/polyfills && npm version patch && npm publish && cd ../.. && cd packages/touchy && npm version patch && npm publish && cd ../.. && cd packages/utils && npm version patch && npm publish && cd ../.."
   },
   "repository": {
