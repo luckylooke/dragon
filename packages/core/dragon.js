@@ -16,8 +16,6 @@ export default class Dragon {
 
 	constructor( config, utils, domEventManager, domClassManager ) {
 
-		console.log('dingdong HAHAHAAA');
-
 		config = config || {}
 
 		if ( config.nodeType == 1 ) // is DOM Element
