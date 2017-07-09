@@ -221,6 +221,9 @@ export default class Drag {
 		else
 			this.domClassManager.add( mirror, 'gu-mirror' )
 
+		if ( !mirrorContainer )
+			mirrorContainer = this.utils.getParent( itemElm ) || document.body
+
 		mirrorContainer.appendChild( mirror )
 		this.domClassManager.add( mirrorContainer, 'gu-unselectable' )
 

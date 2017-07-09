@@ -34,7 +34,7 @@ export default class Dragon {
 		this.defaults = {
 			mouseEvents: true,
 			mirrorAbsolute: false,
-			mirrorContainer: doc.body
+			mirrorContainer: null,
 		}
 		this.id = config.id || 'dragonID_' + Date.now()
 		this.containers = []
