@@ -115,17 +115,19 @@ describe( 'Drag Spec', function () {
 
 			// Arrange
 			let itemElm = document.createElement( 'div' )
-			itemElm.id = 'test'
+			let containerElm = document.createElement( 'div' )
+
+			containerElm.appendChild( itemElm )
+			containerElm.className = 'test'
 
 			// Act
 			drag.renderMirrorImage( itemElm, document.body )
-			let testElm = document.getElementById( 'test' )
+			let testElm = document.getElementsByClassName( 'test' )[0] // containerElm is not appended into document
 
 			// Assert
 			expect( drag.mirror ).toBeDefined()
-			expect( testElm ).not.toEqual()
-			expect( testElm.id ).toEqual( itemElm.id )
-			expect( testElm.className ).toEqual( 'gu-mirror' )
+			expect( testElm ).not.toEqual( containerElm )
+			expect( testElm.className ).toEqual( 'test gu-mirror' )
 			expect( document.body.className ).toEqual( 'gu-unselectable' )
 		} )
 	} )
@@ -136,7 +138,10 @@ describe( 'Drag Spec', function () {
 
 			// Arrange
 			let itemElm = document.createElement( 'div' )
-			itemElm.id = 'test'
+			let containerElm = document.createElement( 'div' )
+
+			containerElm.appendChild( itemElm )
+			containerElm.className = 'test'
 
 			drag.renderMirrorImage( itemElm, document.body )
 

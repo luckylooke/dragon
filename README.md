@@ -66,3 +66,6 @@ Dragging is happening and parameters are changing ( position [x,y], elementBehin
 
 #### Release
 Drag is finished by release and several scenarios can occur. Dragged item can be placed into actual position, can be moved to initial position, or item can be removed. Depends on config and actual situation.
+
+## Special thanks
+I want to specially thank to Joe Hill for releasing the 'dragon' npm username in favor of the dragon library, so I was able to crete @dragon organisation. So plugins of the library can be namespaces under @dragon/plugin-name
