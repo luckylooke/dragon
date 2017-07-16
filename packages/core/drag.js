@@ -209,8 +209,11 @@ export default class Drag {
 	renderMirrorImage( itemElm, mirrorContainer ) {
 
 		let rect = itemElm.getBoundingClientRect()
-		let mirror = itemElm.cloneNode( true )
+		let mirror = this.getConfig( 'mirrorWithParent' ) ? this.utils.getParent( itemElm ).cloneNode( false ) : itemElm.cloneNode( true )
 
+		if ( this.getConfig( 'mirrorWithParent' ) ) 
+			mirror.appendChild( itemElm.cloneNode( true ) )
+		
 		mirror.style.width = this.utils.getRectWidth( rect ) + 'px'
 		mirror.style.height = this.utils.getRectHeight( rect ) + 'px'
 		this.domClassManager.rm( mirror, 'gu-transit' )
@@ -222,7 +225,7 @@ export default class Drag {
 			this.domClassManager.add( mirror, 'gu-mirror' )
 
 		if ( !mirrorContainer )
-			mirrorContainer = this.utils.getParent( itemElm ) || document.body
+			mirrorContainer = ( this.getConfig( 'mirrorWithParent' ) ? this.utils.getParent( this.utils.getParent( itemElm ) ) : this.utils.getParent( itemElm ) ) || document.body
 
 		mirrorContainer.appendChild( mirror )
 		this.domClassManager.add( mirrorContainer, 'gu-unselectable' )
