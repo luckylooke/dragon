@@ -5,8 +5,8 @@
   "main": "dist/dragon.js",
   "module": "dragon.es.js",
   "scripts": {
-    "start": "cd dragon-web && npm start",
-    "dev": "webpack -w",
+    "start": "webpack -w && cd dragon-web && npm start",
+    "dev": "npm run start",
     "build": "npm run test:prod && webpack && npm run build:rollup",
     "test": "cross-env NODE_ENV=DEV karma start",
     "test:prod": "cross-env NODE_ENV=PROD karma start",
@@ -32,7 +32,7 @@
     "@dragon/polyfills": "^0.1.2",
     "@dragon/touchy": "^0.1.2",
     "@dragon/utils": "^0.1.2",
-    "middle.js": "^3.0.3"
+    "middle.js": "^3.2.0"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",

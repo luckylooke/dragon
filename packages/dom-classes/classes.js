@@ -2,7 +2,7 @@ let cache = {}
 let start = '(?:^|\\s)'
 let end = '(?:\\s|$)'
 
-function lookupClass( className ) {
+function lookup( className ) {
 
 	let cached = cache[ className ]
 
@@ -18,7 +18,7 @@ function lookupClass( className ) {
 	return cached
 }
 
-function addClass( el, className ) {
+function add( el, className ) {
 
 	let current = el.className
 
@@ -26,18 +26,18 @@ function addClass( el, className ) {
 
 		el.className = className
 	}
-	else if ( !lookupClass( className ).test( current ) ) {
+	else if ( !lookup( className ).test( current ) ) {
 
 		el.className += ' ' + className
 	}
 }
 
-function rmClass( el, className ) {
+function rm( el, className ) {
 
-	el.className = el.className.replace( lookupClass( className ), ' ' ).trim()
+	el.className = el.className.replace( lookup( className ), ' ' ).trim()
 }
 
 export default {
-	add: addClass,
-	rm: rmClass
+	add,
+	rm
 }
