@@ -27,7 +27,8 @@ module.exports = {
 	},
 	plugins: [
 		new CopyWebpackPlugin( [
-			{ from: './dragon-web/dist', to: './../docs' },
+			{ from: './dragon-web/dist', to: './../docs/dist' },
+			{ from: './dragon-web/assets', to: './../docs/assets' },
 			{ from: './dragon-web/index.html', to: './../docs/index.html' }
 		] ),
 		new CleanWebpackPlugin( __dirname + '/docs' ),
