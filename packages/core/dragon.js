@@ -64,6 +64,8 @@ export default class Dragon {
 
 			this.domEventManager( document.documentElement, 'add', 'mousedown', e => {
 
+				if( this.utils.whichMouseButton(e) == 3 ) return // prevent right click dragging
+
 				e.preventDefault() // fixes github.com/bevacqua/dragula/issues/155
 
 				if ( this.utils.isInput( e.target ) ) {
