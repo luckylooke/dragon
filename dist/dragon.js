@@ -169,9 +169,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function dragon(config) {
 
-	var d = new _core2.default(config, utils, _touchy2.default, _domClasses2.default);
-
-	return d;
+	return new _core2.default(config, utils, _touchy2.default, _domClasses2.default);
 } // cross dom event management
 
 /***/ }),

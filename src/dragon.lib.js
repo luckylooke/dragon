@@ -6,7 +6,5 @@ import  classes      from '@dragon/dom-classes'
 
 export default function dragon( config ) {
 
-	let d = new Dragon( config, utils, touchy, classes )
-
-	return d
+	return new Dragon( config, utils, touchy, classes )
 }
