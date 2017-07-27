@@ -1,0 +1,22 @@
+
+body {
+	text-align: center;
+}
+
+img.logo {
+    max-width: 300px;
+}
+
+#example {
+    text-align: center;
+}
+
+.box {
+    border: 2px solid #bdffa3;
+}
+
+.container {
+    min-height: 20px;
+    background: rgba(100,100,100,0.3);
+    padding: 0.5em;
+}
