@@ -580,7 +580,7 @@ var _dragonDev2 = _interopRequireDefault(_dragonDev);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-buildExample(GET_MOCK_INPUT()
+buildExample(GET_MOCK_INPUT_GENERATED()
 
 // definitions
 
@@ -593,7 +593,9 @@ buildExample(GET_MOCK_INPUT()
 	console.log('dingdong', d);
 }
 
-function createContainers(containers, targetElement) {
+function createContainers(containers, targetElement, level) {
+
+	level = level || 0;
 
 	var rowElm = document.createElement('div');
 	rowElm.className = 'row';
@@ -601,7 +603,7 @@ function createContainers(containers, targetElement) {
 	containers.forEach(function (container) {
 
 		var colElm = document.createElement('div');
-		colElm.className = 'col-xs-12 col-sm-6 col-md-4 col-lg-3 container';
+		colElm.className = level > 0 ? 'col-xs-10 container' : 'col-xs-12 col-sm-6 col-md-4 col-lg-3 container';
 		// colElm.innerHTML = '<p>' + container.value + '</p>'
 
 		if (container.items) {
@@ -613,7 +615,7 @@ function createContainers(containers, targetElement) {
 				boxElm.innerHTML = '<p>' + item.value + '</p>';
 
 				if (item.items) // nested containers
-					createContainers([item], boxElm);
+					createContainers([item], boxElm, level + 1);
 
 				colElm.appendChild(boxElm);
 			});
@@ -627,12 +629,14 @@ function createContainers(containers, targetElement) {
 
 function GET_MOCK_INPUT() {
 
-	return [{ items: [{
+	return [{
+		items: [{
 			value: 'item 1'
 		}, {
 			value: 'item 2'
 		}, {
 			value: 'item 3',
+
 			items: [{
 				value: 'item 31'
 			}, {
@@ -644,7 +648,9 @@ function GET_MOCK_INPUT() {
 			}]
 		}, {
 			value: 'item 4'
-		}] }, { items: [{
+		}]
+	}, {
+		items: [{
 			value: 'item 5'
 		}, {
 			value: 'item 6'
@@ -652,7 +658,35 @@ function GET_MOCK_INPUT() {
 			value: 'item 7'
 		}, {
 			value: 'item 8'
-		}] }];
+		}]
+	}];
+}
+
+function GET_MOCK_INPUT_GENERATED() {
+
+	return [getRandomContainerData(), getRandomContainerData(), getRandomContainerData(), getRandomContainerData()];
+}
+
+function getRandomContainerData(data, level) {
+
+	var num = 1 + Math.round(Math.random() * 10);
+
+	data = data || {};
+	level = level || 0;
+
+	data.items = [];
+
+	for (var i = 0; i < num; i++) {
+
+		var item = { value: 'item #' + Math.round(Math.random() * 10000) };
+
+		if (level < 3 && Math.random() < 0.1) // make nested
+			item = getRandomContainerData(item, level + 1);
+
+		data.items.push(item);
+	}
+
+	return data;
 }
 
 /***/ }),
@@ -695,7 +729,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "\nbody {\n\ttext-align: center;\n}\n\nimg.logo {\n    max-width: 300px;\n}\n\n#example {\n    text-align: center;\n}\n\n.box {\n    border: 2px solid #bdffa3;\n}", ""]);
+exports.push([module.i, "\nbody {\n\ttext-align: center;\n}\n\nimg.logo {\n    max-width: 300px;\n}\n\n#example {\n    text-align: center;\n}\n\n.box {\n    border: 2px solid #bdffa3;\n}\n\n.container {\n    min-height: 20px;\n    background: rgba(100,100,100,0.3);\n    padding: 0.5em;\n}", ""]);
 
 // exports
 
