@@ -14,7 +14,7 @@
     "build:rollup": "rollup -c",
     "styles": "stylus dragon.styl --import node_modules/nib -o dist && cleancss dist/dragon.css -o dist/dragon.min.css",
     "update:web": "cd dragon-web && git pull && npm i && npm run build",
-    "patch:packages": "cd packages/core && npm version patch && npm publish && cd ../.. && cd packages/dom-classes && npm version patch && npm publish && cd ../.. && cd packages/polyfills && npm version patch && npm publish && cd ../.. && cd packages/touchy && npm version patch && npm publish && cd ../.. && cd packages/utils && npm version patch && npm publish && cd ../.."
+    "patch:packages": "cd packages/core && npm version patch && npm publish && cd ../.. && cd packages/dom-classes && npm version patch && npm publish && cd ../.. && cd packages/polyfills && npm version patch && npm publish && cd ../.. && cd packages/touchy && npm version patch && npm publish && cd ../.. && cd packages/utils && npm version patch && npm publish && cd ../.. && npm update && npm run test"
   },
   "repository": {
     "type": "git",
@@ -27,29 +27,29 @@
   },
   "homepage": "https://github.com/luckylooke/dragon",
   "dependencies": {
-    "@dragon/core": "^0.1.5",
-    "@dragon/dom-classes": "^0.1.2",
-    "@dragon/polyfills": "^0.1.2",
-    "@dragon/touchy": "^0.1.2",
-    "@dragon/utils": "^0.1.2",
+    "@dragon/core": "^0.1.6",
+    "@dragon/dom-classes": "^0.1.3",
+    "@dragon/polyfills": "^0.1.3",
+    "@dragon/touchy": "^0.1.3",
+    "@dragon/utils": "^0.1.3",
     "middle.js": "^3.2.0"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.2.3",
-    "babel-loader": "^7.1.0",
+    "babel-loader": "^7.1.1",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-preset-env": "^1.4.0",
-    "clean-css-cli": "^4.1.5",
+    "babel-preset-env": "^1.6.0",
+    "clean-css-cli": "^4.1.6",
     "clean-webpack-plugin": "^0.1.16",
     "copy-webpack-plugin": "^4.0.1",
     "cross-env": "^5.0.0",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.1",
-    "eslint-plugin-import": "^2.6.0",
-    "eslint-plugin-node": "^4.2.2",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^4.2.3",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "jasmine-core": "^2.6.4",
@@ -61,7 +61,7 @@
     "karma-jasmine": "^1.1.0",
     "karma-phantomjs-launcher": "^1.0.4",
     "karma-safari-launcher": "^1.0.0",
-    "karma-webpack": "^2.0.3",
+    "karma-webpack": "^2.0.4",
     "nib": "^1.1.2",
     "rollup": "^0.41.6",
     "rollup-plugin-babel": "^2.7.1",
@@ -71,6 +71,6 @@
     "rollup-plugin-uglify-es": "0.0.1",
     "rollup-watch": "^3.2.2",
     "stylus": "^0.54.5",
-    "webpack": "^2.5.1"
+    "webpack": "^2.7.0"
   }
 }

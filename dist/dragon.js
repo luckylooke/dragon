@@ -572,13 +572,17 @@ var Drag = (_class = function () {
 		value: function renderMirrorImage(itemElm, mirrorContainer) {
 
 			var rect = itemElm.getBoundingClientRect();
-			var mirror = itemElm.cloneNode(true);
+			var mirror = this.getConfig('mirrorWithParent') ? this.utils.getParent(itemElm).cloneNode(false) : itemElm.cloneNode(true);
+
+			if (this.getConfig('mirrorWithParent')) mirror.appendChild(itemElm.cloneNode(true));
 
 			mirror.style.width = this.utils.getRectWidth(rect) + 'px';
 			mirror.style.height = this.utils.getRectHeight(rect) + 'px';
 			this.domClassManager.rm(mirror, 'gu-transit');
 
 			if (this.getConfig('mirrorAbsolute')) this.domClassManager.add(mirror, 'gu-mirror-abs');else this.domClassManager.add(mirror, 'gu-mirror');
+
+			if (!mirrorContainer) mirrorContainer = (this.getConfig('mirrorWithParent') ? this.utils.getParent(this.utils.getParent(itemElm)) : this.utils.getParent(itemElm)) || document.body;
 
 			mirrorContainer.appendChild(mirror);
 			this.domClassManager.add(mirrorContainer, 'gu-unselectable');
@@ -799,7 +803,8 @@ var Dragon = (_class = function () {
 		this.defaults = {
 			mouseEvents: true,
 			mirrorAbsolute: false,
-			mirrorContainer: doc.body
+			mirrorWithParent: true,
+			mirrorContainer: null
 		};
 		this.id = config.id || 'dragonID_' + Date.now();
 		this.containers = [];
@@ -828,6 +833,8 @@ var Dragon = (_class = function () {
 				space.utils = this.utils;
 
 				this.domEventManager(document.documentElement, 'add', 'mousedown', function (e) {
+
+					if (_this.utils.whichMouseButton(e) == 3) return; // prevent right click dragging
 
 					e.preventDefault // fixes github.com/bevacqua/dragula/issues/155
 
@@ -1057,7 +1064,7 @@ var cache = {};
 var start = '(?:^|\\s)';
 var end = '(?:\\s|$)';
 
-function lookupClass(className) {
+function lookup(className) {
 
 	var cached = cache[className];
 
@@ -1072,27 +1079,27 @@ function lookupClass(className) {
 	return cached;
 }
 
-function addClass(el, className) {
+function add(el, className) {
 
 	var current = el.className;
 
 	if (!current.length) {
 
 		el.className = className;
-	} else if (!lookupClass(className).test(current)) {
+	} else if (!lookup(className).test(current)) {
 
 		el.className += ' ' + className;
 	}
 }
 
-function rmClass(el, className) {
+function rm(el, className) {
 
-	el.className = el.className.replace(lookupClass(className), ' ').trim();
+	el.className = el.className.replace(lookup(className), ' ').trim();
 }
 
 exports.default = {
-	add: addClass,
-	rm: rmClass
+	add: add,
+	rm: rm
 };
 
 /***/ }),
@@ -1245,6 +1252,7 @@ exports.getImmediateChild = getImmediateChild;
 exports.getReference = getReference;
 exports.getCoord = getCoord;
 exports.getEventHost = getEventHost;
+exports.whichMouseButton = whichMouseButton;
 exports.getOffset = getOffset;
 exports.getScroll = getScroll;
 exports.getElementBehindPoint = getElementBehindPoint;
@@ -1381,16 +1389,24 @@ function getEventHost(e) {
 	return e;
 }
 
-// export function whichMouseButton (e) {
-//   /** @namespace e.touches -- resolving webstorm unresolved variables */
-//   if (e.touches !== void 0) { return e.touches.length }
-//   if (e.which !== void 0 && e.which !== 0) { return e.which } // see github.com/bevacqua/dragula/issues/261
-//   if (e.buttons !== void 0) { return e.buttons }
-//   let button = e.button
-//   if (button !== void 0) { // see github.com/jquery/jquery/blob/99e8ff1baa7ae341e94bb89c3e84570c7c3ad9ea/src/event.js#L573-L575
-//     return button & 1 ? 1 : button & 2 ? 3 : (button & 4 ? 2 : 0)
-//   }
-// }
+function whichMouseButton(e) {
+
+	// if (e.touches !== void 0) { return e.touches.length }
+	if (e.touches !== void 0) {
+		return 1;
+	} // accept all touches
+	if (e.which !== void 0 && e.which !== 0) {
+		return e.which;
+	} // see github.com/bevacqua/dragula/issues/261
+	if (e.buttons !== void 0) {
+		return e.buttons;
+	}
+	var button = e.button;
+	if (button !== void 0) {
+		// see github.com/jquery/jquery/blob/99e8ff1baa7ae341e94bb89c3e84570c7c3ad9ea/src/event.js#L573-L575
+		return button & 1 ? 1 : button & 2 ? 3 : button & 4 ? 2 : 0;
+	}
+}
 
 // get offset of element from top left corner of document
 function getOffset(el, size) {

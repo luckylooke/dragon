@@ -1,6 +1,6 @@
 {
   "name": "@dragon/core",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Dragon library core",
   "main": "dragon.js",
   "module": "dragon.js",
