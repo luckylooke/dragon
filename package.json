@@ -5,7 +5,7 @@
   "main": "dist/dragon.js",
   "module": "dragon.es.js",
   "scripts": {
-    "start": "webpack -w && cd dragon-web && npm start",
+    "start": "webpack -w",
     "dev": "npm run start",
     "build": "npm run test:prod && webpack && npm run build:rollup",
     "test": "cross-env NODE_ENV=DEV karma start",
