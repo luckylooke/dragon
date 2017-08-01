@@ -104,7 +104,7 @@ function GET_MOCK_INPUT_GENERATED(){
 
 function getRandomContainerData( data, level ){
 
-	var num = 1 + Math.round( Math.random() *10 )
+	var num = 1 + Math.round( Math.random() *2 +3 )
 
 	data = data || {}
 	level = level || 0

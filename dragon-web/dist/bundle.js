@@ -669,7 +669,7 @@ function GET_MOCK_INPUT_GENERATED() {
 
 function getRandomContainerData(data, level) {
 
-	var num = 1 + Math.round(Math.random() * 10);
+	var num = 1 + Math.round(Math.random() * 2 + 3);
 
 	data = data || {};
 	level = level || 0;
@@ -729,7 +729,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "\nbody {\n\ttext-align: center;\n}\n\nimg.logo {\n    max-width: 300px;\n}\n\n#example {\n    text-align: center;\n}\n\n.box {\n    border: 2px solid #bdffa3;\n}\n\n.container {\n    min-height: 20px;\n    background: rgba(100,100,100,0.3);\n    padding: 0.5em;\n}\n\n.home {\n\tbackground: #A770EF;  /* fallback for old browsers */\n\tbackground: -webkit-linear-gradient(to bottom, #FDB99B, #CF8BF3, #A770EF);  /* Chrome 10-25, Safari 5.1-6 */\n\tbackground: linear-gradient(to bottom, #FDB99B, #CF8BF3, #A770EF); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */\n}\n\n.home h1 {\n\tfont-size: 300%;\n}", ""]);
+exports.push([module.i, "\nbody {\n\ttext-align: center;\n}\n\nimg.logo {\n    max-width: 300px;\n}\n\n#example {\n    text-align: center;\n}\n\n.box {\n    border: 2px solid rgba(100,100,100,0.5);\n    margin: 0.2em 0 0.2em 0\n}\n\n.setup {\n    padding: 0.5em 0 0.5em 0;\n    background: rgba(100,100,100,0.3);\n}\n.setup .box {\n    background: rgba(100,100,100,0.3);\n    padding: 0.5em;\n}\n\n.container {\n    min-height: 20px;\n    background: rgba(100,100,100,0.3);\n    padding: 0.2em;\n}\n\n.home {\n\tbackground: #A770EF;  /* fallback for old browsers */\n\tbackground: -webkit-linear-gradient(to bottom, #FDB99B, #CF8BF3, #A770EF);  /* Chrome 10-25, Safari 5.1-6 */\n\tbackground: linear-gradient(to bottom, #FDB99B, #CF8BF3, #A770EF); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */\n}\n\n.home h1 {\n\tfont-size: 300%;\n}", ""]);
 
 // exports
 
