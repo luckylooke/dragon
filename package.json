@@ -8,8 +8,10 @@
     "start": "webpack -w",
     "dev": "npm run start",
     "build": "npm run test:prod && webpack && npm run build:rollup",
-    "test": "cross-env NODE_ENV=DEV karma start",
+    "test": "npm run test:prod && test:e2e && webpack && npm run build:rollup",
+    "test:dev": "cross-env NODE_ENV=DEV karma start",
     "test:prod": "cross-env NODE_ENV=PROD karma start",
+    "test:e2e": "testcafe firefox test/e2e/test.js",
     "dev:rollup": "rollup -c -w",
     "build:rollup": "rollup -c",
     "styles": "stylus dragon.styl --import node_modules/nib -o dist && cleancss dist/dragon.css -o dist/dragon.min.css",
@@ -72,6 +74,7 @@
     "rollup-plugin-uglify-es": "0.0.1",
     "rollup-watch": "^3.2.2",
     "stylus": "^0.54.5",
+    "testcafe": "^0.17.2",
     "webpack": "^2.7.0"
   }
 }
