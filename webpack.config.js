@@ -13,15 +13,17 @@ module.exports = {
 		loaders: [
 			{
 				test: /\.js$/,
-				loader: 'babel-loader',
-				query: {
-					presets: [ 'env' ],
-					plugins: [
-						'transform-decorators-legacy',
-						'transform-class-properties'
-					],
-					babelrc: false
-				}
+				use: [{
+				    loader: 'babel-loader',
+				    options: {
+						presets: [ 'env' ],
+						plugins: [
+							'transform-decorators-legacy',
+							'transform-class-properties'
+						],
+						babelrc: false       
+				    }
+				  }]
 			}
 		]
 	},

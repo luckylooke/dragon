@@ -1,8 +1,8 @@
 {
   "name": "@dragon/utils",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Vanilla implementtation of utils functions used in dragon lib",
-  "main": "utils.js",
+  "main": "utils.es5.js",
   "module": "utils.js",
   "scripts": {},
   "repository": {

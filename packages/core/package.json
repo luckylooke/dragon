@@ -1,10 +1,12 @@
 {
   "name": "@dragon/core",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Dragon library core",
-  "main": "dragon.js",
+  "main": "dragon.es5.js",
   "module": "dragon.js",
-  "scripts": {},
+  "scripts": {
+    "build": "webpack"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/luckylooke/dragon.git"

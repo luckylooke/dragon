@@ -33,7 +33,8 @@ module.exports = function ( config ) {
 			'src/classes.js',
 			'src/touchy.js',
 			'src/polyfills.js',
-			'src/webpack.entry.js'
+			'src/webpack.entry.js',
+			'test/e2e/*'
 		],
 
 

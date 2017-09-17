@@ -1,14 +1,4 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else if(typeof exports === 'object')
-		exports["dragon"] = factory();
-	else
-		root["dragon"] = factory();
-})(this, function() {
-return /******/ (function(modules) { // webpackBootstrap
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -73,41 +63,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 14);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var g;
-
-// This works in non-strict mode
-g = function () {
-	return this;
-}();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1, eval)("this");
-} catch (e) {
-	// This works if the window reference is available
-	if ((typeof window === "undefined" ? "undefined" : _typeof(window)) === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -134,46 +94,7 @@ exports.default = middle;
 //# sourceMappingURL=middle.es.js.map
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.default = dragon;
-
-__webpack_require__(8);
-
-var _core = __webpack_require__(5);
-
-var _core2 = _interopRequireDefault(_core);
-
-var _utils = __webpack_require__(10);
-
-var utils = _interopRequireWildcard(_utils);
-
-var _touchy = __webpack_require__(9);
-
-var _touchy2 = _interopRequireDefault(_touchy);
-
-var _domClasses = __webpack_require__(7);
-
-var _domClasses2 = _interopRequireDefault(_domClasses);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function dragon(config) {
-
-	return new _core2.default(config, utils, _touchy2.default, _domClasses2.default);
-} // cross dom event management
-
-/***/ }),
-/* 3 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -188,11 +109,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _desc, _value, _class;
 
-var _item = __webpack_require__(6);
+var _item = __webpack_require__(4);
 
 var _item2 = _interopRequireDefault(_item);
 
-var _middle = __webpack_require__(1);
+var _middle = __webpack_require__(0);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -334,7 +255,7 @@ var Container = (_class = function () {
 exports.default = Container;
 
 /***/ }),
-/* 4 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -349,7 +270,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _desc, _value, _class;
 
-var _middle = __webpack_require__(1);
+var _middle = __webpack_require__(0);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -436,8 +357,8 @@ var Drag = (_class = function () {
 			var op = remove ? 'remove' : 'add';
 			this.domEventManager(docElm, op, 'mouseup', this.utils.bind(this, 'mouseup'));
 			this.domEventManager(docElm, op, 'mousemove', this.utils.bind(this, '_mousemove'));
-			this.domEventManager(docElm, op, 'selectstart', this.utils.bind(this, 'protectGrab')); // IE8
-			this.domEventManager(docElm, op, 'click', this.utils.bind(this, 'protectGrab'));
+			this.domEventManager(docElm, op, 'selectstart', this.utils.bind(this, 'protectGrab') // IE8
+			);this.domEventManager(docElm, op, 'click', this.utils.bind(this, 'protectGrab'));
 		}
 	}, {
 		key: 'protectGrab',
@@ -612,10 +533,10 @@ var Drag = (_class = function () {
 
 			if (y == undefined) y = this.y;
 
-			if (this.state != 'dragging') return this.cancel();
+			if (this.state != 'dragging') return this.cancel
 
 			// if requestAnimationFrame mode is used, cancel latest request
-			if (this.actualFrame) {
+			();if (this.actualFrame) {
 				window.cancelAnimationFrame(this.actualFrame);
 				this.actualFrame = false;
 			}
@@ -719,7 +640,7 @@ var Drag = (_class = function () {
 exports.default = Drag;
 
 /***/ }),
-/* 5 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -734,11 +655,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _desc, _value, _class;
 
-var _container = __webpack_require__(3);
+var _container = __webpack_require__(1);
 
 var _container2 = _interopRequireDefault(_container);
 
-var _middle = __webpack_require__(1);
+var _middle = __webpack_require__(0);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -836,12 +757,12 @@ var Dragon = (_class = function () {
 
 					if (_this.utils.whichMouseButton(e) == 3) return; // prevent right click dragging
 
-					e.preventDefault(); // fixes github.com/bevacqua/dragula/issues/155
+					e.preventDefault // fixes github.com/bevacqua/dragula/issues/155
 
-					if (_this.utils.isInput(e.target)) {
+					();if (_this.utils.isInput(e.target)) {
 						// see also: github.com/bevacqua/dragula/issues/208
-						e.target.focus(); // fixes github.com/bevacqua/dragula/issues/176
-						return;
+						e.target.focus // fixes github.com/bevacqua/dragula/issues/176
+						();return;
 					}
 
 					_this.grab(e.clientX, e.clientY, e.target);
@@ -870,8 +791,9 @@ var Dragon = (_class = function () {
 				if (this.getContainer(elm)) {
 
 					/* eslint-disable no-console */
-					console.warn('container already registered', elm);
+					console.warn('container already registered', elm
 					/* eslint-enable no-console */
+					);
 				} else {
 
 					container = new _container2.default(this, elm, config);
@@ -963,7 +885,7 @@ var Dragon = (_class = function () {
 exports.default = Dragon;
 
 /***/ }),
-/* 6 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -978,11 +900,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _desc, _value, _class;
 
-var _drag = __webpack_require__(4);
+var _drag = __webpack_require__(2);
 
 var _drag2 = _interopRequireDefault(_drag);
 
-var _middle = __webpack_require__(1);
+var _middle = __webpack_require__(0);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1049,695 +971,5 @@ var Item = (_class = function () {
 }(), (_applyDecoratedDescriptor(_class.prototype, 'grab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'grab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'getConfig', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'getConfig'), _class.prototype)), _class);
 exports.default = Item;
 
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-var cache = {};
-var start = '(?:^|\\s)';
-var end = '(?:\\s|$)';
-
-function lookup(className) {
-
-	var cached = cache[className];
-
-	if (cached) {
-
-		cached.lastIndex = 0;
-	} else {
-
-		cache[className] = cached = new RegExp(start + className + end, 'g');
-	}
-
-	return cached;
-}
-
-function add(el, className) {
-
-	var current = el.className;
-
-	if (!current.length) {
-
-		el.className = className;
-	} else if (!lookup(className).test(current)) {
-
-		el.className += ' ' + className;
-	}
-}
-
-function rm(el, className) {
-
-	el.className = el.className.replace(lookup(className), ' ').trim();
-}
-
-exports.default = {
-	add: add,
-	rm: rm
-};
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Element.classList polyfill for IE<10
- * Polyfill from https://github.com/remy/polyfills/blob/master/classList.js#Polyfill
- */
-
-(function () {
-
-	if (typeof window.Element === 'undefined' || 'classList' in document.documentElement) return;
-
-	var prototype = Array.prototype,
-	    push = prototype.push,
-	    splice = prototype.splice,
-	    join = prototype.join;
-
-	function DOMTokenList(el) {
-		this.el = el;
-		// The className needs to be trimmed and split on whitespace
-		// to retrieve a list of classes.
-		var classes = el.className.replace(/^\s+|\s+$/g, '').split(/\s+/);
-		for (var i = 0; i < classes.length; i++) {
-			push.call(this, classes[i]);
-		}
-	}
-
-	DOMTokenList.prototype = {
-		add: function add(token) {
-			if (this.contains(token)) return;
-			push.call(this, token);
-			this.el.className = this.toString();
-		},
-		contains: function contains(token) {
-			return this.el.className.indexOf(token) != -1;
-		},
-		item: function item(index) {
-			return this[index] || null;
-		},
-		remove: function remove(token) {
-			if (!this.contains(token)) return;
-			var i = void 0;
-			for (i = 0; i < this.length; i++) {
-				if (this[i] == token) break;
-			}
-			splice.call(this, i, 1);
-			this.el.className = this.toString();
-		},
-		toString: function toString() {
-			return join.call(this, ' ');
-		},
-		toggle: function toggle(token) {
-			if (!this.contains(token)) {
-				this.add(token);
-			} else {
-				this.remove(token);
-			}
-
-			return this.contains(token);
-		}
-	};
-
-	window.DOMTokenList = DOMTokenList;
-
-	function defineElementGetter(obj, prop, getter) {
-		if (Object.defineProperty) {
-			Object.defineProperty(obj, prop, {
-				get: getter
-			});
-		} else {
-			obj.__defineGetter__(prop, getter);
-		}
-	}
-
-	defineElementGetter(Element.prototype, 'classList', function () {
-		return new DOMTokenList(this);
-	});
-})();
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.default = touchy;
-
-var _crossvent = __webpack_require__(11);
-
-var _crossvent2 = _interopRequireDefault(_crossvent);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function touchy(el, op, type, fn) {
-
-	var touch = {
-		mouseup: 'touchend',
-		mousedown: 'touchstart',
-		mousemove: 'touchmove'
-	};
-
-	var pointers = {
-		mouseup: 'pointerup',
-		mousedown: 'pointerdown',
-		mousemove: 'pointermove'
-	};
-
-	var microsoft = {
-		mouseup: 'MSPointerUp',
-		mousedown: 'MSPointerDown',
-		mousemove: 'MSPointerMove'
-
-		/** @namespace global.navigator.pointerEnabled -- resolving webstorm unresolved variables */
-		/** @namespace global.navigator.msPointerEnabled -- resolving webstorm unresolved variables */
-	};if (global.navigator.pointerEnabled) {
-
-		_crossvent2.default[op](el, pointers[type] || type, fn);
-	} else if (global.navigator.msPointerEnabled) {
-
-		_crossvent2.default[op](el, microsoft[type] || type, fn);
-	} else {
-
-		_crossvent2.default[op](el, touch[type] || type, fn);
-		_crossvent2.default[op](el, type, fn);
-	}
-}
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.getImmediateChild = getImmediateChild;
-exports.getReference = getReference;
-exports.getCoord = getCoord;
-exports.getEventHost = getEventHost;
-exports.whichMouseButton = whichMouseButton;
-exports.getOffset = getOffset;
-exports.getScroll = getScroll;
-exports.getElementBehindPoint = getElementBehindPoint;
-exports.getRectWidth = getRectWidth;
-exports.getRectHeight = getRectHeight;
-exports.getParent = getParent;
-exports.nextEl = nextEl;
-exports.toArray = toArray;
-exports.ensureArray = ensureArray;
-exports.bind = bind;
-exports.domIndexOf = domIndexOf;
-exports.isInput = isInput;
-exports.isEditable = isEditable;
-exports.getIndexByElm = getIndexByElm;
-var doc = document;
-var docElm = doc.documentElement;
-
-exports.default = {
-
-	// getImmediateChild: getImmediateChild,
-	// getReference: getReference,
-	// getCoord: getCoord,
-	// getEventHost: getEventHost,
-	// getOffset: getOffset,
-	// getScroll: getScroll,
-	// getElementBehindPoint: getElementBehindPoint,
-	// getRectWidth: getRectWidth,
-	// getRectHeight: getRectHeight,
-	// getParent: getParent,
-	// nextEl: nextEl,
-	// toArray: toArray,
-	// bind: bind,
-	// domIndexOf: domIndexOf,
-	// isInput: isInput,
-	// isEditable: isEditable,
-	// getIndexByElm: getIndexByElm,
-	// ensureArray: ensureArray,
-};
-function getImmediateChild(dropTarget, target) {
-
-	var immediate = target;
-
-	while (immediate !== dropTarget && getParent(immediate) !== dropTarget) {
-		immediate = getParent(immediate);
-	}
-
-	if (immediate === docElm) {
-		return null;
-	}
-
-	return immediate;
-}
-
-function getReference(dropTarget, target, x, y, direction, abs) {
-
-	var horizontal = direction === 'horizontal';
-
-	if (abs) {
-		x = x - getScroll('scrollLeft', 'pageXOffset');
-		y = y - getScroll('scrollTop', 'pageYOffset');
-	}
-	return target !== dropTarget ? inside() : outside(); // reference
-
-	function outside() {
-		// slower, but able to figure out any position
-		var len = dropTarget.children.length,
-		    i = void 0,
-		    el = void 0,
-		    rect = void 0;
-
-		for (i = 0; i < len; i++) {
-
-			el = dropTarget.children[i];
-			rect = el.getBoundingClientRect();
-
-			if (horizontal && rect.left + rect.width / 2 > x) {
-				return el;
-			}
-
-			if (!horizontal && rect.top + rect.height / 2 > y) {
-				return el;
-			}
-		}
-
-		return null;
-	}
-
-	function inside() {
-		// faster, but only available if dropped inside a child element
-
-		var rect = target.getBoundingClientRect();
-
-		if (horizontal) {
-			return resolve(x > rect.left + getRectWidth(rect) / 2);
-		}
-
-		return resolve(y > rect.top + getRectHeight(rect) / 2);
-	}
-
-	function resolve(after) {
-
-		return after ? nextEl(target) : target;
-	}
-}
-
-function getCoord(coord, e) {
-
-	var host = getEventHost(e);
-	var missMap = {
-		pageX: 'clientX', // IE8
-		pageY: 'clientY' // IE8
-	};
-
-	if (coord in missMap && !(coord in host) && missMap[coord] in host) {
-		coord = missMap[coord];
-	}
-
-	return host[coord];
-}
-
-function getEventHost(e) {
-
-	// on touchend event, we have to use `e.changedTouches`
-	// see http://stackoverflow.com/questions/7192563/touchend-event-properties
-	// see github.com/bevacqua/dragula/issues/34
-	if (e.targetTouches && e.targetTouches.length) {
-		return e.targetTouches[0];
-	}
-
-	if (e.changedTouches && e.changedTouches.length) {
-		return e.changedTouches[0];
-	}
-
-	return e;
-}
-
-function whichMouseButton(e) {
-
-	// if (e.touches !== void 0) { return e.touches.length }
-	if (e.touches !== void 0) {
-		return 1;
-	} // accept all touches
-	if (e.which !== void 0 && e.which !== 0) {
-		return e.which;
-	} // see github.com/bevacqua/dragula/issues/261
-	if (e.buttons !== void 0) {
-		return e.buttons;
-	}
-	var button = e.button;
-	if (button !== void 0) {
-		// see github.com/jquery/jquery/blob/99e8ff1baa7ae341e94bb89c3e84570c7c3ad9ea/src/event.js#L573-L575
-		return button & 1 ? 1 : button & 2 ? 3 : button & 4 ? 2 : 0;
-	}
-}
-
-// get offset of element from top left corner of document
-function getOffset(el, size) {
-
-	var rect = el.getBoundingClientRect();
-	var result = {
-		left: rect.left + getScroll('scrollLeft', 'pageXOffset'),
-		top: rect.top + getScroll('scrollTop', 'pageYOffset')
-	};
-
-	if (size) {
-
-		result.width = getRectWidth(rect);
-		result.height = getRectHeight(rect);
-	}
-
-	return result;
-}
-
-function getScroll(scrollProp, offsetProp) {
-
-	if (typeof global[offsetProp] !== 'undefined') {
-		return global[offsetProp];
-	}
-
-	if (docElm.clientHeight) {
-		return docElm[scrollProp];
-	}
-
-	return doc.body[scrollProp];
-}
-
-function getElementBehindPoint(elmToHide, x, y, abs) {
-
-	var state = elmToHide.className;
-	var el = void 0;
-
-	// hide elmToHide
-	elmToHide.className += ' gu-hide';
-	// look at the position
-	el = doc.elementFromPoint(abs ? x - getScroll('scrollLeft', 'pageXOffset') : x, abs ? y - getScroll('scrollTop', 'pageYOffset') : y);
-	// show elmToHide back
-	elmToHide.className = state;
-
-	return el;
-}
-
-function getRectWidth(rect) {
-
-	return rect.width || rect.right - rect.left;
-}
-
-function getRectHeight(rect) {
-
-	return rect.height || rect.bottom - rect.top;
-}
-
-function getParent(el) {
-
-	return el.parentNode === doc ? null : el.parentNode;
-}
-
-function nextEl(el) {
-
-	return el.nextElementSibling || manually();
-
-	function manually() {
-		var sibling = el;
-		do {
-			sibling = sibling.nextSibling;
-		} while (sibling && sibling.nodeType !== 1);
-		return sibling;
-	}
-}
-
-function toArray(obj) {
-
-	return [].slice.call(obj);
-}
-
-function ensureArray(it) {
-
-	if (Array.isArray(it)) return it;else if (it.length && it.length != 0) return toArray(it);else return [it];
-}
-
-function bind(obj, methodName) {
-
-	var bindedName = '_binded_' + methodName;
-
-	if (!obj[bindedName]) obj[bindedName] = function () {
-		return obj[methodName].apply(obj, arguments);
-	};
-
-	return obj[bindedName];
-}
-
-function domIndexOf(parent, child) {
-	// Possible problems with IE8- ? https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/children#Browser_compatibility
-	return Array.prototype.indexOf.call(parent.children, child);
-}
-
-function isInput(el) {
-	return el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || isEditable(el);
-}
-
-function isEditable(el) {
-
-	if (!el) {
-		return false;
-	}
-	// no parents were editable
-	if (el.contentEditable === 'false') {
-		return false;
-	}
-	// stop the lookup
-	if (el.contentEditable === 'true') {
-		return true;
-	}
-	// found a contentEditable element in the chain
-	return isEditable(getParent(el)); // contentEditable is set to 'inherit'
-}
-
-function getIndexByElm(sourceArray, elm) {
-
-	var len = sourceArray.length;
-
-	for (var i = 0; i < len; i++) {
-
-		if (sourceArray[i].elm == elm) return i;
-	}
-
-	return -1;
-}
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-var customEvent = __webpack_require__(13);
-var eventmap = __webpack_require__(12);
-var doc = global.document;
-var addEvent = addEventEasy;
-var removeEvent = removeEventEasy;
-var hardCache = [];
-
-if (!global.addEventListener) {
-  addEvent = addEventHard;
-  removeEvent = removeEventHard;
-}
-
-module.exports = {
-  add: addEvent,
-  remove: removeEvent,
-  fabricate: fabricateEvent
-};
-
-function addEventEasy(el, type, fn, capturing) {
-  return el.addEventListener(type, fn, capturing);
-}
-
-function addEventHard(el, type, fn) {
-  return el.attachEvent('on' + type, wrap(el, type, fn));
-}
-
-function removeEventEasy(el, type, fn, capturing) {
-  return el.removeEventListener(type, fn, capturing);
-}
-
-function removeEventHard(el, type, fn) {
-  var listener = unwrap(el, type, fn);
-  if (listener) {
-    return el.detachEvent('on' + type, listener);
-  }
-}
-
-function fabricateEvent(el, type, model) {
-  var e = eventmap.indexOf(type) === -1 ? makeCustomEvent() : makeClassicEvent();
-  if (el.dispatchEvent) {
-    el.dispatchEvent(e);
-  } else {
-    el.fireEvent('on' + type, e);
-  }
-  function makeClassicEvent() {
-    var e;
-    if (doc.createEvent) {
-      e = doc.createEvent('Event');
-      e.initEvent(type, true, true);
-    } else if (doc.createEventObject) {
-      e = doc.createEventObject();
-    }
-    return e;
-  }
-  function makeCustomEvent() {
-    return new customEvent(type, { detail: model });
-  }
-}
-
-function wrapperFactory(el, type, fn) {
-  return function wrapper(originalEvent) {
-    var e = originalEvent || global.event;
-    e.target = e.target || e.srcElement;
-    e.preventDefault = e.preventDefault || function preventDefault() {
-      e.returnValue = false;
-    };
-    e.stopPropagation = e.stopPropagation || function stopPropagation() {
-      e.cancelBubble = true;
-    };
-    e.which = e.which || e.keyCode;
-    fn.call(el, e);
-  };
-}
-
-function wrap(el, type, fn) {
-  var wrapper = unwrap(el, type, fn) || wrapperFactory(el, type, fn);
-  hardCache.push({
-    wrapper: wrapper,
-    element: el,
-    type: type,
-    fn: fn
-  });
-  return wrapper;
-}
-
-function unwrap(el, type, fn) {
-  var i = find(el, type, fn);
-  if (i) {
-    var wrapper = hardCache[i].wrapper;
-    hardCache.splice(i, 1); // free up a tad of memory
-    return wrapper;
-  }
-}
-
-function find(el, type, fn) {
-  var i, item;
-  for (i = 0; i < hardCache.length; i++) {
-    item = hardCache[i];
-    if (item.element === el && item.type === type && item.fn === fn) {
-      return i;
-    }
-  }
-}
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-var eventmap = [];
-var eventname = '';
-var ron = /^on/;
-
-for (eventname in global) {
-  if (ron.test(eventname)) {
-    eventmap.push(eventname.slice(2));
-  }
-}
-
-module.exports = eventmap;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-var NativeCustomEvent = global.CustomEvent;
-
-function useNative() {
-  try {
-    var p = new NativeCustomEvent('cat', { detail: { foo: 'bar' } });
-    return 'cat' === p.type && 'bar' === p.detail.foo;
-  } catch (e) {}
-  return false;
-}
-
-/**
- * Cross-browser `CustomEvent` constructor.
- *
- * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent.CustomEvent
- *
- * @public
- */
-
-module.exports = useNative() ? NativeCustomEvent :
-
-// IE >= 9
-'undefined' !== typeof document && 'function' === typeof document.createEvent ? function CustomEvent(type, params) {
-  var e = document.createEvent('CustomEvent');
-  if (params) {
-    e.initCustomEvent(type, params.bubbles, params.cancelable, params.detail);
-  } else {
-    e.initCustomEvent(type, false, false, void 0);
-  }
-  return e;
-} :
-
-// IE <= 8
-function CustomEvent(type, params) {
-  var e = document.createEventObject();
-  e.type = type;
-  if (params) {
-    e.bubbles = Boolean(params.bubbles);
-    e.cancelable = Boolean(params.cancelable);
-    e.detail = params.detail;
-  } else {
-    e.bubbles = false;
-    e.cancelable = false;
-    e.detail = void 0;
-  }
-  return e;
-};
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-// workaround from https://github.com/webpack/webpack/issues/3929
-module.exports = __webpack_require__(2).default;
-
 /***/ })
 /******/ ]);
-});

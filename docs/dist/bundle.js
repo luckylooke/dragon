@@ -570,124 +570,30 @@ function updateLink (link, options, obj) {
 
 __webpack_require__(5);
 
-__webpack_require__(8);
+var _home = __webpack_require__(25);
 
-__webpack_require__(10);
+var _vanillaUiRouter = __webpack_require__(12);
 
-var _dragonDev = __webpack_require__(12);
+// Initialize the router with the dynamic DOM entry point
+var router = (0, _vanillaUiRouter.createRouter)(document.getElementById('app'));
 
-var _dragonDev2 = _interopRequireDefault(_dragonDev);
+// https://github.com/micromata/vanilla-ui-router
+router
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-buildExample(GET_MOCK_INPUT_GENERATED()
-
-// definitions
-
-);function buildExample(containers) {
-
-	var exampleElm = document.getElementById('example');
-	createContainers(containers, exampleElm);
-
-	var d = (0, _dragonDev2.default)(document.getElementsByClassName('container'));
-	console.log('dingdong', d);
-}
-
-function createContainers(containers, targetElement, level) {
-
-	level = level || 0;
-
-	var rowElm = document.createElement('div');
-	rowElm.className = 'row';
-
-	containers.forEach(function (container) {
-
-		var colElm = document.createElement('div');
-		colElm.className = level > 0 ? 'col-xs-10 container' : 'col-xs-12 col-sm-6 col-md-4 col-lg-3 container';
-		// colElm.innerHTML = '<p>' + container.value + '</p>'
-
-		if (container.items) {
-
-			container.items.forEach(function (item) {
-
-				var boxElm = document.createElement('div');
-				boxElm.className = 'box';
-				boxElm.innerHTML = '<p>' + item.value + '</p>';
-
-				if (item.items) // nested containers
-					createContainers([item], boxElm, level + 1);
-
-				colElm.appendChild(boxElm);
-			});
-		}
-
-		rowElm.appendChild(colElm);
-	});
-
-	targetElement.appendChild(rowElm);
-}
-
-function GET_MOCK_INPUT() {
-
-	return [{
-		items: [{
-			value: 'item 1'
-		}, {
-			value: 'item 2'
-		}, {
-			value: 'item 3',
-
-			items: [{
-				value: 'item 31'
-			}, {
-				value: 'item 32'
-			}, {
-				value: 'item 33'
-			}, {
-				value: 'item 34'
-			}]
-		}, {
-			value: 'item 4'
-		}]
-	}, {
-		items: [{
-			value: 'item 5'
-		}, {
-			value: 'item 6'
-		}, {
-			value: 'item 7'
-		}, {
-			value: 'item 8'
-		}]
-	}];
-}
-
-function GET_MOCK_INPUT_GENERATED() {
-
-	return [getRandomContainerData(), getRandomContainerData(), getRandomContainerData(), getRandomContainerData()];
-}
-
-function getRandomContainerData(data, level) {
-
-	var num = 1 + Math.round(Math.random() * 2 + 3);
-
-	data = data || {};
-	level = level || 0;
-
-	data.items = [];
-
-	for (var i = 0; i < num; i++) {
-
-		var item = { value: 'item #' + Math.round(Math.random() * 10000) };
-
-		if (level < 3 && Math.random() < 0.1) // make nested
-			item = getRandomContainerData(item, level + 1);
-
-		data.items.push(item);
-	}
-
-	return data;
-}
+// Start route: The server side URL without a hash
+.addRoute('', function () {
+	/*
+ 	Use navigateTo(…) to make dynamic route changes, i.e. to redirect to another route
+ */
+	router.navigateTo('home');
+}).addRoute('home', {
+	templateUrl: './pages/home.html',
+	routeHandler: _home.homeHandler
+}).otherwise(function () {
+	// If no route configuration matches, the otherwise route is invoked.
+	console.log('I am the otherwise route');
+	router.navigateTo('404');
+});
 
 /***/ }),
 /* 5 */
@@ -926,26 +832,221 @@ exports.push([module.i, ".gu-mirror {\n  position: fixed !important;\n  margin: 
 "use strict";
 
 
+Object.defineProperty(exports, '__esModule', { value: true });
+
+var parseRouteParamToCorrectType = function parseRouteParamToCorrectType(paramValue) {
+	if (!isNaN(paramValue)) {
+		return parseInt(paramValue, 10);
+	}
+
+	if (paramValue === 'true' || paramValue === 'false') {
+		return JSON.parse(paramValue);
+	}
+
+	return paramValue;
+};
+
+var extractRouteParams = function extractRouteParams(routeIdentifier, currentHash) {
+	var splittedHash = currentHash.split('/');
+	var splittedRouteIdentifier = routeIdentifier.split('/');
+
+	return splittedRouteIdentifier.map(function (routeIdentifierToken, index) {
+		if (routeIdentifierToken.indexOf(':', 0) === -1) {
+			return null;
+		}
+		var routeParam = {};
+		var key = routeIdentifierToken.substr(1, routeIdentifierToken.length - 1);
+		routeParam[key] = splittedHash[index];
+		return routeParam;
+	}).filter(function (p) {
+		return p !== null;
+	}).reduce(function (acc, curr) {
+		Object.keys(curr).forEach(function (key) {
+			acc[key] = parseRouteParamToCorrectType(curr[key]);
+		});
+		return acc;
+	}, {});
+};
+
+var findMatchingRouteIdentifier = function findMatchingRouteIdentifier(currentHash, routeKeys) {
+	var splittedHash = currentHash.split('/');
+	var firstHashToken = splittedHash[0];
+
+	return routeKeys.filter(function (routeKey) {
+		var splittedRouteKey = routeKey.split('/');
+		var staticRouteTokensAreEqual = splittedRouteKey.map(function (routeToken, i) {
+			if (routeToken.indexOf(':', 0) !== -1) {
+				return true;
+			}
+			return routeToken === splittedHash[i];
+		}).reduce(function (countInvalid, currentValidationState) {
+			if (currentValidationState === false) {
+				++countInvalid;
+			}
+			return countInvalid;
+		}, 0) === 0;
+
+		return routeKey.indexOf(firstHashToken, 0) !== -1 && staticRouteTokensAreEqual && splittedHash.length === splittedRouteKey.length;
+	})[0];
+};
+
+var XMLHttpRequestFactory = window.XMLHttpRequest;
+
+var loadTemplate = function loadTemplate(templateUrl, successCallback) {
+	var xhr = new XMLHttpRequestFactory();
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState === 4) {
+			successCallback(xhr.responseText);
+		}
+	};
+	xhr.open('GET', templateUrl);
+	xhr.send();
+};
+
+var renderTemplates = function renderTemplates(routeConfiguration, domEntryPoint, successCallback) {
+	if (!routeConfiguration) {
+		return;
+	}
+
+	if (routeConfiguration.templateString) {
+		domEntryPoint.innerHTML = routeConfiguration.templateString;
+		successCallback();
+	}
+
+	if (routeConfiguration.templateUrl) {
+		loadTemplate(routeConfiguration.templateUrl, function (templateString) {
+			domEntryPoint.innerHTML = templateString;
+			successCallback();
+		});
+	}
+
+	if (routeConfiguration.templateId) {
+		var templateScript = document.getElementById(routeConfiguration.templateId);
+		domEntryPoint.innerHTML = templateScript.text;
+		successCallback();
+	}
+};
+
+var createRouter = function createRouter(domEntryPoint) {
+	var routes = {};
+	var lastDomEntryPoint = domEntryPoint.cloneNode(true);
+	var lastRouteHandler = null;
+
+	var navigateTo = function navigateTo(hashUrl) {
+		window.location.hash = hashUrl;
+	};
+
+	var otherwise = function otherwise(routeHandler) {
+		routes['*'] = routeHandler;
+	};
+
+	var addRoute = function addRoute(hashUrl, routeHandler, data) {
+		routes[hashUrl] = routeHandler;
+		routes[hashUrl].data = data;
+		return { addRoute: addRoute, otherwise: otherwise, navigateTo: navigateTo };
+	};
+
+	var initializeDomElement = function initializeDomElement() {
+		if (!domEntryPoint.parentElement) {
+			return;
+		}
+
+		var domClone = lastDomEntryPoint.cloneNode(true);
+		domEntryPoint.parentElement.insertBefore(domClone, domEntryPoint);
+
+		if (typeof domEntryPoint.remove === 'undefined') {
+			domEntryPoint.removeNode(true);
+		} else {
+			domEntryPoint.remove();
+		}
+
+		domEntryPoint = domClone;
+	};
+
+	var disposeLastRoute = function disposeLastRoute() {
+		if (!lastRouteHandler) return;
+		if (typeof lastRouteHandler.dispose === 'undefined') return;
+		lastRouteHandler.dispose(domEntryPoint);
+	};
+
+	var handleRouting = function handleRouting() {
+		var defaultRouteIdentifier = '*';
+		var currentHash = location.hash.slice(1);
+
+		var maybeMatchingRouteIdentifier = findMatchingRouteIdentifier(currentHash, Object.keys(routes));
+		var routeParams = {};
+		if (maybeMatchingRouteIdentifier) {
+			routeParams = extractRouteParams(maybeMatchingRouteIdentifier, currentHash);
+		}
+
+		var routeHandler = Object.keys(routes).indexOf(maybeMatchingRouteIdentifier) > -1 ? routes[maybeMatchingRouteIdentifier] : routes[defaultRouteIdentifier];
+
+		if (!routeHandler) {
+			return;
+		}
+
+		disposeLastRoute(routeHandler);
+
+		// Memory last routeHandler
+		lastRouteHandler = routeHandler;
+
+		initializeDomElement();
+
+		if (typeof routeHandler === 'function') {
+			routeHandler(domEntryPoint, routeParams, routeHandler.data);
+		} else {
+
+			if (!routeHandler.templateString && !routeHandler.templateId && !routeHandler.templateUrl) {
+				throw Error('No template configured for route ' + currentHash);
+			}
+
+			renderTemplates(routeHandler, domEntryPoint, function () {
+				if (typeof routeHandler.routeHandler === 'function') {
+					routeHandler.routeHandler(domEntryPoint, routeParams, routeHandler.data);
+				}
+			});
+		}
+	};
+
+	if (window) {
+		window.removeEventListener('hashchange', handleRouting);
+		window.addEventListener('hashchange', handleRouting);
+		window.removeEventListener('load', handleRouting);
+		window.addEventListener('load', handleRouting);
+	}
+
+	return { addRoute: addRoute, otherwise: otherwise, navigateTo: navigateTo };
+};
+
+exports.createRouter = createRouter;
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 exports.default = dragon;
 
-__webpack_require__(13);
+__webpack_require__(14);
 
-var _dragon = __webpack_require__(14);
+var _dragon = __webpack_require__(15);
 
 var _dragon2 = _interopRequireDefault(_dragon);
 
-var _utils = __webpack_require__(18);
+var _utils = __webpack_require__(19);
 
 var utils = _interopRequireWildcard(_utils);
 
-var _touchy = __webpack_require__(19);
+var _touchy = __webpack_require__(20);
 
 var _touchy2 = _interopRequireDefault(_touchy);
 
-var _classes = __webpack_require__(23);
+var _classes = __webpack_require__(24);
 
 var _classes2 = _interopRequireDefault(_classes);
 
@@ -959,7 +1060,7 @@ function dragon(config) {
 } // cross dom event management
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1042,7 +1143,7 @@ function dragon(config) {
 })();
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1057,7 +1158,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _desc, _value, _class;
 
-var _container = __webpack_require__(15);
+var _container = __webpack_require__(16);
 
 var _container2 = _interopRequireDefault(_container);
 
@@ -1287,7 +1388,7 @@ var Dragon = (_class = function () {
 exports.default = Dragon;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1302,7 +1403,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _desc, _value, _class;
 
-var _item = __webpack_require__(16);
+var _item = __webpack_require__(17);
 
 var _item2 = _interopRequireDefault(_item);
 
@@ -1448,7 +1549,7 @@ var Container = (_class = function () {
 exports.default = Container;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1463,7 +1564,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _desc, _value, _class;
 
-var _drag = __webpack_require__(17);
+var _drag = __webpack_require__(18);
 
 var _drag2 = _interopRequireDefault(_drag);
 
@@ -1535,7 +1636,7 @@ var Item = (_class = function () {
 exports.default = Item;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1920,7 +2021,7 @@ var Drag = (_class = function () {
 exports.default = Drag;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2225,7 +2326,7 @@ function getIndexByElm(sourceArray, elm) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2236,7 +2337,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = touchy;
 
-var _crossvent = __webpack_require__(20);
+var _crossvent = __webpack_require__(21);
 
 var _crossvent2 = _interopRequireDefault(_crossvent);
 
@@ -2278,14 +2379,14 @@ function touchy(el, op, type, fn) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {
 
-var customEvent = __webpack_require__(21);
-var eventmap = __webpack_require__(22);
+var customEvent = __webpack_require__(22);
+var eventmap = __webpack_require__(23);
 var doc = global.document;
 var addEvent = addEventEasy;
 var removeEvent = removeEventEasy;
@@ -2390,7 +2491,7 @@ function find(el, type, fn) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2445,7 +2546,7 @@ function CustomEvent(type, params) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2465,7 +2566,7 @@ module.exports = eventmap;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2515,6 +2616,142 @@ exports.default = {
 	add: add,
 	rm: rm
 };
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.homeHandler = homeHandler;
+
+__webpack_require__(8);
+
+__webpack_require__(10);
+
+var _dragonDev = __webpack_require__(13);
+
+var _dragonDev2 = _interopRequireDefault(_dragonDev);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function homeHandler(domEntryPoint, routeParams) {
+	buildExample(GET_MOCK_INPUT_GENERATED());
+}
+
+// definitions
+
+function buildExample(containers) {
+
+	var exampleElm = document.getElementById('example');
+
+	if (!exampleElm) return;
+
+	createContainers(containers, exampleElm);
+
+	var d = (0, _dragonDev2.default)(document.getElementsByClassName('container'));
+	console.log('dingdong', d);
+}
+
+function createContainers(containers, targetElement, level) {
+
+	level = level || 0;
+
+	var rowElm = document.createElement('div');
+	rowElm.className = 'row';
+
+	containers.forEach(function (container) {
+
+		var colElm = document.createElement('div');
+		colElm.className = level > 0 ? 'col-xs-10 container' : 'col-xs-12 col-sm-6 col-md-4 col-lg-3 container';
+		// colElm.innerHTML = '<p>' + container.value + '</p>'
+
+		if (container.items) {
+
+			container.items.forEach(function (item) {
+
+				var boxElm = document.createElement('div');
+				boxElm.className = 'box';
+				boxElm.innerHTML = '<p>' + item.value + '</p>';
+
+				if (item.items) // nested containers
+					createContainers([item], boxElm, level + 1);
+
+				colElm.appendChild(boxElm);
+			});
+		}
+
+		rowElm.appendChild(colElm);
+	});
+
+	targetElement.appendChild(rowElm);
+}
+
+function GET_MOCK_INPUT() {
+
+	return [{
+		items: [{
+			value: 'item 1'
+		}, {
+			value: 'item 2'
+		}, {
+			value: 'item 3',
+
+			items: [{
+				value: 'item 31'
+			}, {
+				value: 'item 32'
+			}, {
+				value: 'item 33'
+			}, {
+				value: 'item 34'
+			}]
+		}, {
+			value: 'item 4'
+		}]
+	}, {
+		items: [{
+			value: 'item 5'
+		}, {
+			value: 'item 6'
+		}, {
+			value: 'item 7'
+		}, {
+			value: 'item 8'
+		}]
+	}];
+}
+
+function GET_MOCK_INPUT_GENERATED() {
+
+	return [getRandomContainerData(), getRandomContainerData(), getRandomContainerData(), getRandomContainerData()];
+}
+
+function getRandomContainerData(data, level) {
+
+	var num = 1 + Math.round(Math.random() * 2 + 3);
+
+	data = data || {};
+	level = level || 0;
+
+	data.items = [];
+
+	for (var i = 0; i < num; i++) {
+
+		var item = { value: 'item #' + Math.round(Math.random() * 10000) };
+
+		if (level < 3 && Math.random() < 0.1) // make nested
+			item = getRandomContainerData(item, level + 1);
+
+		data.items.push(item);
+	}
+
+	return data;
+}
 
 /***/ })
 /******/ ]);
