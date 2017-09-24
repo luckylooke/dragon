@@ -1,3 +1,4 @@
+const path = require('path')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 
@@ -30,7 +31,7 @@ module.exports = {
 	plugins: [
 		new CleanWebpackPlugin( path.join( __dirname, '/docs')),
 		new CopyWebpackPlugin( [
-			{ from: './dragon-web/dist', to: './../docs/dist'}
+			{ context: 'dragon-web', from: 'dist', to: path.join( __dirname, '/docs')}
 		], { 
 			// debug: 'info' 
 		}),
