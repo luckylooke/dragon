@@ -1,6 +1,6 @@
 {
   "name": "@dragon/core",
-  "version": "0.1.7",
+  "version": "0.1.9",
   "description": "Dragon library core",
   "main": "dragon.es5.js",
   "module": "dragon.js",
@@ -20,5 +20,8 @@
   "dependencies": {
     "middle.js": "^3.0.3"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "css-loader": "^0.28.7",
+    "style-loader": "^0.18.2"
+  }
 }

@@ -53,9 +53,9 @@ export default class Container {
 			let reference = this.elm.children[ index ]
 
 			if ( reference )
-				this.elm.insertBefore( item.elm, reference )
+				this.utils.hierarchySafe( () => this.elm.insertBefore( item.elm, reference ))
 			else
-				this.elm.appendChild( item.elm )
+				this.utils.hierarchySafe( () => this.elm.appendChild( item.elm ))
 		}
 
 		return item

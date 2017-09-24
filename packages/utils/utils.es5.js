@@ -125,6 +125,7 @@ exports.domIndexOf = domIndexOf;
 exports.isInput = isInput;
 exports.isEditable = isEditable;
 exports.getIndexByElm = getIndexByElm;
+exports.hierarchySafe = hierarchySafe;
 var doc = document;
 var docElm = doc.documentElement;
 
@@ -172,9 +173,9 @@ function getReference(dropTarget, target, x, y, direction, abs) {
 		x = x - getScroll('scrollLeft', 'pageXOffset');
 		y = y - getScroll('scrollTop', 'pageYOffset');
 	}
-	return target !== dropTarget ? inside() : outside // reference
+	return target !== dropTarget ? inside() : outside(); // reference
 
-	();function outside() {
+	function outside() {
 		// slower, but able to figure out any position
 		var len = dropTarget.children.length,
 		    i = void 0,
@@ -303,11 +304,11 @@ function getElementBehindPoint(elmToHide, x, y, abs) {
 	var el = void 0;
 
 	// hide elmToHide
-	elmToHide.className += ' gu-hide';
+	elmToHide.className += ' dragon-hide';
 	// look at the position
-	el = doc.elementFromPoint(abs ? x - getScroll('scrollLeft', 'pageXOffset') : x, abs ? y - getScroll('scrollTop', 'pageYOffset') : y
+	el = doc.elementFromPoint(abs ? x - getScroll('scrollLeft', 'pageXOffset') : x, abs ? y - getScroll('scrollTop', 'pageYOffset') : y);
 	// show elmToHide back
-	);elmToHide.className = state;
+	elmToHide.className = state;
 
 	return el;
 }
@@ -384,8 +385,7 @@ function isEditable(el) {
 		return true;
 	}
 	// found a contentEditable element in the chain
-	return isEditable(getParent(el) // contentEditable is set to 'inherit'
-	);
+	return isEditable(getParent(el)); // contentEditable is set to 'inherit'
 }
 
 function getIndexByElm(sourceArray, elm) {
@@ -398,6 +398,17 @@ function getIndexByElm(sourceArray, elm) {
 	}
 
 	return -1;
+}
+
+function hierarchySafe(fn) {
+
+	try {
+		fn();
+	} catch (e) {
+		// console.dir(e)
+		if (e.name !== 'HierarchyRequestError') // fixing: Uncaught DOMException: Failed to execute 'insertBefore' on 'Node': The new child element contains the parent.
+			console.error(e);
+	}
 }
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 

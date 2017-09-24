@@ -180,6 +180,7 @@ var Container = (_class = function () {
 	}, {
 		key: 'addItem',
 		value: function addItem(itemOrElm, index, config, init) {
+			var _this = this;
 
 			index = index || 0;
 
@@ -200,7 +201,11 @@ var Container = (_class = function () {
 				// sync DOM
 				var reference = this.elm.children[index];
 
-				if (reference) this.elm.insertBefore(item.elm, reference);else this.elm.appendChild(item.elm);
+				if (reference) this.utils.hierarchySafe(function () {
+					return _this.elm.insertBefore(item.elm, reference);
+				});else this.utils.hierarchySafe(function () {
+					return _this.elm.appendChild(item.elm);
+				});
 			}
 
 			return item;
@@ -357,8 +362,8 @@ var Drag = (_class = function () {
 			var op = remove ? 'remove' : 'add';
 			this.domEventManager(docElm, op, 'mouseup', this.utils.bind(this, 'mouseup'));
 			this.domEventManager(docElm, op, 'mousemove', this.utils.bind(this, '_mousemove'));
-			this.domEventManager(docElm, op, 'selectstart', this.utils.bind(this, 'protectGrab') // IE8
-			);this.domEventManager(docElm, op, 'click', this.utils.bind(this, 'protectGrab'));
+			this.domEventManager(docElm, op, 'selectstart', this.utils.bind(this, 'protectGrab')); // IE8
+			this.domEventManager(docElm, op, 'click', this.utils.bind(this, 'protectGrab'));
 		}
 	}, {
 		key: 'protectGrab',
@@ -448,7 +453,7 @@ var Drag = (_class = function () {
 			this.itemOffsetY = y;
 
 			this.initialSibling = this.currentSibling = this.utils.nextEl(this.itemElm);
-			this.domClassManager.add(this.itemElm, 'gu-transit');
+			this.domClassManager.add(this.itemElm, 'dragon-transit');
 			this.renderMirrorImage(this.itemElm, this.getConfig('mirrorContainer'));
 
 			this.state = 'dragging';
@@ -456,6 +461,7 @@ var Drag = (_class = function () {
 	}, {
 		key: 'drag',
 		value: function drag(x, y) {
+			var _this = this;
 
 			if (this.state != 'dragging') return;
 
@@ -485,7 +491,9 @@ var Drag = (_class = function () {
 			if (reference === null || reference !== this.itemElm && reference !== this.utils.nextEl(this.itemElm)) {
 
 				this.currentSibling = reference;
-				dropTarget.insertBefore(this.itemElm, reference);
+				this.utils.hierarchySafe(function () {
+					return dropTarget.insertBefore(_this.itemElm, reference);
+				});
 			}
 		}
 	}, {
@@ -499,14 +507,14 @@ var Drag = (_class = function () {
 
 			mirror.style.width = this.utils.getRectWidth(rect) + 'px';
 			mirror.style.height = this.utils.getRectHeight(rect) + 'px';
-			this.domClassManager.rm(mirror, 'gu-transit');
+			this.domClassManager.rm(mirror, 'dragon-transit');
 
-			if (this.getConfig('mirrorAbsolute')) this.domClassManager.add(mirror, 'gu-mirror-abs');else this.domClassManager.add(mirror, 'gu-mirror');
+			if (this.getConfig('mirrorAbsolute')) this.domClassManager.add(mirror, 'dragon-mirror-abs');else this.domClassManager.add(mirror, 'dragon-mirror');
 
 			if (!mirrorContainer) mirrorContainer = (this.getConfig('mirrorWithParent') ? this.utils.getParent(this.utils.getParent(itemElm)) : this.utils.getParent(itemElm)) || document.body;
 
 			mirrorContainer.appendChild(mirror);
-			this.domClassManager.add(mirrorContainer, 'gu-unselectable');
+			this.domClassManager.add(mirrorContainer, 'dragon-unselectable');
 
 			this.mirror = mirror;
 		}
@@ -515,7 +523,7 @@ var Drag = (_class = function () {
 		value: function removeMirrorImage() {
 
 			var mirrorContainer = this.utils.getParent(this.mirror);
-			this.domClassManager.rm(mirrorContainer, 'gu-unselectable');
+			this.domClassManager.rm(mirrorContainer, 'dragon-unselectable');
 			mirrorContainer.removeChild(this.mirror);
 			this.mirror = null;
 		}
@@ -533,10 +541,10 @@ var Drag = (_class = function () {
 
 			if (y == undefined) y = this.y;
 
-			if (this.state != 'dragging') return this.cancel
+			if (this.state != 'dragging') return this.cancel();
 
 			// if requestAnimationFrame mode is used, cancel latest request
-			();if (this.actualFrame) {
+			if (this.actualFrame) {
 				window.cancelAnimationFrame(this.actualFrame);
 				this.actualFrame = false;
 			}
@@ -605,7 +613,7 @@ var Drag = (_class = function () {
 			if (this.mirror) this.removeMirrorImage();
 
 			if (this.itemElm) {
-				this.domClassManager.rm(this.itemElm, 'gu-transit');
+				this.domClassManager.rm(this.itemElm, 'dragon-transit');
 			}
 		}
 	}, {
@@ -757,12 +765,12 @@ var Dragon = (_class = function () {
 
 					if (_this.utils.whichMouseButton(e) == 3) return; // prevent right click dragging
 
-					e.preventDefault // fixes github.com/bevacqua/dragula/issues/155
+					e.preventDefault(); // fixes github.com/bevacqua/dragula/issues/155
 
-					();if (_this.utils.isInput(e.target)) {
+					if (_this.utils.isInput(e.target)) {
 						// see also: github.com/bevacqua/dragula/issues/208
-						e.target.focus // fixes github.com/bevacqua/dragula/issues/176
-						();return;
+						e.target.focus(); // fixes github.com/bevacqua/dragula/issues/176
+						return;
 					}
 
 					_this.grab(e.clientX, e.clientY, e.target);
@@ -791,9 +799,8 @@ var Dragon = (_class = function () {
 				if (this.getContainer(elm)) {
 
 					/* eslint-disable no-console */
-					console.warn('container already registered', elm
+					console.warn('container already registered', elm);
 					/* eslint-enable no-console */
-					);
 				} else {
 
 					container = new _container2.default(this, elm, config);

@@ -166,7 +166,7 @@ export default class Dragon {
 	@middle
 	findDropTarget( target ) {
 
-		while ( target && !this.getContainer( target ) ) {
+		while ( target && !this.getContainer( target )) {
 			target = this.utils.getParent( target )
 		}
 

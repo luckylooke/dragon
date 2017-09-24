@@ -1,6 +1,3 @@
-const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
-const CleanWebpackPlugin = require( 'clean-webpack-plugin' )
-
 module.exports = {
 	entry: __dirname + '/classes.js',
 	output: {

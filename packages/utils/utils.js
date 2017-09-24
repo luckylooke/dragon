@@ -168,7 +168,7 @@ export function getElementBehindPoint( elmToHide, x, y, abs ) {
 	let el
 
 	// hide elmToHide
-	elmToHide.className += ' gu-hide'
+	elmToHide.className += ' dragon-hide'
 	// look at the position
 	el = doc.elementFromPoint(
 		abs ? x - getScroll( 'scrollLeft', 'pageXOffset' ) : x,
@@ -277,5 +277,16 @@ export function getIndexByElm( sourceArray, elm ) {
 	}
 
 	return -1
+}
+
+export function hierarchySafe( fn ) {
+
+	try {
+		fn()
+	} catch( e ){
+		// console.dir(e)
+		if ( e.name !== 'HierarchyRequestError') // fixing: Uncaught DOMException: Failed to execute 'insertBefore' on 'Node': The new child element contains the parent.
+			console.error( e )
+	}
 }
 

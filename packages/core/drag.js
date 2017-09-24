@@ -157,7 +157,7 @@ export default class Drag {
 		this.itemOffsetY = y
 
 		this.initialSibling = this.currentSibling = this.utils.nextEl( this.itemElm )
-		this.domClassManager.add( this.itemElm, 'gu-transit' )
+		this.domClassManager.add( this.itemElm, 'dragon-transit' )
 		this.renderMirrorImage( this.itemElm, this.getConfig( 'mirrorContainer' ) )
 
 		this.state = 'dragging'
@@ -201,7 +201,7 @@ export default class Drag {
 		) {
 
 			this.currentSibling = reference
-			dropTarget.insertBefore( this.itemElm, reference )
+			this.utils.hierarchySafe( () => dropTarget.insertBefore( this.itemElm, reference ))
 		}
 	}
 
@@ -216,19 +216,18 @@ export default class Drag {
 		
 		mirror.style.width = this.utils.getRectWidth( rect ) + 'px'
 		mirror.style.height = this.utils.getRectHeight( rect ) + 'px'
-		this.domClassManager.rm( mirror, 'gu-transit' )
+		this.domClassManager.rm( mirror, 'dragon-transit' )
 
 		if ( this.getConfig( 'mirrorAbsolute' ) )
-
-			this.domClassManager.add( mirror, 'gu-mirror-abs' )
+			this.domClassManager.add( mirror, 'dragon-mirror-abs' )
 		else
-			this.domClassManager.add( mirror, 'gu-mirror' )
+			this.domClassManager.add( mirror, 'dragon-mirror' )
 
 		if ( !mirrorContainer )
 			mirrorContainer = ( this.getConfig( 'mirrorWithParent' ) ? this.utils.getParent( this.utils.getParent( itemElm ) ) : this.utils.getParent( itemElm ) ) || document.body
 
 		mirrorContainer.appendChild( mirror )
-		this.domClassManager.add( mirrorContainer, 'gu-unselectable' )
+		this.domClassManager.add( mirrorContainer, 'dragon-unselectable' )
 
 		this.mirror = mirror
 	}
@@ -237,7 +236,7 @@ export default class Drag {
 	removeMirrorImage() {
 
 		let mirrorContainer = this.utils.getParent( this.mirror )
-		this.domClassManager.rm( mirrorContainer, 'gu-unselectable' )
+		this.domClassManager.rm( mirrorContainer, 'dragon-unselectable' )
 		mirrorContainer.removeChild( this.mirror )
 		this.mirror = null
 	}
@@ -337,7 +336,7 @@ export default class Drag {
 			this.removeMirrorImage()
 
 		if ( this.itemElm ) {
-			this.domClassManager.rm( this.itemElm, 'gu-transit' )
+			this.domClassManager.rm( this.itemElm, 'dragon-transit' )
 		}
 	}
 

@@ -127,8 +127,8 @@ describe( 'Drag Spec', function () {
 			// Assert
 			expect( drag.mirror ).toBeDefined()
 			expect( testElm ).not.toEqual( containerElm )
-			expect( testElm.className ).toEqual( 'test gu-mirror' )
-			expect( document.body.className ).toEqual( 'gu-unselectable' )
+			expect( testElm.className ).toEqual( 'test dragon-mirror' )
+			expect( document.body.className ).toEqual( 'dragon-unselectable' )
 		} )
 	} )
 

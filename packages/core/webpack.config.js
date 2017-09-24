@@ -1,6 +1,3 @@
-const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
-const CleanWebpackPlugin = require( 'clean-webpack-plugin' )
-
 module.exports = {
 	entry: __dirname + '/dragon.js',
 	output: {
@@ -19,7 +16,14 @@ module.exports = {
 					],
 					babelrc: false
 				}
-			}
+			},
+			{
+		        test: /\.css$/,
+		        use: [
+		          { loader: "style-loader" },
+		          { loader: "css-loader" }
+		        ]
+		    }
 		]
 	}
 };

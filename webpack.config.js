@@ -25,13 +25,21 @@ module.exports = {
 						babelrc: false       
 				    }
 				  }]
-			}
+			},
+			{
+		        test: /\.css$/,
+		        use: [
+		          { loader: "style-loader" },
+		          { loader: "css-loader" }
+		        ]
+		    }
 		]
 	},
 	plugins: [
 		new CleanWebpackPlugin( path.join( __dirname, '/docs')),
 		new CopyWebpackPlugin( [
-			{ context: 'dragon-web', from: 'dist', to: path.join( __dirname, '/docs')}
+			{ context: 'dragon-web', from: 'dist', to: path.join( __dirname, '/docs')},
+			{ context: 'packages/core', from: 'dragon.css', to: path.join( __dirname, '/dist')},
 		], { 
 			// debug: 'info' 
 		}),
