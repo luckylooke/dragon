@@ -103,3 +103,6 @@ fabric.properties
 .idea/
 /tmp/
 /.idea/workspace.xml
+
+# dragon-web
+dragon-web/dist

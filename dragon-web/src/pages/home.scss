@@ -1,0 +1,48 @@
+@import "../variables";
+
+h2 {
+
+    color: $h2;
+}
+
+h3, h4, h5, h6 {
+
+    color: $hx;
+}
+
+img.logo {
+    max-width: 300px;
+}
+
+img.docs {
+    width: 100%;
+}
+
+#example {
+    text-align: center;
+}
+
+.box {
+    border: 2px solid rgba(100,100,100,0.5);
+    background: rgba(0,0,0,0.2);
+    margin: 0.2em 0 0.2em 0;
+    padding: 0.3em;
+}
+
+.home {
+	background: $rainbowGradient;
+    background-repeat: no-repeat;
+    overflow: visible;
+
+    h1 {
+        font-size: 300%;
+    }
+
+    .footer {
+        padding-bottom: 2em;
+
+        a {
+            color: white;
+        }
+    }
+}

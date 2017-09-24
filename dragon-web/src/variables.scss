@@ -1,0 +1,9 @@
+
+// rainbow background
+$gradientStart: #FDB99B; 
+$gradientMiddle: #CF8BF3;
+$gradientEnd: #A770EF;
+$rainbowGradient: linear-gradient(to bottom, $gradientStart, $gradientMiddle, $gradientEnd );
+
+$h2: #E16964;
+$hx: rgba(30,30,30,0.7);

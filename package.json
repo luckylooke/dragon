@@ -11,7 +11,8 @@
     "test": "npm run test:prod && npm run test:e2e",
     "test:dev": "cross-env NODE_ENV=DEV karma start",
     "test:prod": "cross-env NODE_ENV=PROD karma start",
-    "test:e2e": "testcafe firefox test/e2e/test.js",
+    "test:e2e": "testcafe chrome:headless test/e2e/test.js",
+    "test:e2e:debug": "testcafe --inspect --debug-brk chrome test/e2e/test.js",
     "dev:rollup": "rollup -c -w",
     "build:rollup": "rollup -c",
     "styles": "stylus dragon.styl --import node_modules/nib -o dist && cleancss dist/dragon.css -o dist/dragon.min.css",
@@ -34,8 +35,7 @@
     "@dragon/polyfills": "^0.1.4",
     "@dragon/touchy": "^0.1.4",
     "@dragon/utils": "^0.1.4",
-    "middle.js": "^3.2.0",
-    "vanilla-ui-router": "^1.2.2"
+    "middle.js": "^3.2.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

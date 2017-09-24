@@ -1,5 +1,5 @@
-const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
-const CleanWebpackPlugin = require( 'clean-webpack-plugin' )
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 module.exports = {
 	entry: __dirname + '/src/webpack.entry.js',
@@ -16,7 +16,7 @@ module.exports = {
 				use: [{
 				    loader: 'babel-loader',
 				    options: {
-						presets: [ 'env' ],
+						presets: ['env'],
 						plugins: [
 							'transform-decorators-legacy',
 							'transform-class-properties'
@@ -28,11 +28,11 @@ module.exports = {
 		]
 	},
 	plugins: [
+		new CleanWebpackPlugin( path.join( __dirname, '/docs')),
 		new CopyWebpackPlugin( [
-			{ from: './dragon-web/dist', to: './../docs/dist' },
-			{ from: './dragon-web/assets', to: './../docs/assets' },
-			{ from: './dragon-web/index.html', to: './../docs/index.html' }
-		] ),
-		new CleanWebpackPlugin( __dirname + '/docs' ),
+			{ from: './dragon-web/dist', to: './../docs/dist'}
+		], { 
+			// debug: 'info' 
+		}),
 	]
 };

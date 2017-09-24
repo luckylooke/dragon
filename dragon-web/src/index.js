@@ -1,6 +1,8 @@
-import './app.css'
-import { homeHandler } from '../pages/home.js'
+import './index.scss'
+import { homePageHandler } from './pages/home.js'
+import { installationPageHandler } from './pages/docs/installation.js'
 import { createRouter } from 'vanilla-ui-router'
+import 'bootstrap'
 
 // Initialize the router with the dynamic DOM entry point
 const router = createRouter( document.getElementById('app') );
@@ -18,7 +20,12 @@ router
 
 	.addRoute('home', {
 		templateUrl: './pages/home.html',
-		routeHandler: homeHandler
+		routeHandler: homePageHandler
+	})
+
+	.addRoute('docs/installation', {
+		templateUrl: './pages/docs/installation.html',
+		routeHandler: installationPageHandler
 	})
 
 	.otherwise(() => {
