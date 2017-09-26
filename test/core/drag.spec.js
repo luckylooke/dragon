@@ -14,8 +14,8 @@ import classes from '../../packages/dom-classes/classes'
 describe( 'Drag Spec', function () {
 
 	// Arrange
-	let div = document.createElement( 'div' )
-	let itemElm = document.createElement( 'div' )
+	let div = document.createElement('div')
+	let itemElm = document.createElement('div')
 
 	div.appendChild( itemElm )
 	document.body.appendChild( div )
@@ -47,7 +47,7 @@ describe( 'Drag Spec', function () {
 			// let spy2 = spyOn( drag, 'mousemove' )
 			let spy3 = spyOn( drag, 'protectGrab' )
 
-			let el = document.createElement( 'div' )
+			let el = document.createElement('div')
 			el.setAttribute( 'onselectstart', 'return;' )
 			let isSelectSupported = typeof el.onclick == 'function'
 
@@ -114,8 +114,8 @@ describe( 'Drag Spec', function () {
 		it( 'it should render mirror image', function () {
 
 			// Arrange
-			let itemElm = document.createElement( 'div' )
-			let containerElm = document.createElement( 'div' )
+			let itemElm = document.createElement('div')
+			let containerElm = document.createElement('div')
 
 			containerElm.appendChild( itemElm )
 			containerElm.className = 'test'
@@ -137,8 +137,8 @@ describe( 'Drag Spec', function () {
 		it( 'it should remove mirror image', function () {
 
 			// Arrange
-			let itemElm = document.createElement( 'div' )
-			let containerElm = document.createElement( 'div' )
+			let itemElm = document.createElement('div')
+			let containerElm = document.createElement('div')
 
 			containerElm.appendChild( itemElm )
 			containerElm.className = 'test'
@@ -158,8 +158,8 @@ describe( 'Drag Spec', function () {
 
 		it( 'should return item config value', function () {
 			// Arrange
-			let div = document.createElement( 'div' )
-			let itemElm = document.createElement( 'div' )
+			let div = document.createElement('div')
+			let itemElm = document.createElement('div')
 
 			div.appendChild( itemElm )
 			document.body.appendChild( div )

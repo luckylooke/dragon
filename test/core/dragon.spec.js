@@ -47,8 +47,8 @@ describe( 'Dragon Spec', function () {
 
 	it( 'should have add containers provided to constructor', function () {
 		// Arrange
-		let containerElm = document.createElement( 'div' )
-		let containerElm2 = document.createElement( 'div' )
+		let containerElm = document.createElement('div')
+		let containerElm2 = document.createElement('div')
 		let dragon = new Dragon( [ containerElm, containerElm2 ], utils, touchy, classes )
 
 		// Assert
@@ -57,8 +57,8 @@ describe( 'Dragon Spec', function () {
 
 	it( 'should have add containers provided via options to constructor', function () {
 		// Arrange
-		let containerElm = document.createElement( 'div' )
-		let containerElm2 = document.createElement( 'div' )
+		let containerElm = document.createElement('div')
+		let containerElm2 = document.createElement('div')
 		let dragon = new Dragon( { containers: [ containerElm, containerElm2 ] }, utils, touchy, classes )
 
 		// Assert
@@ -69,9 +69,9 @@ describe( 'Dragon Spec', function () {
 
 		it( 'should add containers to dragon', function () {
 			// Arrange
-			let containerElm = document.createElement( 'div' )
-			let containerElm2 = document.createElement( 'div' )
-			let containerElm3 = document.createElement( 'div' )
+			let containerElm = document.createElement('div')
+			let containerElm2 = document.createElement('div')
+			let containerElm3 = document.createElement('div')
 			let dragon = new Dragon( {}, utils, touchy, classes )
 
 			// Act
@@ -95,8 +95,8 @@ describe( 'Dragon Spec', function () {
 
 		it( 'should get containerElm instance from dragon', function () {
 			// Arrange
-			let containerElm = document.createElement( 'div' )
-			let containerElm2 = document.createElement( 'div' )
+			let containerElm = document.createElement('div')
+			let containerElm2 = document.createElement('div')
 			let dragon = new Dragon( [ containerElm ], utils, touchy, classes )
 
 			// Act
@@ -114,8 +114,8 @@ describe( 'Dragon Spec', function () {
 
 		it( 'should grab element provided', function () {
 			// Arrange
-			let containerElm = document.createElement( 'div' )
-			let itemElm = document.createElement( 'div' )
+			let containerElm = document.createElement('div')
+			let itemElm = document.createElement('div')
 
 			containerElm.appendChild( itemElm )
 			document.body.appendChild( containerElm )
@@ -131,9 +131,9 @@ describe( 'Dragon Spec', function () {
 
 		it( 'should grab element by coordinates', function () {
 			// Arrange
-			let containerElm = document.createElement( 'div' )
-			let itemElm = document.createElement( 'div' )
-			let itemElm2 = document.createElement( 'div' )
+			let containerElm = document.createElement('div')
+			let itemElm = document.createElement('div')
+			let itemElm2 = document.createElement('div')
 
 			itemElm.style.width = '100px'
 			itemElm.style.height = '100px'
@@ -158,10 +158,10 @@ describe( 'Dragon Spec', function () {
 
 		it( 'should find target containerElm in DOM tree, if there is any', function () {
 			// Arrange
-			let div = document.createElement( 'div' )
-			let div1 = document.createElement( 'div' )
-			let div2 = document.createElement( 'div' )
-			let div3 = document.createElement( 'div' )
+			let div = document.createElement('div')
+			let div1 = document.createElement('div')
+			let div2 = document.createElement('div')
+			let div3 = document.createElement('div')
 			let dragon = new Dragon( div1, utils, touchy, classes )
 
 			div.appendChild( div1 )

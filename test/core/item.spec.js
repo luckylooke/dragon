@@ -13,8 +13,8 @@ describe( 'Item Spec', function () {
 
 	it( 'should have been initialised properly', function () {
 		// Arrange
-		let div = document.createElement( 'div' )
-		let itemElm = document.createElement( 'div' )
+		let div = document.createElement('div')
+		let itemElm = document.createElement('div')
 
 		div.appendChild( itemElm )
 		document.body.appendChild( div )
@@ -35,8 +35,8 @@ describe( 'Item Spec', function () {
 		it( 'should grab the item and return drag object', function () {
 
 			// Arrange
-			let div = document.createElement( 'div' )
-			let itemElm = document.createElement( 'div' )
+			let div = document.createElement('div')
+			let itemElm = document.createElement('div')
 
 			div.appendChild( itemElm )
 			document.body.appendChild( div )
@@ -60,8 +60,8 @@ describe( 'Item Spec', function () {
 
 		it( 'should return config value or container.config.value or dragon.config.value or dragon.default.value if not set by input config ', function () {
 			// Arrange
-			let div = document.createElement( 'div' )
-			let itemElm = document.createElement( 'div' )
+			let div = document.createElement('div')
+			let itemElm = document.createElement('div')
 
 			div.appendChild( itemElm )
 			document.body.appendChild( div )
@@ -83,8 +83,8 @@ describe( 'Item Spec', function () {
 
 		it( 'should return config value and get value from function if provided instead of value', function () {
 			// Arrange
-			let div = document.createElement( 'div' )
-			let itemElm = document.createElement( 'div' )
+			let div = document.createElement('div')
+			let itemElm = document.createElement('div')
 
 			div.appendChild( itemElm )
 			document.body.appendChild( div )

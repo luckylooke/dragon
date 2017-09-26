@@ -11,10 +11,10 @@ describe( 'utils.getImmediateChild', function () {
 	it( 'should have found immediate child of a dropTraget', function () {
 
 		// Arrange
-		let div = document.createElement( 'div' )
-		let itemElm = document.createElement( 'div' )
-		let itemElm2 = document.createElement( 'div' )
-		let itemElm3 = document.createElement( 'div' )
+		let div = document.createElement('div')
+		let itemElm = document.createElement('div')
+		let itemElm2 = document.createElement('div')
+		let itemElm3 = document.createElement('div')
 
 		div.appendChild( itemElm )
 		itemElm.appendChild( itemElm2 )
@@ -33,8 +33,8 @@ describe( 'utils.getOffset', function () {
 	it( 'should have return object with element offset params', function () {
 
 		// Arrange
-		let div = document.createElement( 'div' )
-		let itemElm = document.createElement( 'div' )
+		let div = document.createElement('div')
+		let itemElm = document.createElement('div')
 		document.body.innerHTML = ''
 		document.body.style.margin = '0px'
 		document.body.style.padding = '0px'
@@ -107,8 +107,8 @@ describe( 'utils.getParent', function () {
 	it( 'should have return parent of given element or null if the parent is document', function () {
 
 		// Arrange
-		let div = document.createElement( 'div' )
-		let itemElm = document.createElement( 'div' )
+		let div = document.createElement('div')
+		let itemElm = document.createElement('div')
 
 		div.appendChild( itemElm )
 		document.body.appendChild( div )
@@ -128,9 +128,9 @@ describe( 'utils.nextEl', function () {
 	it( 'should have return next sibling element of given element or null if there is no sibling', function () {
 
 		// Arrange
-		let div = document.createElement( 'div' )
-		let itemElm = document.createElement( 'div' )
-		let itemElm2 = document.createElement( 'div' )
+		let div = document.createElement('div')
+		let itemElm = document.createElement('div')
+		let itemElm2 = document.createElement('div')
 
 		div.appendChild( itemElm )
 		div.appendChild( itemElm2 )
@@ -151,10 +151,10 @@ describe( 'utils.toArray', function () {
 	it( 'should have return real array from array-like or array object if input is array already', function () {
 
 		// Arrange
-		let div = document.createElement( 'div' )
-		let itemElm = document.createElement( 'div' )
-		let itemElm2 = document.createElement( 'div' )
-		let itemElm3 = document.createElement( 'div' )
+		let div = document.createElement('div')
+		let itemElm = document.createElement('div')
+		let itemElm2 = document.createElement('div')
+		let itemElm3 = document.createElement('div')
 
 		itemElm.className = 'test'
 		itemElm2.className = 'test'
@@ -203,10 +203,10 @@ describe( 'utils.domIndexOf', function () {
 	it( 'should return index of child element in parentNode', function () {
 
 		// Arrange
-		let div = document.createElement( 'div' )
-		let itemElm = document.createElement( 'div' )
-		let itemElm2 = document.createElement( 'div' )
-		let itemElm3 = document.createElement( 'div' )
+		let div = document.createElement('div')
+		let itemElm = document.createElement('div')
+		let itemElm2 = document.createElement('div')
+		let itemElm3 = document.createElement('div')
 
 		div.appendChild( itemElm )
 		div.appendChild( itemElm2 )
@@ -233,9 +233,9 @@ describe( 'utils.isInput', function () {
 		let inputElm = document.createElement( 'input' )
 		let textAreaElm = document.createElement( 'textarea' )
 		let selectElm = document.createElement( 'select' )
-		let editableElm = document.createElement( 'div' )
-		let editableChildElm = document.createElement( 'div' )
-		let notInput = document.createElement( 'div' )
+		let editableElm = document.createElement('div')
+		let editableChildElm = document.createElement('div')
+		let notInput = document.createElement('div')
 
 		editableElm.contentEditable = true
 
@@ -269,9 +269,9 @@ describe( 'utils.isEditable', function () {
 	it( 'should return true if provided element is in content-editable mode', function () {
 
 		// Arrange
-		let editableElm = document.createElement( 'div' )
-		let editableChildElm = document.createElement( 'div' )
-		let notEditable = document.createElement( 'div' )
+		let editableElm = document.createElement('div')
+		let editableChildElm = document.createElement('div')
+		let notEditable = document.createElement('div')
 
 		editableElm.contentEditable = true
 
@@ -296,9 +296,9 @@ describe( 'utils.getIndexByElm', function () {
 	it( 'should return index of the object in collection array looked up by elm property containing DOM element', function () {
 
 		// Arrange
-		let elm = document.createElement( 'div' )
-		let elm2 = document.createElement( 'div' )
-		let elm3 = document.createElement( 'div' )
+		let elm = document.createElement('div')
+		let elm2 = document.createElement('div')
+		let elm3 = document.createElement('div')
 
 		let collection = [ {
 			elm: elm

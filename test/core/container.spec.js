@@ -12,7 +12,7 @@ describe( 'Container Spec', function () {
 
 	it( 'should have been initialised properly', function () {
 		// Arrange
-		let div = document.createElement( 'div' )
+		let div = document.createElement('div')
 		let dragon = new Dragon( {}, utils, touchy, classes )
 		let container = new Container( dragon, div )
 
@@ -28,10 +28,10 @@ describe( 'Container Spec', function () {
 		it( 'should add new item to the container', function () {
 
 			// Arrange
-			let div = document.createElement( 'div' )
-			let itemElm = document.createElement( 'div' )
-			let itemElm1 = document.createElement( 'div' )
-			let itemElm2 = document.createElement( 'div' )
+			let div = document.createElement('div')
+			let itemElm = document.createElement('div')
+			let itemElm1 = document.createElement('div')
+			let itemElm2 = document.createElement('div')
 			let dragon = new Dragon( {}, utils, touchy, classes )
 
 			div.appendChild( itemElm )
@@ -55,10 +55,10 @@ describe( 'Container Spec', function () {
 		it( 'should remove item to the container', function () {
 
 			// Arrange
-			let div = document.createElement( 'div' )
-			let itemElm = document.createElement( 'div' )
-			let itemElm1 = document.createElement( 'div' )
-			let itemElm2 = document.createElement( 'div' )
+			let div = document.createElement('div')
+			let itemElm = document.createElement('div')
+			let itemElm1 = document.createElement('div')
+			let itemElm2 = document.createElement('div')
 			let dragon = new Dragon( {}, utils, touchy, classes )
 
 			div.appendChild( itemElm )
@@ -88,10 +88,10 @@ describe( 'Container Spec', function () {
 		it( 'should grab the itemElm if it is valid itemElm of the container', function () {
 			// Arrange
 			// Arrange
-			let div = document.createElement( 'div' )
-			let itemElm = document.createElement( 'div' )
-			let itemElm1 = document.createElement( 'div' )
-			let itemElm2 = document.createElement( 'div' )
+			let div = document.createElement('div')
+			let itemElm = document.createElement('div')
+			let itemElm1 = document.createElement('div')
+			let itemElm2 = document.createElement('div')
 			let dragon = new Dragon( {}, utils, touchy, classes )
 
 			div.appendChild( itemElm )
@@ -117,10 +117,10 @@ describe( 'Container Spec', function () {
 
 		it( 'should return config value or dragon.config.value or dragon.default.value if not set by input config ', function () {
 			// Arrange
-			let div = document.createElement( 'div' )
-			let div2 = document.createElement( 'div' )
-			let div3 = document.createElement( 'div' )
-			let div4 = document.createElement( 'div' )
+			let div = document.createElement('div')
+			let div2 = document.createElement('div')
+			let div3 = document.createElement('div')
+			let div4 = document.createElement('div')
 			let dragon = new Dragon( { containers: [ div ] }, utils, touchy, classes )
 			let dragon2 = new Dragon( { containers: [ div2 ], mouseEvents: false }, utils, touchy, classes )
 			let dragon3 = new Dragon( {}, utils, touchy, classes )
@@ -144,7 +144,7 @@ describe( 'Container Spec', function () {
 
 		it( 'should return config value and get value from function if provided instead of value', function () {
 			// Arrange
-			let div = document.createElement( 'div' )
+			let div = document.createElement('div')
 			let dragon = new Dragon( {}, utils, touchy, classes )
 
 			let cont = dragon.addContainers( div, { mouseEvents: () => false } )[ 0 ]

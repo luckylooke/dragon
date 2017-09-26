@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.3 Refactor
+- refactoring web to bootstrap@^4.0.0 style
+- workflow changes (added webpack dev-server, etc..)
 
 ## 0.1.2 Fixed paths
 - fixed paths to main files in package.json
