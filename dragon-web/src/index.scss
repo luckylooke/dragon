@@ -5,4 +5,27 @@
 body {
     text-align: center;
     font-family: sans-serif;
+    background: $rainbowGradient;
+    background-repeat: no-repeat;
+    overflow: visible;
+    position: relative;
+    min-height: 1vh;
+    padding-bottom: 2em;
+}
+
+pre {
+    background: $preBackground;
+    border: $preBorder;
+    padding: 0.5em;
+    margin: 0.5em;
+    color: white;
+}
+
+a {
+    color: $a;
+}
+
+a:hover {
+	color: $aHover;
+    text-decoration: none;
 }

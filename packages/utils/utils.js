@@ -279,14 +279,19 @@ export function getIndexByElm( sourceArray, elm ) {
 	return -1
 }
 
-export function hierarchySafe( fn ) {
+export function hierarchySafe( fn, success, fail ) {
 
 	try {
+		// dom edit fn to protect
 		fn()
+		if ( success ) success()
+
 	} catch( e ){
 		// console.dir(e)
 		if ( e.name !== 'HierarchyRequestError') // fixing: Uncaught DOMException: Failed to execute 'insertBefore' on 'Node': The new child element contains the parent.
 			console.error( e )
+
+		if ( fail ) fail()
 	}
 }
 

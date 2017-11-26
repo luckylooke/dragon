@@ -74,8 +74,8 @@ export default class Dragon {
 					return
 				}
 
-				this.grab( e.clientX, e.clientY, e.target )
-			} )
+				this.grab( this.utils.getCoord( 'clientX', e ), this.utils.getCoord( 'clientY', e ), e.target )
+			})
 		}
 
 		if ( !space.Dragon )

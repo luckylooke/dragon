@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0 Refactor2 + docs
+- draging element is item element, two mirrors are rendered as placeholders ( start and drop places )
+- renaming properties and methods
+- new docs with routing
+
 ## 0.1.3 Refactor
 - refactoring web to bootstrap@^4.0.0 style
 - workflow changes (added webpack dev-server, etc..)
