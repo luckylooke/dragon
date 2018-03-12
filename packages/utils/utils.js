@@ -1,8 +1,10 @@
+/* global global */
 let doc = document
 let docElm = doc.documentElement
 
 export default {
 
+	// getConfig: getConfig,
 	// getImmediateChild: getImmediateChild,
 	// getReference: getReference,
 	// getCoord: getCoord,
@@ -21,6 +23,17 @@ export default {
 	// isEditable: isEditable,
 	// getIndexByElm: getIndexByElm,
 	// ensureArray: ensureArray,
+}
+
+export function setConfig( parent, config ) {
+
+	this.config = Object.assign( Object.create( parent.config ), config )
+}
+
+export function getConfig( prop ) {
+
+	prop = this.config[ prop ]
+	return typeof prop == 'function' ? prop( this ) : prop
 }
 
 export function getImmediateChild( dropTarget, target ) {
@@ -289,7 +302,7 @@ export function hierarchySafe( fn, success, fail ) {
 	} catch( e ){
 		// console.dir(e)
 		if ( e.name !== 'HierarchyRequestError') // fixing: Uncaught DOMException: Failed to execute 'insertBefore' on 'Node': The new child element contains the parent.
-			console.error( e )
+			console.error( e ) // eslint-disable-line no-console
 
 		if ( fail ) fail()
 	}

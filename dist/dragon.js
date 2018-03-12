@@ -235,8 +235,9 @@ var Container = (_class = function () {
 
 		this.config = config;
 		this.id = config.id || 'containerID_' + Date.now();
-		this.dragon = dragon;
+		this.dragon = Object.assign(Object.create(dragon.config), config);
 		this.utils = dragon.utils;
+		this.getConfig = this.utils.getConfig.bind(this);
 		this.items = [];
 		this.elm = elm;
 
@@ -320,17 +321,10 @@ var Container = (_class = function () {
 				this._initItem(arr[i]);
 			}
 		}
-	}, {
-		key: 'getConfig',
-		value: function getConfig(prop) {
-
-			prop = this.config.hasOwnProperty(prop) ? this.config[prop] : this.dragon.getConfig(prop);
-			return typeof prop == 'function' ? prop() : prop;
-		}
 	}]);
 
 	return Container;
-}(), (_applyDecoratedDescriptor(_class.prototype, 'grab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'grab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'addItem', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'addItem'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'removeItem', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'removeItem'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'getConfig', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'getConfig'), _class.prototype)), _class);
+}(), (_applyDecoratedDescriptor(_class.prototype, 'grab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'grab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'addItem', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'addItem'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'removeItem', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'removeItem'), _class.prototype)), _class);
 exports.default = Container;
 
 /***/ }),
@@ -1023,9 +1017,12 @@ var Item = (_class = function () {
 
 		if (!config) config = {};
 
-		this.config = config;
-		this.id = config.id || 'itemID_' + Date.now();
+		this.Drag = _drag2.default;
+		this.config = Object.assign(Object.create(container.config), config);
+		this.id = config.id || 'itemID_' + Date.notaciaw();
 		this.container = container;
+		this.utils = container.utils;
+		this.getConfig = this.utils.getConfig.bind(this);
 		this.elm = elm;
 	}
 
@@ -1033,20 +1030,13 @@ var Item = (_class = function () {
 		key: 'grab',
 		value: function grab() {
 
-			this.drag = new _drag2.default(this);
+			this.drag = new this.Drag(this);
 			return this.drag;
-		}
-	}, {
-		key: 'getConfig',
-		value: function getConfig(prop) {
-
-			prop = this.config.hasOwnProperty(prop) ? this.config[prop] : this.container.getConfig(prop);
-			return typeof prop == 'function' ? prop() : prop;
 		}
 	}]);
 
 	return Item;
-}(), (_applyDecoratedDescriptor(_class.prototype, 'grab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'grab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'getConfig', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'getConfig'), _class.prototype)), _class);
+}(), (_applyDecoratedDescriptor(_class.prototype, 'grab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'grab'), _class.prototype)), _class);
 exports.default = Item;
 
 /***/ }),

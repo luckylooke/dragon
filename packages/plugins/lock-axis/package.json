@@ -1,9 +1,9 @@
 {
-  "name": "@dragon/utils",
-  "version": "0.1.8",
-  "description": "Vanilla implementtation of utils functions used in dragon lib",
-  "main": "utils.es5.js",
-  "module": "utils.js",
+  "name": "@dragon/plugin-lock-axis",
+  "version": "0.1.6",
+  "description": "DOM element css classs manager for dragon",
+  "main": "axis.es5.js",
+  "module": "axis.js",
   "scripts": {},
   "repository": {
     "type": "git",
@@ -15,7 +15,6 @@
     "url": "https://github.com/luckylooke/dragon/issues"
   },
   "homepage": "https://github.com/luckylooke/dragon",
-  "dependencies": {},
   "devDependencies": {},
   "peerDependencies": {
     "@dragon/core": "^0.1"

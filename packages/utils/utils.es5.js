@@ -106,6 +106,8 @@ module.exports = g;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.setConfig = setConfig;
+exports.getConfig = getConfig;
 exports.getImmediateChild = getImmediateChild;
 exports.getReference = getReference;
 exports.getCoord = getCoord;
@@ -126,11 +128,13 @@ exports.isInput = isInput;
 exports.isEditable = isEditable;
 exports.getIndexByElm = getIndexByElm;
 exports.hierarchySafe = hierarchySafe;
+/* global global */
 var doc = document;
 var docElm = doc.documentElement;
 
 exports.default = {
 
+	// getConfig: getConfig,
 	// getImmediateChild: getImmediateChild,
 	// getReference: getReference,
 	// getCoord: getCoord,
@@ -150,6 +154,17 @@ exports.default = {
 	// getIndexByElm: getIndexByElm,
 	// ensureArray: ensureArray,
 };
+function setConfig(parent, config) {
+
+	this.config = Object.assign(Object.create(parent.config), config);
+}
+
+function getConfig(prop) {
+
+	prop = this.config[prop];
+	return typeof prop == 'function' ? prop(this) : prop;
+}
+
 function getImmediateChild(dropTarget, target) {
 
 	var immediate = target;
@@ -400,14 +415,18 @@ function getIndexByElm(sourceArray, elm) {
 	return -1;
 }
 
-function hierarchySafe(fn) {
+function hierarchySafe(fn, success, fail) {
 
 	try {
+		// dom edit fn to protect
 		fn();
+		if (success) success();
 	} catch (e) {
 		// console.dir(e)
 		if (e.name !== 'HierarchyRequestError') // fixing: Uncaught DOMException: Failed to execute 'insertBefore' on 'Node': The new child element contains the parent.
-			console.error(e);
+			console.error(e); // eslint-disable-line no-console
+
+		if (fail) fail();
 	}
 }
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))

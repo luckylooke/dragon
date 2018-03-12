@@ -7,12 +7,12 @@ fs.readdir(packagesFolder, (err, files) => {
 
   files.forEach(file => {
 
-    console.log('starting build for: ', file, 'package')
+    console.log('starting build for: ', path.join(packagesFolder, file, '/'))
 
-    exec( 'webpack && npm version patch && npm publish', 
+    exec( 'webpack && npm version patch && npm publish',
     	{
 	    	cwd: path.join(packagesFolder, file, '/')
-	    }, 
+	    },
 	    (err, stdout, stderr) => {
 			if (err) {
 			    // node couldn't execute the command

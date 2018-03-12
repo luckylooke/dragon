@@ -1,9 +1,9 @@
 {
   "name": "@dragon/core",
-  "version": "0.1.9",
+  "version": "0.1.11",
   "description": "Dragon library core",
-  "main": "dragon.es5.js",
-  "module": "dragon.js",
+  "main": "core.es5.js",
+  "module": "core.js",
   "scripts": {
     "build": "webpack"
   },

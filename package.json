@@ -5,7 +5,8 @@
   "main": "dist/dragon.js",
   "module": "dragon.es.js",
   "scripts": {
-    "start": "webpack -w",
+    "--- DEV-NOTE ---": "mkdir -p ./dragon-web/dist -> fixes: ERROR in [copy-webpack-plugin] unable to locate 'dist' at '/Users/lucky/Documents/projects/dragon/dragon-web/dist'",
+    "start": "mkdir -p ./dragon-web/dist && webpack -w",
     "dev": "npm run start",
     "build": "npm run test:prod && webpack && npm run build:rollup",
     "test": "npm run test:prod && npm run test:e2e",
@@ -35,7 +36,8 @@
     "@dragon/polyfills": "^0.1.4",
     "@dragon/touchy": "^0.1.4",
     "@dragon/utils": "^0.1.4",
-    "middle.js": "^3.2.0"
+    "middle.js": "^3.2.0",
+    "vanilla-ui-router": "^1.2.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

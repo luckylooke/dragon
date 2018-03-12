@@ -4,7 +4,7 @@ let docElm = document.documentElement
 
 export default class Drag {
 
-	constructor( item ) {
+	constructor( item, config ) {
 
 		// this.mirror // mirror image
 		// this.originContElm // source container element
@@ -29,6 +29,10 @@ export default class Drag {
 		this.domEventManager = this.dragon.domEventManager
 		this.domClassManager = this.dragon.domClassManager
 		this.findDropTarget = this.dragon.findDropTarget.bind( this.dragon )
+		this.utils = item.utils
+    this.setConfig = this.utils.setConfig.bind( this, item )
+    this.setConfig( config )
+		this.getConfig = this.utils.getConfig.bind( this )
 
 		if ( this.getConfig( 'mouseEvents' ) )
 			this.mouseEvents()
@@ -214,9 +218,9 @@ export default class Drag {
 		let mirrorWithParent = this.getConfig( 'mirrorWithParent' )
 		let mirror = mirrorWithParent ? this.utils.getParent( itemElm ).cloneNode( false ) : itemElm.cloneNode( true )
 
-		if ( mirrorWithParent ) 
+		if ( mirrorWithParent )
 			mirror.appendChild( itemElm.cloneNode( true ) )
-		
+
 		mirror.style.width = this.utils.getRectWidth( rect ) + 'px'
 		mirror.style.height = this.utils.getRectHeight( rect ) + 'px'
 		this.domClassManager.rm( mirror, 'dragon-transit' )
@@ -364,11 +368,5 @@ export default class Drag {
 		}
 
 		return target === this.originContElm && sibling === this.initialSibling
-	}
-
-	@middle
-	getConfig( prop ) {
-
-		return this.item.getConfig( prop )
 	}
 }

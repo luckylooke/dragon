@@ -1,7 +1,7 @@
 module.exports = {
-	entry: __dirname + '/core.js',
+	entry: __dirname + '/axis.js',
 	output: {
-		filename: 'core.es5.js'
+		filename: 'axis.es5.js'
 	},
 	module: {
 		loaders: [
@@ -16,14 +16,7 @@ module.exports = {
 					],
 					babelrc: false
 				}
-			},
-			{
-		        test: /\.css$/,
-		        use: [
-		          { loader: "style-loader" },
-		          { loader: "css-loader" }
-		        ]
-		    }
+			}
 		]
 	}
 };

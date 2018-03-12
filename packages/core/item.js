@@ -8,23 +8,20 @@ export default class Item {
 		if ( !config )
 			config = {}
 
-		this.config = config
+		this.Drag = Drag
 		this.id = config.id || 'itemID_' + Date.now()
 		this.container = container
+		this.utils = container.utils
+    this.setConfig = this.utils.setConfig.bind( this, container )
+    this.setConfig( config )
+		this.getConfig = this.utils.getConfig.bind( this )
 		this.elm = elm
 	}
 
 	@middle
 	grab() {
 
-		this.drag = new Drag( this )
+		this.drag = new this.Drag( this )
 		return this.drag
-	}
-
-	@middle
-	getConfig( prop ) {
-
-		prop = this.config.hasOwnProperty( prop ) ? this.config[ prop ] : this.container.getConfig( prop )
-		return typeof prop == 'function' ? prop() : prop
 	}
 }

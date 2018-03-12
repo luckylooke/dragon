@@ -324,14 +324,14 @@ function touchy(el, op, type, fn) {
 		/** @namespace global.navigator.msPointerEnabled -- resolving webstorm unresolved variables */
 	};if (global.navigator.pointerEnabled) {
 
-		_crossvent2.default[op](el, pointers[type] || type, fn);
+		_crossvent2.default[op](el, pointers[type], fn, { passive: false });
 	} else if (global.navigator.msPointerEnabled) {
 
-		_crossvent2.default[op](el, microsoft[type] || type, fn);
+		_crossvent2.default[op](el, microsoft[type], fn, { passive: false });
 	} else {
 
-		_crossvent2.default[op](el, touch[type] || type, fn);
-		_crossvent2.default[op](el, type, fn);
+		_crossvent2.default[op](el, touch[type], fn, { passive: false });
+		_crossvent2.default[op](el, type, fn, { passive: false });
 	}
 }
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))

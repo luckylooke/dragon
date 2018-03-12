@@ -1,3 +1,4 @@
+/* global __dirname */
 const path = require('path')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
@@ -15,24 +16,24 @@ module.exports = {
 			{
 				test: /\.js$/,
 				use: [{
-				    loader: 'babel-loader',
-				    options: {
-						presets: ['env'],
-						plugins: [
-							'transform-decorators-legacy',
-							'transform-class-properties'
-						],
-						babelrc: false       
-				    }
-				  }]
+          loader: 'babel-loader',
+          options: {
+          presets: ['env'],
+          plugins: [
+            'transform-decorators-legacy',
+            'transform-class-properties'
+          ],
+          babelrc: false
+          }
+        }]
 			},
 			{
-		        test: /\.css$/,
-		        use: [
-		          { loader: "style-loader" },
-		          { loader: "css-loader" }
-		        ]
-		    }
+        test: /\.css$/,
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' }
+        ]
+      }
 		]
 	},
 	plugins: [
@@ -40,8 +41,8 @@ module.exports = {
 		new CopyWebpackPlugin( [
 			{ context: 'dragon-web', from: 'dist', to: path.join( __dirname, '/docs')},
 			{ context: 'packages/core', from: 'dragon.css', to: path.join( __dirname, '/dist')},
-		], { 
-			// debug: 'info' 
+		], {
+			// debug: 'info'
 		}),
 	]
 };

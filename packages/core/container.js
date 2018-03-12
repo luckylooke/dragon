@@ -8,12 +8,16 @@ export default class Container {
 		if ( !config )
 			config = {}
 
-		this.config = config
 		this.id = config.id || 'containerID_' + Date.now()
+    this.utils = dragon.utils
+    this.setConfig = this.utils.setConfig.bind( this, dragon )
+    this.setConfig( config )
+		this.getConfig = this.utils.getConfig.bind( this )
+
 		this.dragon = dragon
-		this.utils = dragon.utils
 		this.items = []
 		this.elm = elm
+		this.Item = Item
 
 		this._initItems()
 	}
@@ -43,7 +47,7 @@ export default class Container {
 			item = itemOrElm
 		} else {
 
-			item = new Item( this, itemOrElm, config )
+			item = new this.Item( this, itemOrElm, config )
 		}
 
 		this.items.splice( index, 0, item )
@@ -53,9 +57,9 @@ export default class Container {
 			let reference = this.elm.children[ index ]
 
 			if ( reference )
-				this.utils.hierarchySafe( () => this.elm.insertBefore( item.elm, reference ))
+				this.elm.insertBefore( item.elm, reference )
 			else
-				this.utils.hierarchySafe( () => this.elm.appendChild( item.elm ))
+				this.elm.appendChild( item.elm )
 		}
 
 		return item
@@ -94,12 +98,5 @@ export default class Container {
 		for ( let i = 0; i < len; i++ ) {
 			this._initItem( arr[ i ] )
 		}
-	}
-
-	@middle
-	getConfig( prop ) {
-
-		prop = this.config.hasOwnProperty( prop ) ? this.config[ prop ] : this.dragon.getConfig( prop )
-		return typeof prop == 'function' ? prop() : prop
 	}
 }

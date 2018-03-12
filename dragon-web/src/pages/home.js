@@ -1,8 +1,9 @@
-
+/* eslint-disable no-console */
 import './home.scss'
 import dragon from '../../../src/dragon.dev.lib'
 
-export function homePageHandler( domEntryPoint, routeParams ){
+// export function homePageHandler( domEntryPoint , routeParams ){
+export function homePageHandler(){
 	buildExample( GET_MOCK_INPUT_GENERATED() )
 }
 
@@ -18,15 +19,17 @@ function buildExample( containers ){
 	createContainers( containers, exampleElm )
 
 	let d = dragon(document.getElementsByClassName('example-container'))
-      console.log('dragon instance: ', d)
+      console.log('dragon instance, also can by find in window._dev_dragon: ', d)
+
+  window._dev_dragon = d
 }
 
 function createContainers( containers, targetElement, level ) {
 
 	level = level || 0
 
-	var rowElm = document.createElement('div')
-  	rowElm.className = 'row'
+  var rowElm = document.createElement('div')
+    rowElm.className = 'row'
 
 	containers.forEach( function( container ){
 
@@ -51,13 +54,13 @@ function createContainers( containers, targetElement, level ) {
 			})
 		}
 
-	  	rowElm.appendChild( colElm )
+    rowElm.appendChild( colElm )
 	})
 
 	targetElement.appendChild( rowElm )
 
 }
-
+// eslint-disable-next-line no-unused-vars
 function GET_MOCK_INPUT(){
 
 	return [
