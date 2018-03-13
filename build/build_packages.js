@@ -7,6 +7,7 @@ fs.readdir(packagesFolder, (err, files) => {
 
   files.forEach(file => {
 
+    if ( file === 'plugins') return
     console.log('starting build for: ', path.join(packagesFolder, file, '/'))
 
     exec( 'webpack && npm version patch && npm publish',

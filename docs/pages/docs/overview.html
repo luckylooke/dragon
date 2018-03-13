@@ -1,0 +1,81 @@
+<div class="overview-page">
+    <div class="container">
+    	<div class="row">
+    		<div class="col">
+    			<h1>DRAGON overview</h1>
+
+    			<h2>Basic terms definitions</h2>
+
+                <ul>
+                    <li><b>drag</b> - is an instance of class Drag which is object referencing the drag action, it is the fundamental class of the library.</li>
+                    <li><b>item</b> - is an instance of class Item which is object holding reference to related dom element and additional data</li>
+                    <li><b>container</b> - is an instance of class Container which is object holding reference to its items, related dom element and additional data. It contains items.</li>
+                    <li><b>dragon</b> - is an instance of class Dragon we can imagine it as group of containers sharing same configuration</li>
+                    <li><b>space</b> - is an object holding references of multiple dragons which can interfere, it is kind of dragons group</li>
+                </ul>
+    		</div>
+    	</div>
+  
+        <hr>
+        <div class="row">
+            <div class="col">
+
+                <h2>Bootstraping dragon</h2>
+
+                <p>Basicaly you bootstrap dragons by calling dragon function of a library which inside creates new Dragon instance and returns it. You are not supposed to create dragon instances directly because Dragon needs some extra parameters which is intended for advanced use and it is not described here in overview section.</p>
+
+                <p>The dragon function accepts one parameter, which can be configuration object, array of container ( elements ), or one container element. It also accepts array-like objects such as jQuery elements collection etc.</p>
+
+                <pre>dragon({ containers: [ containerElm1, cotainerElm2 ]})</pre>
+                <pre>dragon([ containerElm1, cotainerElm2 ])</pre>
+                <pre>dragon( containerElm1 )</pre>
+                <pre>dragon( $('#containerElm1'))</pre>
+            </div>
+        </div>
+  
+        <hr>
+        <div class="row">
+            <div class="col">
+
+                <h2>Drag & drop</h2>
+
+                <ul>
+                    <li>grab</li>
+                    <li>drag start</li>
+                    <li>drag</li>
+                    <li>release</li>
+                    <li>drop</li>
+                </ul>
+            </div>
+        </div>
+  
+        <div class="row">
+            <div class="col">
+
+                <h3>Grab</h3>
+
+                <p>By default grab occurs when user performs mouse down ( touch start ) on item element. Dragon travel trough the ancestors of the elemenent looking for registered container element. If found one, it will trigger grab method on relevant container object.</p>
+
+                <p>Container grab method by default just search for relevant item object and call grab method on it. The item then create new instance of Drag class. From now, drag is ready to be activated by move.</p>
+            </div>
+        </div>
+  
+        <div class="row">
+            <div class="col">
+
+                <h3>Drag start</h3>
+
+                <p>By default drag is activated by mouse ( touch ) movement. This movement starts drag start procedure wich initialize drag instace for being dragged. From now the item is moving according to mouse move ( touch move ).</p>
+            </div>
+        </div>
+  
+        <div class="row">
+            <div class="col">
+
+                <h3>Drag</h3>
+
+                <p>During the drag elements behind cursor ( touch position ), are checked if there is no container ready to accept dragged item. If found one, it will move item element into it.</p>
+            </div>
+        </div>
+    </div>
+</div>

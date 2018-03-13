@@ -1,0 +1,79 @@
+<div class="quick-start-page">
+    <div class="container">
+    	<div class="row">
+    		<div class="col">
+    			<h1>DRAGON quick start</h1>
+
+    			<p>Dragon library is possible to install as npm package and use it as ES6 module or as ES5 UMD module, or even it can be loaded as &lt;script&gt; into the simple page.</p>
+    		</div>
+    	</div>
+        <div class="row">
+            <hr>
+            <div class="col">
+                <h2>Installation</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#es6" role="tab">ES6 module</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#es5" role="tab">ES5 module</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#no-module" role="tab">No module</a>
+                  </li>
+                </ul>
+
+                <div class="tab-content" id="myTabContent">
+                  <div class="tab-pane fade show active" id="es6" role="tabpanel" aria-labelledby="es6-tab">
+                    <pre>npm install dragon</pre>
+                    or
+                    <pre>yarn dragon</pre>
+
+                    then in your project just import dragon and start using
+
+                    <pre>import dragon from 'dragon'</pre>
+                    <pre>let dragonInstance = dragon(element, options)</pre>
+                  </div>
+                  <div class="tab-pane fade" id="es5" role="tabpanel" aria-labelledby="es5-tab">
+                    <pre>npm install dragon</pre>
+                    or
+                    <pre>yarn dragon</pre>
+
+                    then in your project just import dragon and start using
+
+                    <pre>var dragon require('dragon')</pre>
+                    <pre>let dragonInstance = dragon(element, options)</pre>
+                  </div>
+                  <div class="tab-pane fade" id="no-module" role="tabpanel" aria-labelledby="no-module-tab">
+                    <pre>download dragon.js (dragon.min.js) from <a href="https://github.com/luckylooke/dragon/tree/master/dist">dist folder</a>.</pre> Where dragon.min.js version is minified one.
+
+                    in your html
+
+                    <pre>&lt;script type=&quot;text/javascript&quot; src=&quot;./path/to/dragon.js&quot;&gt;&lt;/script&gt;</pre>
+
+                    then in your code
+
+                    <pre>let dragonInstance = dragon(element, options)</pre>
+                      </div>
+                    </div>
+                
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col col-12">
+                <h2>Where to go now?</h2>
+            </div>
+            <div class="col col-auto">
+                <ul>
+                    <li><a href="#docs/overview">Dragon overview</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
