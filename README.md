@@ -34,38 +34,5 @@ Projects **without** module bundler:
 new Dragon( document.getElementsByClassName('container') );
 ```
 
-## Principes of library
-Explained principes of the library to better understanding how it works and how you can extend it or hook on its parts, events etc.
-
-### Dragon objects
-Dragon library has few classes helping to make drags done precisely and reliably. The classes are: Dragon, Container, Item, Drag. There is also one shared object called space. The space object is where dragons live together.
-
-#### space
-Main purpose of space is to provide communication medium for dragons.
-
-#### Dragon( config | Array[ Container | DOMElement ] | ArrayLike[ DOMElement ] ) class
-Main class of the library, it holds container objects so we can imagine it as group of containers.
-
-#### Container( Dragon, DOMElement, config )
-An object associated with DOM element which holds draggable items. 
-
-#### Item( Container, DOMElement, config )
-An object associated with DOM element which represents draggable item. 
-
-#### Drag( Observable, Item, Container )
-An object representing the active drag, it holds references to item being dragged, source container where the item was placed in the beginning of drag and other related info.
-
-### States of the Item
-Every drag has these stages: GRAB, DRAG, RELEASE.
-
-#### Grab
-Started with user interaction ( mousedown ) or by js, it is where Drag object instance is created. And it waits for starting signal ( movement, time, js ). 
-
-#### Drag
-Dragging is happening and parameters are changing ( position [x,y], elementBehindCursor ). It has also state ( grabbed, moved, dragging, dropped, cancelled, cleaned ).
-
-#### Release
-Drag is finished by release and several scenarios can occur. Dragged item can be placed into actual position, can be moved to initial position, or item can be removed. Depends on config and actual situation.
-
 ## Special thanks
 I want to specially thank to Joe Hill for releasing the 'dragon' npm username in favor of the dragon library, so I was able to crete @dragon organisation. So plugins of the library can be namespaces under @dragon/plugin-name
