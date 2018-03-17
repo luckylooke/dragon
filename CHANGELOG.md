@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.0 Inherited options
+- prototypal inheritance of options objects
+
 ## 0.2.0 Refactor2 + docs
 - draging element is item element, two mirrors are rendered as placeholders ( start and drop places )
 - renaming properties and methods
