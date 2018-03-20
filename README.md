@@ -36,3 +36,11 @@ new Dragon( document.getElementsByClassName('container') );
 
 ## Special thanks
 I want to specially thank to Joe Hill for releasing the 'dragon' npm username in favor of the dragon library, so I was able to crete @dragon organisation. So plugins of the library can be namespaces under @dragon/plugin-name
+
+## How can you contribute?
+You can ask me on email (luckylooke@gmail.com), we can diskuss your skills and then I can share some tasks with you
+
+## How can you support the project?
+This is my free time project now, so you can donnate the project to speed it up, more money I get, less time I need to work elsewhere.
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CR7QL68KM4VUC)
