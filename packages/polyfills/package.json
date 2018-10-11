@@ -1,6 +1,6 @@
 {
   "name": "@dragon/polyfills",
-  "version": "0.1.8",
+  "version": "0.1.10",
   "description": "Compatibility Polyfills for dragon",
   "main": "polyfills.es5.js",
   "module": "polyfills.js",

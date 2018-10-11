@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.1 plugin support
+- domClassManager and domEventManager provided via utils for simplified reuse/mock/etc
+- Dragon and utils exported from lib module
+- added midle.js as dev dependency to develop it in paraallel with dragon
+
 ## 0.3.0 Inherited options
 - prototypal inheritance of options objects
 

@@ -1,9 +1,14 @@
+import  touchy       from '@dragon/touchy' // cross dom event management
+import  classes      from '@dragon/dom-classes'
+
 /* global global */
 let doc = document
 let docElm = doc.documentElement
 
 export default {
 
+	// domEventManager: touchy,
+	// domClassManager: classes,
 	// getConfig: getConfig,
 	// getImmediateChild: getImmediateChild,
 	// getReference: getReference,
@@ -23,6 +28,11 @@ export default {
 	// isEditable: isEditable,
 	// getIndexByElm: getIndexByElm,
 	// ensureArray: ensureArray,
+}
+
+export {
+	touchy as domEventManager,
+	classes as domClassManager,
 }
 
 export function setConfig( parent, config ) {
@@ -56,8 +66,8 @@ export function getReference( dropTarget, target, x, y, direction, abs ) {
 	let horizontal = direction === 'horizontal'
 
 	if ( abs ) {
-		x = x - getScroll( 'scrollLeft', 'pageXOffset' )
-		y = y - getScroll( 'scrollTop', 'pageYOffset' )
+		x = x - getScroll('scrollLeft', 'pageXOffset')
+		y = y - getScroll('scrollTop', 'pageYOffset')
 	}
 	return target !== dropTarget ? inside() : outside() // reference
 
@@ -149,8 +159,8 @@ export function getOffset( el, size ) {
 
 	let rect = el.getBoundingClientRect()
 	let result = {
-		left: rect.left + getScroll( 'scrollLeft', 'pageXOffset' ),
-		top: rect.top + getScroll( 'scrollTop', 'pageYOffset' )
+		left: rect.left + getScroll('scrollLeft', 'pageXOffset'),
+		top: rect.top + getScroll('scrollTop', 'pageYOffset')
 	}
 
 	if ( size ) {
@@ -164,7 +174,7 @@ export function getOffset( el, size ) {
 
 export function getScroll( scrollProp, offsetProp ) {
 
-	if ( typeof global[ offsetProp ] !== 'undefined' ) {
+	if ( typeof global[ offsetProp ] !== 'undefined') {
 		return global[ offsetProp ]
 	}
 
@@ -184,8 +194,8 @@ export function getElementBehindPoint( elmToHide, x, y, abs ) {
 	elmToHide.className += ' dragon-hide'
 	// look at the position
 	el = doc.elementFromPoint(
-		abs ? x - getScroll( 'scrollLeft', 'pageXOffset' ) : x,
-		abs ? y - getScroll( 'scrollTop', 'pageYOffset' ) : y
+		abs ? x - getScroll('scrollLeft', 'pageXOffset') : x,
+		abs ? y - getScroll('scrollTop', 'pageYOffset') : y
 	)
 	// show elmToHide back
 	elmToHide.className = state
@@ -268,11 +278,11 @@ export function isEditable( el ) {
 		return false
 	}
 	// no parents were editable
-	if ( el.contentEditable === 'false' ) {
+	if ( el.contentEditable === 'false') {
 		return false
 	}
 	// stop the lookup
-	if ( el.contentEditable === 'true' ) {
+	if ( el.contentEditable === 'true') {
 		return true
 	}
 	// found a contentEditable element in the chain

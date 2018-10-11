@@ -1,6 +1,6 @@
 {
   "name": "@dragon/utils",
-  "version": "0.1.8",
+  "version": "0.1.10",
   "description": "Vanilla implementtation of utils functions used in dragon lib",
   "main": "utils.es5.js",
   "module": "utils.js",
@@ -15,7 +15,10 @@
     "url": "https://github.com/luckylooke/dragon/issues"
   },
   "homepage": "https://github.com/luckylooke/dragon",
-  "dependencies": {},
+  "dependencies": {
+    "@dragon/dom-classes": "^0.1.8",
+    "@dragon/touchy": "^0.1.8"
+  },
   "devDependencies": {},
   "peerDependencies": {
     "@dragon/core": "^0.1"

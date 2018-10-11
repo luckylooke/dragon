@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -101,11 +101,304 @@ module.exports = g;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+var cache = {};
+var start = '(?:^|\\s)';
+var end = '(?:\\s|$)';
+
+function lookup(className) {
+
+	var cached = cache[className];
+
+	if (cached) {
+
+		cached.lastIndex = 0;
+	} else {
+
+		cache[className] = cached = new RegExp(start + className + end, 'g');
+	}
+
+	return cached;
+}
+
+function add(el, className) {
+
+	var current = el.className;
+
+	if (!current.length) {
+
+		el.className = className;
+	} else if (!lookup(className).test(current)) {
+
+		el.className += ' ' + className;
+	}
+}
+
+function rm(el, className) {
+
+	el.className = el.className.replace(lookup(className), ' ').trim();
+}
+
+exports.default = {
+	add: add,
+	rm: rm
+};
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 /* WEBPACK VAR INJECTION */(function(global) {
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.default = touchy;
+
+var _crossvent = __webpack_require__(3);
+
+var _crossvent2 = _interopRequireDefault(_crossvent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function touchy(el, op, type, fn) {
+
+	var touch = {
+		mouseup: 'touchend',
+		mousedown: 'touchstart',
+		mousemove: 'touchmove'
+	};
+
+	var pointers = {
+		mouseup: 'pointerup',
+		mousedown: 'pointerdown',
+		mousemove: 'pointermove'
+	};
+
+	var microsoft = {
+		mouseup: 'MSPointerUp',
+		mousedown: 'MSPointerDown',
+		mousemove: 'MSPointerMove'
+
+		/** @namespace global.navigator.pointerEnabled -- resolving webstorm unresolved variables */
+		/** @namespace global.navigator.msPointerEnabled -- resolving webstorm unresolved variables */
+	};if (global.navigator.pointerEnabled) {
+
+		_crossvent2.default[op](el, pointers[type], fn, { passive: false });
+	} else if (global.navigator.msPointerEnabled) {
+
+		_crossvent2.default[op](el, microsoft[type], fn, { passive: false });
+	} else {
+
+		_crossvent2.default[op](el, touch[type], fn, { passive: false });
+		_crossvent2.default[op](el, type, fn, { passive: false });
+	}
+}
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {
+
+var customEvent = __webpack_require__(5);
+var eventmap = __webpack_require__(4);
+var doc = global.document;
+var addEvent = addEventEasy;
+var removeEvent = removeEventEasy;
+var hardCache = [];
+
+if (!global.addEventListener) {
+  addEvent = addEventHard;
+  removeEvent = removeEventHard;
+}
+
+module.exports = {
+  add: addEvent,
+  remove: removeEvent,
+  fabricate: fabricateEvent
+};
+
+function addEventEasy(el, type, fn, capturing) {
+  return el.addEventListener(type, fn, capturing);
+}
+
+function addEventHard(el, type, fn) {
+  return el.attachEvent('on' + type, wrap(el, type, fn));
+}
+
+function removeEventEasy(el, type, fn, capturing) {
+  return el.removeEventListener(type, fn, capturing);
+}
+
+function removeEventHard(el, type, fn) {
+  var listener = unwrap(el, type, fn);
+  if (listener) {
+    return el.detachEvent('on' + type, listener);
+  }
+}
+
+function fabricateEvent(el, type, model) {
+  var e = eventmap.indexOf(type) === -1 ? makeCustomEvent() : makeClassicEvent();
+  if (el.dispatchEvent) {
+    el.dispatchEvent(e);
+  } else {
+    el.fireEvent('on' + type, e);
+  }
+  function makeClassicEvent() {
+    var e;
+    if (doc.createEvent) {
+      e = doc.createEvent('Event');
+      e.initEvent(type, true, true);
+    } else if (doc.createEventObject) {
+      e = doc.createEventObject();
+    }
+    return e;
+  }
+  function makeCustomEvent() {
+    return new customEvent(type, { detail: model });
+  }
+}
+
+function wrapperFactory(el, type, fn) {
+  return function wrapper(originalEvent) {
+    var e = originalEvent || global.event;
+    e.target = e.target || e.srcElement;
+    e.preventDefault = e.preventDefault || function preventDefault() {
+      e.returnValue = false;
+    };
+    e.stopPropagation = e.stopPropagation || function stopPropagation() {
+      e.cancelBubble = true;
+    };
+    e.which = e.which || e.keyCode;
+    fn.call(el, e);
+  };
+}
+
+function wrap(el, type, fn) {
+  var wrapper = unwrap(el, type, fn) || wrapperFactory(el, type, fn);
+  hardCache.push({
+    wrapper: wrapper,
+    element: el,
+    type: type,
+    fn: fn
+  });
+  return wrapper;
+}
+
+function unwrap(el, type, fn) {
+  var i = find(el, type, fn);
+  if (i) {
+    var wrapper = hardCache[i].wrapper;
+    hardCache.splice(i, 1); // free up a tad of memory
+    return wrapper;
+  }
+}
+
+function find(el, type, fn) {
+  var i, item;
+  for (i = 0; i < hardCache.length; i++) {
+    item = hardCache[i];
+    if (item.element === el && item.type === type && item.fn === fn) {
+      return i;
+    }
+  }
+}
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {
+
+var eventmap = [];
+var eventname = '';
+var ron = /^on/;
+
+for (eventname in global) {
+  if (ron.test(eventname)) {
+    eventmap.push(eventname.slice(2));
+  }
+}
+
+module.exports = eventmap;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {
+
+var NativeCustomEvent = global.CustomEvent;
+
+function useNative() {
+  try {
+    var p = new NativeCustomEvent('cat', { detail: { foo: 'bar' } });
+    return 'cat' === p.type && 'bar' === p.detail.foo;
+  } catch (e) {}
+  return false;
+}
+
+/**
+ * Cross-browser `CustomEvent` constructor.
+ *
+ * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent.CustomEvent
+ *
+ * @public
+ */
+
+module.exports = useNative() ? NativeCustomEvent :
+
+// IE >= 9
+'undefined' !== typeof document && 'function' === typeof document.createEvent ? function CustomEvent(type, params) {
+  var e = document.createEvent('CustomEvent');
+  if (params) {
+    e.initCustomEvent(type, params.bubbles, params.cancelable, params.detail);
+  } else {
+    e.initCustomEvent(type, false, false, void 0);
+  }
+  return e;
+} :
+
+// IE <= 8
+function CustomEvent(type, params) {
+  var e = document.createEventObject();
+  e.type = type;
+  if (params) {
+    e.bubbles = Boolean(params.bubbles);
+    e.cancelable = Boolean(params.cancelable);
+    e.detail = params.detail;
+  } else {
+    e.bubbles = false;
+    e.cancelable = false;
+    e.detail = void 0;
+  }
+  return e;
+};
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.domClassManager = exports.domEventManager = undefined;
 exports.setConfig = setConfig;
 exports.getConfig = getConfig;
 exports.getImmediateChild = getImmediateChild;
@@ -128,12 +421,26 @@ exports.isInput = isInput;
 exports.isEditable = isEditable;
 exports.getIndexByElm = getIndexByElm;
 exports.hierarchySafe = hierarchySafe;
+
+var _touchy = __webpack_require__(2);
+
+var _touchy2 = _interopRequireDefault(_touchy);
+
+var _domClasses = __webpack_require__(1);
+
+var _domClasses2 = _interopRequireDefault(_domClasses);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 /* global global */
-var doc = document;
+var doc = document; // cross dom event management
+
 var docElm = doc.documentElement;
 
 exports.default = {
 
+	// domEventManager: touchy,
+	// domClassManager: classes,
 	// getConfig: getConfig,
 	// getImmediateChild: getImmediateChild,
 	// getReference: getReference,
@@ -154,6 +461,8 @@ exports.default = {
 	// getIndexByElm: getIndexByElm,
 	// ensureArray: ensureArray,
 };
+exports.domEventManager = _touchy2.default;
+exports.domClassManager = _domClasses2.default;
 function setConfig(parent, config) {
 
 	this.config = Object.assign(Object.create(parent.config), config);

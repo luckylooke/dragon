@@ -142,6 +142,164 @@ function _applyDecoratedDescriptor(target, property, decorators, descriptor, con
 	return desc;
 }
 
+var Container = (_class = function () {
+	function Container(dragon, elm, config) {
+		_classCallCheck(this, Container);
+
+		if (!config) config = {};
+
+		this.id = config.id || 'containerID_' + Date.now();
+		this.utils = dragon.utils;
+		this.Item = dragon.Item;
+		this.Drag = dragon.Drag;
+		this.setConfig = this.utils.setConfig.bind(this, dragon);
+		this.setConfig(config);
+		this.getConfig = this.utils.getConfig.bind(this);
+
+		this.dragon = dragon;
+		this.items = [];
+		this.elm = elm;
+
+		this._initItems();
+	}
+
+	_createClass(Container, [{
+		key: 'grab',
+		value: function grab(itemElm) {
+
+			var item = this.items[this.utils.getIndexByElm(this.items, itemElm)];
+			return item ? item.grab() : null;
+		}
+	}, {
+		key: '_initItem',
+		value: function _initItem(itemOrElm) {
+
+			this.addItem(itemOrElm, this.items.length, this.config.itemConf, true);
+		}
+	}, {
+		key: 'addItem',
+		value: function addItem(itemOrElm, index, config, init) {
+
+			index = index || 0;
+
+			var item = void 0;
+
+			if (itemOrElm instanceof this.Item) {
+
+				itemOrElm.container = this;
+				item = itemOrElm;
+			} else {
+
+				item = this.createItem(this, itemOrElm, config || this.config.itemConf);
+			}
+
+			this.items.splice(index, 0, item);
+
+			if (!init && !this.elm.contains(item.elm)) {
+				// sync DOM
+				var reference = this.elm.children[index];
+
+				if (reference) this.elm.insertBefore(item.elm, reference);else this.elm.appendChild(item.elm);
+			}
+
+			return item;
+		}
+	}, {
+		key: 'createItem',
+		value: function createItem(container, itemOrElm, config) {
+			return new this.Item(container, itemOrElm, config);
+		}
+	}, {
+		key: 'removeItem',
+		value: function removeItem(itemOrElm) {
+
+			var index = void 0;
+			var item = void 0;
+
+			if (itemOrElm instanceof this.Item) {
+
+				itemOrElm.container = null;
+				index = this.items.indexOf(itemOrElm);
+			} else {
+
+				index = this.utils.getIndexByElm(this.items, itemOrElm);
+			}
+
+			item = this.items.splice(index, 1)[0];
+
+			if (this.elm.contains(item.elm)) {
+				// sync DOM
+				this.elm.removeChild(item.elm);
+			}
+
+			return item;
+		}
+	}, {
+		key: '_initItems',
+		value: function _initItems() {
+
+			var arr = this.utils.toArray(this.elm.children);
+			var len = arr.length;
+
+			for (var i = 0; i < len; i++) {
+				this._initItem(arr[i]);
+			}
+		}
+	}]);
+
+	return Container;
+}(), (_applyDecoratedDescriptor(_class.prototype, 'grab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'grab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'addItem', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'addItem'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'createItem', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'createItem'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'removeItem', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'removeItem'), _class.prototype)), _class);
+exports.default = Container;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _desc, _value, _class;
+
+var _middle = __webpack_require__(0);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+	var desc = {};
+	Object['ke' + 'ys'](descriptor).forEach(function (key) {
+		desc[key] = descriptor[key];
+	});
+	desc.enumerable = !!desc.enumerable;
+	desc.configurable = !!desc.configurable;
+
+	if ('value' in desc || desc.initializer) {
+		desc.writable = true;
+	}
+
+	desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+		return decorator(target, property, desc) || desc;
+	}, desc);
+
+	if (context && desc.initializer !== void 0) {
+		desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+		desc.initializer = undefined;
+	}
+
+	if (desc.initializer === void 0) {
+		Object['define' + 'Property'](target, property, desc);
+		desc = null;
+	}
+
+	return desc;
+}
+
 var docElm = document.documentElement;
 
 var Drag = (_class = function () {
@@ -485,7 +643,7 @@ var Drag = (_class = function () {
 exports.default = Drag;
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -500,13 +658,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _desc, _value, _class;
 
-var _drag = __webpack_require__(1);
-
-var _drag2 = _interopRequireDefault(_drag);
-
 var _middle = __webpack_require__(0);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -545,9 +697,9 @@ var Item = (_class = function () {
 
 		if (!config) config = {};
 
-		this.Drag = _drag2.default;
 		this.id = config.id || 'itemID_' + Date.now();
 		this.container = container;
+		this.Drag = container.Drag;
 		this.utils = container.utils;
 		this.setConfig = this.utils.setConfig.bind(this, container);
 		this.setConfig(config);
@@ -559,172 +711,19 @@ var Item = (_class = function () {
 		key: 'grab',
 		value: function grab() {
 
-			this.drag = new this.Drag(this);
+			this.drag = this.createDrag(this, this.config.dragConf);
 			return this.drag;
+		}
+	}, {
+		key: 'createDrag',
+		value: function createDrag(item, config) {
+			return new this.Drag(item, config);
 		}
 	}]);
 
 	return Item;
-}(), (_applyDecoratedDescriptor(_class.prototype, 'grab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'grab'), _class.prototype)), _class);
+}(), (_applyDecoratedDescriptor(_class.prototype, 'grab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'grab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'createDrag', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'createDrag'), _class.prototype)), _class);
 exports.default = Item;
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.default = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _desc, _value, _class;
-
-var _item = __webpack_require__(2);
-
-var _item2 = _interopRequireDefault(_item);
-
-var _middle = __webpack_require__(0);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
-	var desc = {};
-	Object['ke' + 'ys'](descriptor).forEach(function (key) {
-		desc[key] = descriptor[key];
-	});
-	desc.enumerable = !!desc.enumerable;
-	desc.configurable = !!desc.configurable;
-
-	if ('value' in desc || desc.initializer) {
-		desc.writable = true;
-	}
-
-	desc = decorators.slice().reverse().reduce(function (desc, decorator) {
-		return decorator(target, property, desc) || desc;
-	}, desc);
-
-	if (context && desc.initializer !== void 0) {
-		desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
-		desc.initializer = undefined;
-	}
-
-	if (desc.initializer === void 0) {
-		Object['define' + 'Property'](target, property, desc);
-		desc = null;
-	}
-
-	return desc;
-}
-
-var Container = (_class = function () {
-	function Container(dragon, elm, config) {
-		_classCallCheck(this, Container);
-
-		if (!config) config = {};
-
-		this.id = config.id || 'containerID_' + Date.now();
-		this.utils = dragon.utils;
-		this.setConfig = this.utils.setConfig.bind(this, dragon);
-		this.setConfig(config);
-		this.getConfig = this.utils.getConfig.bind(this);
-
-		this.dragon = dragon;
-		this.items = [];
-		this.elm = elm;
-		this.Item = _item2.default;
-
-		this._initItems();
-	}
-
-	_createClass(Container, [{
-		key: 'grab',
-		value: function grab(itemElm) {
-
-			var item = this.items[this.utils.getIndexByElm(this.items, itemElm)];
-			return item ? item.grab() : null;
-		}
-	}, {
-		key: '_initItem',
-		value: function _initItem(itemOrElm) {
-
-			this.addItem(itemOrElm, this.items.length, null, true);
-		}
-	}, {
-		key: 'addItem',
-		value: function addItem(itemOrElm, index, config, init) {
-
-			index = index || 0;
-
-			var item = void 0;
-
-			if (itemOrElm instanceof _item2.default) {
-
-				itemOrElm.container = this;
-				item = itemOrElm;
-			} else {
-
-				item = new this.Item(this, itemOrElm, config);
-			}
-
-			this.items.splice(index, 0, item);
-
-			if (!init && !this.elm.contains(item.elm)) {
-				// sync DOM
-				var reference = this.elm.children[index];
-
-				if (reference) this.elm.insertBefore(item.elm, reference);else this.elm.appendChild(item.elm);
-			}
-
-			return item;
-		}
-	}, {
-		key: 'removeItem',
-		value: function removeItem(itemOrElm) {
-
-			var index = void 0;
-			var item = void 0;
-
-			if (itemOrElm instanceof _item2.default) {
-
-				itemOrElm.container = null;
-				index = this.items.indexOf(itemOrElm);
-			} else {
-
-				index = this.utils.getIndexByElm(this.items, itemOrElm);
-			}
-
-			item = this.items.splice(index, 1)[0];
-
-			if (this.elm.contains(item.elm)) {
-				// sync DOM
-				this.elm.removeChild(item.elm);
-			}
-
-			return item;
-		}
-	}, {
-		key: '_initItems',
-		value: function _initItems() {
-
-			var arr = this.utils.toArray(this.elm.children);
-			var len = arr.length;
-
-			for (var i = 0; i < len; i++) {
-				this._initItem(arr[i]);
-			}
-		}
-	}]);
-
-	return Container;
-}(), (_applyDecoratedDescriptor(_class.prototype, 'grab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'grab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'addItem', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'addItem'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'removeItem', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'removeItem'), _class.prototype)), _class);
-exports.default = Container;
 
 /***/ }),
 /* 4 */
@@ -742,15 +741,15 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _desc, _value, _class;
 
-var _container = __webpack_require__(3);
+var _container = __webpack_require__(1);
 
 var _container2 = _interopRequireDefault(_container);
 
-var _item = __webpack_require__(2);
+var _item = __webpack_require__(3);
 
 var _item2 = _interopRequireDefault(_item);
 
-var _drag = __webpack_require__(1);
+var _drag = __webpack_require__(2);
 
 var _drag2 = _interopRequireDefault(_drag);
 
@@ -799,10 +798,10 @@ var space = window.dragonSpace;
 // =============================================================================================================================================================
 /** is group of containers */
 var Dragon = (_class = function () {
-	function Dragon(config, utils, domEventManager, domClassManager) {
+	function Dragon(config, utils) {
 		_classCallCheck(this, Dragon);
 
-		if (!utils || !domEventManager || !domClassManager) throw new Error('Dragon: dependencies not sattisfied!');
+		if (!utils || !utils.domEventManager || !utils.domClassManager) throw new Error('Dragon: dependencies not sattisfied!');
 
 		config = config || {};
 
@@ -812,8 +811,8 @@ var Dragon = (_class = function () {
 		if (typeof config.length !== 'undefined') // is array-like
 			config = { containers: utils.ensureArray(config) };
 
-		this.domEventManager = domEventManager;
-		this.domClassManager = domClassManager;
+		this.domEventManager = utils.domEventManager;
+		this.domClassManager = utils.domClassManager;
 		this.using = []; // array of plugins using by this dragon
 		this.defaults = {
 			config: {
@@ -831,10 +830,12 @@ var Dragon = (_class = function () {
 		this.id = config.id || 'dragonID_' + Date.now();
 		this.containers = [];
 		this.space = space;
-		this.Container = _container2.default;
+		this.Container = space.classes.Container;
+		this.Item = space.classes.Item;
+		this.Drag = space.classes.Drag;
 		space.dragons.push(this);
 
-		this.addContainers();
+		this.addContainers(config.containerConfig);
 	}
 
 	_createClass(Dragon, [{
@@ -851,13 +852,14 @@ var Dragon = (_class = function () {
 				if (!space.drags) space.drags = [];
 				if (!space.utils) space.utils = this.utils;
 
-				if (!space.Dragon) space.Dragon = Dragon;
-				if (!space.Container) space.Container = _container2.default;
-				if (!space.Item) space.Item = _item2.default;
-				if (!space.Drag) space.Drag = _drag2.default;
+				if (!space.classes) space.classes = {
+					Dragon: Dragon,
+					Container: _container2.default,
+					Item: _item2.default,
+					Drag: _drag2.default
 
-				// space.setConfig = this.utils.setConfig.bind( space, space, this.defaults, space.config )
-				space.getConfig = this.utils.getConfig.bind(space);
+					// space.setConfig = this.utils.setConfig.bind( space, space, this.defaults, space.config )
+				};space.getConfig = this.utils.getConfig.bind(space);
 				space.setConfig = this.utils.setConfig.bind(space, this.defaults);
 				space.setConfig({});
 
@@ -889,6 +891,7 @@ var Dragon = (_class = function () {
 
 			var len = containerElms.length;
 			var addedContainers = [];
+			config = config || this.config.containerConf;
 
 			for (var i = 0, elm, container; i < len; i++) {
 
@@ -901,13 +904,18 @@ var Dragon = (_class = function () {
 					/* eslint-enable no-console */
 				} else {
 
-					container = new this.Container(this, elm, config);
+					container = this.createContainer(this, elm, config);
 					this.containers.push(container);
 					addedContainers.push(container);
 				}
 			}
 
 			return addedContainers;
+		}
+	}, {
+		key: 'createContainer',
+		value: function createContainer(container, elm, config) {
+			return new this.Container(container, elm, config);
 		}
 	}, {
 		key: 'getContainer',
@@ -979,7 +987,7 @@ var Dragon = (_class = function () {
 	}]);
 
 	return Dragon;
-}(), (_applyDecoratedDescriptor(_class.prototype, 'initSpace', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'initSpace'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'addContainers', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'addContainers'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'getContainer', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'getContainer'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'grab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'grab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'findDropTarget', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'findDropTarget'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'use', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'use'), _class.prototype)), _class);
+}(), (_applyDecoratedDescriptor(_class.prototype, 'initSpace', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'initSpace'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'addContainers', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'addContainers'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'createContainer', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'createContainer'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'getContainer', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'getContainer'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'grab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'grab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'findDropTarget', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'findDropTarget'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'use', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'use'), _class.prototype)), _class);
 exports.default = Dragon;
 
 /***/ }),
@@ -1002,7 +1010,7 @@ Object.defineProperty(exports, 'Dragon', {
   }
 });
 
-var _container = __webpack_require__(3);
+var _container = __webpack_require__(1);
 
 Object.defineProperty(exports, 'Container', {
   enumerable: true,
@@ -1011,7 +1019,7 @@ Object.defineProperty(exports, 'Container', {
   }
 });
 
-var _item = __webpack_require__(2);
+var _item = __webpack_require__(3);
 
 Object.defineProperty(exports, 'Item', {
   enumerable: true,
@@ -1020,7 +1028,7 @@ Object.defineProperty(exports, 'Item', {
   }
 });
 
-var _drag = __webpack_require__(1);
+var _drag = __webpack_require__(2);
 
 Object.defineProperty(exports, 'Drag', {
   enumerable: true,

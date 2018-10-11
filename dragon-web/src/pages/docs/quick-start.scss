@@ -21,7 +21,15 @@
 	}
 
 	.nav-tabs {
-	    border-bottom: none !important;
+      border-bottom: none !important;
+
+      .nav-link {
+        color: $hx;
+
+        &.active {
+          color: $h2;
+        }
+      }
 	}
 
 	.tab-content {

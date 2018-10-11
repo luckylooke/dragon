@@ -1,6 +1,9 @@
 /* eslint-disable no-console */
 import './home.scss'
 import dragon from '../../../src/dragon.dev.lib'
+import lockAxisPlugin from '../../../packages/plugins/lock-axis/axis'
+
+// console.log('lockAxisPlugin', lockAxisPlugin)
 
 // export function homePageHandler( domEntryPoint , routeParams ){
 export function homePageHandler(){
@@ -18,8 +21,12 @@ function buildExample( containers ){
 
 	createContainers( containers, exampleElm )
 
-	let d = dragon(document.getElementsByClassName('example-container'))
-      console.log('dragon instance, also can by find in window._dev_dragon: ', d)
+  let d = dragon(document.getElementsByClassName('example-container'), {
+      // lockAxisPlugin: { lockX: true }
+    })
+    .use( lockAxisPlugin )
+
+  console.log('dragon instance, also can by find in window._dev_dragon: ', d)
 
   window._dev_dragon = d
 }

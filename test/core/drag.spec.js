@@ -11,7 +11,7 @@ import * as utils from '../../packages/utils/utils'
 import touchy from '../../packages/touchy/touchy'
 import classes from '../../packages/dom-classes/classes'
 
-describe( 'Drag Spec', function () {
+describe('Drag Spec', function () {
 
 	// Arrange
 	let div = document.createElement('div')
@@ -25,11 +25,11 @@ describe( 'Drag Spec', function () {
 	let item = new Item( container, itemElm )
 	let drag = new Drag( item )
 
-	it( 'should have been initialised properly', function () {
+	it('should have been initialised properly', function () {
 
 		// Assert
 		expect( drag.id ).toBeDefined()
-		expect( drag.state ).toEqual( 'grabbed' )
+		expect( drag.state ).toEqual('grabbed')
 		expect( drag.item ).toEqual( item )
 		expect( drag.itemElm ).toEqual( itemElm )
 		expect( drag.sourceContainer ).toEqual( container )
@@ -38,26 +38,26 @@ describe( 'Drag Spec', function () {
 		expect( drag.findDropTarget ).toBeDefined()
 	} )
 
-	describe( 'item.mouseEvents', function () {
+	describe('item.mouseEvents', function () {
 
-		it( 'should add/remove drag mouse event listeners on document element', function () {
+		it('should add/remove drag mouse event listeners on document element', function () {
 
 			// Arrange
-			let spy = spyOn( drag, 'mouseup' )
-			// let spy2 = spyOn( drag, 'mousemove' )
-			let spy3 = spyOn( drag, 'protectGrab' )
+			let spy = spyOn( drag, 'mouseup')
+			// let spy2 = spyOn( drag, 'mousemove')
+			let spy3 = spyOn( drag, 'protectGrab')
 
 			let el = document.createElement('div')
-			el.setAttribute( 'onselectstart', 'return;' )
+			el.setAttribute('onselectstart', 'return;')
 			let isSelectSupported = typeof el.onclick == 'function'
 
 			// Act
-			crossvent.fabricate( document.body, 'mouseup' )
-			// crossvent.fabricate( document.body, 'mousemove' )
-			crossvent.fabricate( document.body, 'click' )
+			crossvent.fabricate( document.body, 'mouseup')
+			// crossvent.fabricate( document.body, 'mousemove')
+			crossvent.fabricate( document.body, 'click')
 
 			if ( isSelectSupported )
-				crossvent.fabricate( document.body, 'selectstart' )
+				crossvent.fabricate( document.body, 'selectstart')
 
 			// Assert
 			expect( spy ).toHaveBeenCalled()
@@ -65,12 +65,12 @@ describe( 'Drag Spec', function () {
 			expect( spy3 ).toHaveBeenCalledTimes( isSelectSupported ? 2 : 1 )
 
 			// Act
-			drag.mouseEvents( 'remove' )
+			drag.mouseEvents('remove')
 
 			// Act
-			crossvent.fabricate( document.body, 'mouseup' )
-			// crossvent.fabricate( document.body, 'mousemove' )
-			crossvent.fabricate( document.body, 'click' )
+			crossvent.fabricate( document.body, 'mouseup')
+			// crossvent.fabricate( document.body, 'mousemove')
+			crossvent.fabricate( document.body, 'click')
 
 			// Assert
 			expect( spy ).toHaveBeenCalledTimes( 1 )
@@ -80,9 +80,9 @@ describe( 'Drag Spec', function () {
 			drag.mouseEvents() // add
 
 			// Act
-			crossvent.fabricate( document.body, 'mouseup' )
-			// crossvent.fabricate( document.body, 'mousemove' )
-			crossvent.fabricate( document.body, 'click' )
+			crossvent.fabricate( document.body, 'mouseup')
+			// crossvent.fabricate( document.body, 'mousemove')
+			crossvent.fabricate( document.body, 'click')
 
 			// Assert
 			expect( spy ).toHaveBeenCalledTimes( 2 )
@@ -91,15 +91,15 @@ describe( 'Drag Spec', function () {
 		} )
 	} )
 
-	describe( 'item.protectGrab', function () {
+	describe('item.protectGrab', function () {
 
-		it( 'it should preventDefault on provided event if state of the drag is "grabbed" ', function () {
+		it('it should preventDefault on provided event if state of the drag is "grabbed" ', function () {
 
 			// Arrange
 			let mockEvent = {
 				preventDefault: () => ''
 			}
-			let spy = spyOn( mockEvent, 'preventDefault' )
+			let spy = spyOn( mockEvent, 'preventDefault')
 
 			// Act
 			drag.protectGrab( mockEvent )
@@ -109,9 +109,9 @@ describe( 'Drag Spec', function () {
 		} )
 	} )
 
-	describe( 'item.renderMirrorImage', function () {
+	describe('item.renderMirrorImage', function () {
 
-		it( 'it should render mirror image', function () {
+		it('it should render mirror image', function () {
 
 			// Arrange
 			let itemElm = document.createElement('div')
@@ -122,19 +122,19 @@ describe( 'Drag Spec', function () {
 
 			// Act
 			drag.renderMirrorImage( itemElm, document.body )
-			let testElm = document.getElementsByClassName( 'test' )[0] // containerElm is not appended into document
+			let testElm = document.getElementsByClassName('test')[0] // containerElm is not appended into document
 
 			// Assert
 			expect( drag.mirror ).toBeDefined()
 			expect( testElm ).not.toEqual( containerElm )
-			expect( testElm.className ).toEqual( 'test dragon-mirror' )
-			expect( document.body.className ).toEqual( 'dragon-unselectable' )
+			expect( testElm.className ).toEqual('test dragon-mirror')
+			expect( document.body.className ).toEqual('dragon-unselectable')
 		} )
 	} )
 
-	describe( 'item.removeMirrorImage', function () {
+	describe('item.removeMirrorImage', function () {
 
-		it( 'it should remove mirror image', function () {
+		it('it should remove mirror image', function () {
 
 			// Arrange
 			let itemElm = document.createElement('div')
@@ -150,13 +150,13 @@ describe( 'Drag Spec', function () {
 
 			// Assert
 			expect( drag.mirror ).toBeNull()
-			expect( document.body.className ).toEqual( '' )
+			expect( document.body.className ).toEqual('')
 		} )
 	} )
 
-	describe( 'drag.getConfig', function () {
+	describe('drag.getConfig', function () {
 
-		it( 'should return item config value', function () {
+		it('should return item config value', function () {
 			// Arrange
 			let div = document.createElement('div')
 			let itemElm = document.createElement('div')
@@ -170,14 +170,14 @@ describe( 'Drag Spec', function () {
 			let drag = item.grab()
 
 			// Act
-			let configVal = drag.getConfig( 'test' )
-			let configVal2 = drag.getConfig( 'test2' )
-			let configVal3 = drag.getConfig( 'test3' )
+			let configVal = drag.getConfig('test')
+			let configVal2 = drag.getConfig('test2')
+			let configVal3 = drag.getConfig('test3')
 
 			// // Assert
-			expect( configVal ).toEqual( 'testVal' )
-			expect( configVal2 ).toEqual( 'testVal2' )
-			expect( configVal3 ).toEqual( 'testVal3' )
+			expect( configVal ).toEqual('testVal')
+			expect( configVal2 ).toEqual('testVal2')
+			expect( configVal3 ).toEqual('testVal3')
 		} )
 	} )
 

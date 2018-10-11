@@ -1,7 +1,7 @@
 @import "../variables";
 
 .home-page {
-    
+
     overflow: visible;
 
     h1 {
@@ -26,6 +26,12 @@
         width: 100%;
     }
 
+    .btn {
+      margin-top: 1em;
+      border: 2px solid rgba(100,100,100,0.5);
+      background: $h2;
+    }
+
     #example {
         text-align: center;
 
@@ -34,14 +40,6 @@
             background: rgba(0,0,0,0.2);
             margin: 0.2em 0 0.2em 0;
             padding: 0.3em;
-        }
-    }
-
-    .footer {
-        padding-bottom: 2em;
-
-        a {
-            color: white;
         }
     }
 }

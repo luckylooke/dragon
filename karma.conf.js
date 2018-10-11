@@ -2,7 +2,7 @@
 // Generated on Wed May 17 2017 09:14:53 GMT+0200 (CEST)
 
 let isDev = process.env.NODE_ENV == 'DEV'
-let webpackConf = require( './webpack.config.js' );
+let webpackConf = require('./webpack.config.js');
 
 module.exports = function ( config ) {
 	config.set( {

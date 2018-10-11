@@ -8,9 +8,9 @@ import * as utils from '../../packages/utils/utils'
 import touchy from '../../packages/touchy/touchy'
 import classes from '../../packages/dom-classes/classes'
 
-describe( 'Container Spec', function () {
+describe('Container Spec', function () {
 
-	it( 'should have been initialised properly', function () {
+	it('should have been initialised properly', function () {
 		// Arrange
 		let div = document.createElement('div')
 		let dragon = new Dragon( {}, utils, touchy, classes )
@@ -23,9 +23,9 @@ describe( 'Container Spec', function () {
 		expect( container.elm ).toEqual( div )
 	} )
 
-	describe( 'container.addItem', function () {
+	describe('container.addItem', function () {
 
-		it( 'should add new item to the container', function () {
+		it('should add new item to the container', function () {
 
 			// Arrange
 			let div = document.createElement('div')
@@ -50,9 +50,9 @@ describe( 'Container Spec', function () {
 		} )
 	} )
 
-	describe( 'container.removeItem', function () {
+	describe('container.removeItem', function () {
 
-		it( 'should remove item to the container', function () {
+		it('should remove item to the container', function () {
 
 			// Arrange
 			let div = document.createElement('div')
@@ -83,9 +83,9 @@ describe( 'Container Spec', function () {
 		} )
 	} )
 
-	describe( 'container.grab', function () {
+	describe('container.grab', function () {
 
-		it( 'should grab the itemElm if it is valid itemElm of the container', function () {
+		it('should grab the itemElm if it is valid itemElm of the container', function () {
 			// Arrange
 			// Arrange
 			let div = document.createElement('div')
@@ -113,9 +113,9 @@ describe( 'Container Spec', function () {
 		} )
 	} )
 
-	describe( 'container.getConfig', function () {
+	describe('container.getConfig', function () {
 
-		it( 'should return config value or dragon.config.value or dragon.default.value if not set by input config ', function () {
+		it('should return config value or dragon.config.value or dragon.default.value if not set by input config ', function () {
 			// Arrange
 			let div = document.createElement('div')
 			let div2 = document.createElement('div')
@@ -130,10 +130,10 @@ describe( 'Container Spec', function () {
 			let cont2 = dragon4.addContainers( div4, { mouseEvents: false } )[ 0 ]
 
 			// Act
-			let configVal = dragon.containers[ 0 ].getConfig( 'mouseEvents' )
-			let configVal2 = dragon2.containers[ 0 ].getConfig( 'mouseEvents' )
-			let configVal3 = cont.getConfig( 'mouseEvents' )
-			let configVal4 = cont2.getConfig( 'mouseEvents' )
+			let configVal = dragon.containers[ 0 ].getConfig('mouseEvents')
+			let configVal2 = dragon2.containers[ 0 ].getConfig('mouseEvents')
+			let configVal3 = cont.getConfig('mouseEvents')
+			let configVal4 = cont2.getConfig('mouseEvents')
 
 			// // Assert
 			expect( configVal ).toEqual( true )
@@ -142,7 +142,7 @@ describe( 'Container Spec', function () {
 			expect( configVal4 ).toEqual( false )
 		} )
 
-		it( 'should return config value and get value from function if provided instead of value', function () {
+		it('should return config value and get value from function if provided instead of value', function () {
 			// Arrange
 			let div = document.createElement('div')
 			let dragon = new Dragon( {}, utils, touchy, classes )
@@ -150,7 +150,7 @@ describe( 'Container Spec', function () {
 			let cont = dragon.addContainers( div, { mouseEvents: () => false } )[ 0 ]
 
 			// Act
-			let configVal = cont.getConfig( 'mouseEvents' )
+			let configVal = cont.getConfig('mouseEvents')
 
 			// // Assert
 			expect( configVal ).toEqual( false )

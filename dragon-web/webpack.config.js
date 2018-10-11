@@ -1,17 +1,20 @@
-/* global __dirname, require, module */
+/* global __dirname, require, module, process */
 const path = require('path')
 const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
+// const CleanWebpackPlugin = require('clean-webpack-plugin')
+const ENV = process.env.NODE_ENV
 
 module.exports = {
-  entry: __dirname + '/src/index.js',
+  name: 'dragonWeb',
+  mode: ENV === 'PROD' ? 'production' : 'development',
+  entry: path.resolve(__dirname, 'src/index.js'),
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist')
   },
   module : {
-    loaders : [
+    rules : [
       {
         test: /\.js$/,
         loader: 'babel-loader',
@@ -37,7 +40,7 @@ module.exports = {
                     return [
                       require('precss'),
                       require('autoprefixer')
-                    ];
+                    ]
                   }
                 }
               }, {
@@ -47,11 +50,11 @@ module.exports = {
     ]
   },
   plugins: [
-    new CleanWebpackPlugin( path.join( __dirname, '/dist')),
+    // new CleanWebpackPlugin( path.join( __dirname, 'dist')),
     new CopyWebpackPlugin( [
-      { from: 'src/index.html', to: 'index.html'},
-      { from: 'assets', to: 'assets' },
-      { context: 'src/pages', from: '**/*.html', to: path.join( __dirname, '/dist/pages') },
+      { from: path.join( __dirname, 'src/index.html'), to: path.join( __dirname, 'dist/index.html'), force: true},
+      { from: path.join( __dirname, 'assets'), to: path.join( __dirname, 'dist/assets'), force: true },
+      { context: path.join( __dirname, 'src/pages'), from: '**/*.html', to: path.join( __dirname, 'dist/pages'), force: true },
     ], {
       // debug: 'debug' // or info
     }),
@@ -62,7 +65,17 @@ module.exports = {
       Popper: ['popper.js', 'default']
     })
   ],
-  devServer: {
-    contentBase: './dist'
+  resolve: {
+    alias: {
+      'middle.js$': ENV === 'DEV' ? path.resolve( __dirname, '../packages/middle_dev/src/middle.src.js') : path.resolve( __dirname, '../node_modules/middle.js/')
+    }
   },
+  devServer: {
+    // https://webpack.js.org/configuration/dev-server/
+    contentBase: path.join(__dirname, 'dist'),
+    publicPath: 'http://localhost:9000/',
+    // compress: true,
+    port: 9000,
+    open: true
+  }
 }

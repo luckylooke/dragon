@@ -7,7 +7,7 @@
 		exports["dragon"] = factory();
 	else
 		root["dragon"] = factory();
-})(this, function() {
+})(window, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -43,18 +43,35 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -72,1662 +89,204 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 14);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/webpack.entry.js");
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ "./node_modules/@dragon/core/container.js":
+/*!************************************************!*\
+  !*** ./node_modules/@dragon/core/container.js ***!
+  \************************************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var g;
-
-// This works in non-strict mode
-g = function () {
-	return this;
-}();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1, eval)("this");
-} catch (e) {
-	// This works if the window reference is available
-	if ((typeof window === "undefined" ? "undefined" : _typeof(window)) === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\nexports.default = undefined;\n\nvar _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();\n\nvar _desc, _value, _class;\n\nvar _middle = __webpack_require__(/*! middle.js */ \"./node_modules/middle.js/dist/middle.es.js\");\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {\n\tvar desc = {};\n\tObject['ke' + 'ys'](descriptor).forEach(function (key) {\n\t\tdesc[key] = descriptor[key];\n\t});\n\tdesc.enumerable = !!desc.enumerable;\n\tdesc.configurable = !!desc.configurable;\n\n\tif ('value' in desc || desc.initializer) {\n\t\tdesc.writable = true;\n\t}\n\n\tdesc = decorators.slice().reverse().reduce(function (desc, decorator) {\n\t\treturn decorator(target, property, desc) || desc;\n\t}, desc);\n\n\tif (context && desc.initializer !== void 0) {\n\t\tdesc.value = desc.initializer ? desc.initializer.call(context) : void 0;\n\t\tdesc.initializer = undefined;\n\t}\n\n\tif (desc.initializer === void 0) {\n\t\tObject['define' + 'Property'](target, property, desc);\n\t\tdesc = null;\n\t}\n\n\treturn desc;\n}\n\nvar Container = (_class = function () {\n\tfunction Container(dragon, elm, config) {\n\t\t_classCallCheck(this, Container);\n\n\t\tif (!config) config = {};\n\n\t\tthis.id = config.id || 'containerID_' + Date.now();\n\t\tthis.utils = dragon.utils;\n\t\tthis.Item = dragon.Item;\n\t\tthis.Drag = dragon.Drag;\n\t\tthis.setConfig = this.utils.setConfig.bind(this, dragon);\n\t\tthis.setConfig(config);\n\t\tthis.getConfig = this.utils.getConfig.bind(this);\n\n\t\tthis.dragon = dragon;\n\t\tthis.items = [];\n\t\tthis.elm = elm;\n\n\t\tthis._initItems();\n\t}\n\n\t_createClass(Container, [{\n\t\tkey: 'grab',\n\t\tvalue: function grab(itemElm) {\n\n\t\t\tvar item = this.items[this.utils.getIndexByElm(this.items, itemElm)];\n\t\t\treturn item ? item.grab() : null;\n\t\t}\n\t}, {\n\t\tkey: '_initItem',\n\t\tvalue: function _initItem(itemOrElm) {\n\n\t\t\tthis.addItem(itemOrElm, this.items.length, this.config.itemConf, true);\n\t\t}\n\t}, {\n\t\tkey: 'addItem',\n\t\tvalue: function addItem(itemOrElm, index, config, init) {\n\n\t\t\tindex = index || 0;\n\n\t\t\tvar item = void 0;\n\n\t\t\tif (itemOrElm instanceof this.Item) {\n\n\t\t\t\titemOrElm.container = this;\n\t\t\t\titem = itemOrElm;\n\t\t\t} else {\n\n\t\t\t\titem = this.createItem(this, itemOrElm, config || this.config.itemConf);\n\t\t\t}\n\n\t\t\tthis.items.splice(index, 0, item);\n\n\t\t\tif (!init && !this.elm.contains(item.elm)) {\n\t\t\t\t// sync DOM\n\t\t\t\tvar reference = this.elm.children[index];\n\n\t\t\t\tif (reference) this.elm.insertBefore(item.elm, reference);else this.elm.appendChild(item.elm);\n\t\t\t}\n\n\t\t\treturn item;\n\t\t}\n\t}, {\n\t\tkey: 'createItem',\n\t\tvalue: function createItem(container, itemOrElm, config) {\n\t\t\treturn new this.Item(container, itemOrElm, config);\n\t\t}\n\t}, {\n\t\tkey: 'removeItem',\n\t\tvalue: function removeItem(itemOrElm) {\n\n\t\t\tvar index = void 0;\n\t\t\tvar item = void 0;\n\n\t\t\tif (itemOrElm instanceof this.Item) {\n\n\t\t\t\titemOrElm.container = null;\n\t\t\t\tindex = this.items.indexOf(itemOrElm);\n\t\t\t} else {\n\n\t\t\t\tindex = this.utils.getIndexByElm(this.items, itemOrElm);\n\t\t\t}\n\n\t\t\titem = this.items.splice(index, 1)[0];\n\n\t\t\tif (this.elm.contains(item.elm)) {\n\t\t\t\t// sync DOM\n\t\t\t\tthis.elm.removeChild(item.elm);\n\t\t\t}\n\n\t\t\treturn item;\n\t\t}\n\t}, {\n\t\tkey: '_initItems',\n\t\tvalue: function _initItems() {\n\n\t\t\tvar arr = this.utils.toArray(this.elm.children);\n\t\t\tvar len = arr.length;\n\n\t\t\tfor (var i = 0; i < len; i++) {\n\t\t\t\tthis._initItem(arr[i]);\n\t\t\t}\n\t\t}\n\t}]);\n\n\treturn Container;\n}(), (_applyDecoratedDescriptor(_class.prototype, 'grab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'grab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'addItem', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'addItem'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'createItem', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'createItem'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'removeItem', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'removeItem'), _class.prototype)), _class);\nexports.default = Container;\n\n//# sourceURL=webpack://dragon/./node_modules/@dragon/core/container.js?");
 
 /***/ }),
-/* 1 */
+
+/***/ "./node_modules/@dragon/core/core.js":
+/*!*******************************************!*\
+  !*** ./node_modules/@dragon/core/core.js ***!
+  \*******************************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-function middle(e, t) {
-  var _ = function t() {
-    var n = Array.prototype.slice.call(arguments);return void 0 === _._m_ctx && (_._m_ctx = this), _._m_stack.length === _._m_index ? (_._m_index = 0, e.apply(_._m_ctx, n)) : (n.unshift(t), _._m_stack[_._m_index++].apply(_._m_ctx, n));
-  };return _._m_stack = [], _._m_index = 0, _._m_ctx = t, _.use = function (e, t) {
-    _._m_stack.push(e.bind(t));
-  }, _;
-}function decorator(e, t, _) {
-  if (e) {
-    var n = _.writable,
-        i = _.enumerable;return { get: function get() {
-        var e = middle(_.value, this);return Object.defineProperty(this, t, { value: e, writable: n, enumerable: i }), e;
-      } };
-  }
-}exports.decorator = decorator;
-exports.default = middle;
-//# sourceMappingURL=middle.es.js.map
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n\nvar _dragon = __webpack_require__(/*! ./dragon */ \"./node_modules/@dragon/core/dragon.js\");\n\nObject.defineProperty(exports, 'Dragon', {\n  enumerable: true,\n  get: function get() {\n    return _dragon.Dragon;\n  }\n});\n\nvar _container = __webpack_require__(/*! ./container */ \"./node_modules/@dragon/core/container.js\");\n\nObject.defineProperty(exports, 'Container', {\n  enumerable: true,\n  get: function get() {\n    return _container.Container;\n  }\n});\n\nvar _item = __webpack_require__(/*! ./item */ \"./node_modules/@dragon/core/item.js\");\n\nObject.defineProperty(exports, 'Item', {\n  enumerable: true,\n  get: function get() {\n    return _item.Item;\n  }\n});\n\nvar _drag = __webpack_require__(/*! ./drag */ \"./node_modules/@dragon/core/drag.js\");\n\nObject.defineProperty(exports, 'Drag', {\n  enumerable: true,\n  get: function get() {\n    return _drag.Drag;\n  }\n});\n\n//# sourceURL=webpack://dragon/./node_modules/@dragon/core/core.js?");
 
 /***/ }),
-/* 2 */
+
+/***/ "./node_modules/@dragon/core/drag.js":
+/*!*******************************************!*\
+  !*** ./node_modules/@dragon/core/drag.js ***!
+  \*******************************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.default = dragon;
-
-__webpack_require__(8);
-
-var _core = __webpack_require__(5);
-
-var _core2 = _interopRequireDefault(_core);
-
-var _utils = __webpack_require__(10);
-
-var utils = _interopRequireWildcard(_utils);
-
-var _touchy = __webpack_require__(9);
-
-var _touchy2 = _interopRequireDefault(_touchy);
-
-var _domClasses = __webpack_require__(7);
-
-var _domClasses2 = _interopRequireDefault(_domClasses);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function dragon(config) {
-
-	return new _core2.default(config, utils, _touchy2.default, _domClasses2.default);
-} // cross dom event management
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\nexports.default = undefined;\n\nvar _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();\n\nvar _desc, _value, _class;\n\nvar _middle = __webpack_require__(/*! middle.js */ \"./node_modules/middle.js/dist/middle.es.js\");\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {\n\tvar desc = {};\n\tObject['ke' + 'ys'](descriptor).forEach(function (key) {\n\t\tdesc[key] = descriptor[key];\n\t});\n\tdesc.enumerable = !!desc.enumerable;\n\tdesc.configurable = !!desc.configurable;\n\n\tif ('value' in desc || desc.initializer) {\n\t\tdesc.writable = true;\n\t}\n\n\tdesc = decorators.slice().reverse().reduce(function (desc, decorator) {\n\t\treturn decorator(target, property, desc) || desc;\n\t}, desc);\n\n\tif (context && desc.initializer !== void 0) {\n\t\tdesc.value = desc.initializer ? desc.initializer.call(context) : void 0;\n\t\tdesc.initializer = undefined;\n\t}\n\n\tif (desc.initializer === void 0) {\n\t\tObject['define' + 'Property'](target, property, desc);\n\t\tdesc = null;\n\t}\n\n\treturn desc;\n}\n\nvar docElm = document.documentElement;\n\nvar Drag = (_class = function () {\n\tfunction Drag(item, config) {\n\t\t_classCallCheck(this, Drag);\n\n\t\t// this.mirror // mirror image\n\t\t// this.originContElm // source container element\n\t\t// this.originContainer // source Container object\n\t\t// this.itemElm // item element being dragged\n\t\t// this.itemOffsetX // reference x offset event from itemElement corner\n\t\t// this.itemOffsetY // reference y\n\t\t// this.x // reference move x - by default clientX + mirrorContainer.scrollX of first event occurrence starting the drag\n\t\t// this.y // reference move y\n\t\t// this.initialSibling // reference sibling when grabbed\n\t\t// this.currentSibling // reference sibling now\n\t\t// this.state // holds Drag state (grabbed, dragging, dropped...)\n\n\t\tthis.id = 'dragID_' + Date.now();\n\t\tthis.state = 'grabbed';\n\t\tthis.item = item;\n\t\tthis.itemElm = item.elm;\n\t\tthis.originContainer = item.container;\n\t\tthis.originContElm = item.container.elm;\n\t\tthis.dragon = this.originContainer.dragon;\n\t\tthis.utils = this.dragon.utils;\n\t\tthis.domEventManager = this.dragon.domEventManager;\n\t\tthis.domClassManager = this.dragon.domClassManager;\n\t\tthis.findDropTarget = this.dragon.findDropTarget.bind(this.dragon);\n\t\tthis.utils = item.utils;\n\t\tthis.setConfig = this.utils.setConfig.bind(this, item);\n\t\tthis.setConfig(config);\n\t\tthis.getConfig = this.utils.getConfig.bind(this);\n\n\t\tif (this.getConfig('mouseEvents')) this.mouseEvents();\n\t}\n\n\t_createClass(Drag, [{\n\t\tkey: 'destroy',\n\t\tvalue: function destroy() {\n\n\t\t\tthis.release(this.x, this.y);\n\t\t}\n\t}, {\n\t\tkey: 'mouseEvents',\n\t\tvalue: function mouseEvents(remove) {\n\n\t\t\tif (!this._mousemove) // if not initialised yet\n\t\t\t\t// use requestAnimationFrame while dragging if available\n\t\t\t\tif (window.requestAnimationFrame) {\n\n\t\t\t\t\tthis.move_e = null;\n\t\t\t\t\tthis._mousemove = this._mousemoveAF;\n\t\t\t\t} else this._mousemove = this.mousemove;\n\n\t\t\tvar op = remove ? 'remove' : 'add';\n\t\t\tthis.domEventManager(docElm, op, 'mouseup', this.utils.bind(this, 'mouseup'));\n\t\t\tthis.domEventManager(docElm, op, 'mousemove', this.utils.bind(this, '_mousemove'));\n\t\t\tthis.domEventManager(docElm, op, 'selectstart', this.utils.bind(this, 'protectGrab')); // IE8\n\t\t\tthis.domEventManager(docElm, op, 'click', this.utils.bind(this, 'protectGrab'));\n\t\t}\n\t}, {\n\t\tkey: 'protectGrab',\n\t\tvalue: function protectGrab(e) {\n\n\t\t\tif (this.state == 'grabbed') {\n\t\t\t\te.preventDefault();\n\t\t\t}\n\t\t}\n\t}, {\n\t\tkey: 'mousemove',\n\t\tvalue: function mousemove(e) {\n\n\t\t\tif (!e.target) {\n\n\t\t\t\te = this.move_e;\n\t\t\t\tthis.move_e = false;\n\t\t\t}\n\n\t\t\tif (this.state == 'grabbed') {\n\n\t\t\t\tthis.startByMouseMove(e);\n\t\t\t\treturn;\n\t\t\t}\n\n\t\t\tif (this.state != 'dragging') {\n\n\t\t\t\tthis.cancel();\n\t\t\t\treturn;\n\t\t\t}\n\n\t\t\te.preventDefault();\n\n\t\t\tthis.drag(this.utils.getCoord('clientX', e), this.utils.getCoord('clientY', e));\n\t\t}\n\t}, {\n\t\tkey: '_mousemoveAF',\n\t\tvalue: function _mousemoveAF(e) {\n\n\t\t\tif (!this.move_e) this.actualFrame = window.requestAnimationFrame(this.mousemove);\n\n\t\t\tthis.move_e = e;\n\t\t}\n\t}, {\n\t\tkey: 'startByMouseMove',\n\t\tvalue: function startByMouseMove(e) {\n\n\t\t\t// if (whichMouseButton(e) === 0) {\n\t\t\t//   release({})\n\t\t\t//   return // when text is selected on an input and then dragged, mouseup doesn't fire. this is our only hope\n\t\t\t// }\n\n\t\t\tif (this.x == undefined) {\n\n\t\t\t\tthis.x = this.utils.getCoord('clientX', e), this.y = this.utils.getCoord('clientY', e);\n\t\t\t\treturn;\n\t\t\t}\n\n\t\t\t// truthy check fixes github.com/bevacqua/dragula/issues/239, equality fixes github.com/bevacqua/dragula/issues/207\n\t\t\tif (e.clientX !== void 0 && e.clientX === this.x && e.clientY !== void 0 && e.clientY === this.y) return;\n\n\t\t\tvar offset = this.utils.getOffset(this.itemElm);\n\n\t\t\tthis.start(this.utils.getCoord('pageX', e) - offset.left, this.utils.getCoord('pageY', e) - offset.top);\n\t\t}\n\t}, {\n\t\tkey: 'start',\n\t\tvalue: function start(x, y) {\n\n\t\t\tif (this.state != 'grabbed') return;\n\n\t\t\tx = x || 0;\n\t\t\ty = y || 0;\n\n\t\t\tthis._cachedAbs = this.getConfig('mirrorAbsolute');\n\t\t\tthis._cachedDir = this.getConfig('direction');\n\n\t\t\tvar itemPosition = this._cachedAbs ? this.utils.getOffset(this.itemElm) : this.itemElm.getBoundingClientRect();\n\n\t\t\tif (this.x == undefined) this.x = itemPosition.left + x;\n\n\t\t\tif (this.y == undefined) this.y = itemPosition.top + y;\n\n\t\t\t// offset of mouse event from top left corner of the itemElm\n\t\t\tthis.itemOffsetX = x;\n\t\t\tthis.itemOffsetY = y;\n\n\t\t\tthis.initialSibling = this.currentSibling = this.utils.nextEl(this.itemElm);\n\t\t\tthis.domClassManager.add(this.itemElm, 'dragon-transit');\n\t\t\tthis.mirror = this.renderMirrorImage(this.itemElm, this.getConfig('mirrorContainer'));\n\n\t\t\tthis.state = 'dragging';\n\t\t}\n\t}, {\n\t\tkey: 'drag',\n\t\tvalue: function drag(x, y) {\n\t\t\tvar _this = this;\n\n\t\t\tif (this.state != 'dragging') return;\n\n\t\t\tvar mirrorX = x - this.itemOffsetX;\n\t\t\tvar mirrorY = y - this.itemOffsetY;\n\t\t\tvar mirror = this.mirror;\n\n\t\t\tthis.x = x;\n\t\t\tthis.y = y;\n\n\t\t\tmirror.style.left = mirrorX + 'px';\n\t\t\tmirror.style.top = mirrorY + 'px';\n\n\t\t\tvar elementBehindPoint = this.utils.getElementBehindPoint(mirror, x, y, this._cachedAbs);\n\t\t\tvar dropTarget = this.findDropTarget(elementBehindPoint);\n\t\t\tvar reference = void 0;\n\t\t\tvar immediate = dropTarget && this.utils.getImmediateChild(dropTarget, elementBehindPoint);\n\n\t\t\tif (immediate) {\n\t\t\t\treference = this.utils.getReference(dropTarget, immediate, x, y, this._cachedDir, this._cachedAbs);\n\t\t\t} else {\n\t\t\t\treturn;\n\t\t\t}\n\n\t\t\tif (reference === null || reference !== this.itemElm && reference !== this.currentSibling) {\n\n\t\t\t\tthis.utils.hierarchySafe(\n\t\t\t\t// dom edit fn to protect\n\t\t\t\tfunction () {\n\t\t\t\t\treturn dropTarget.insertBefore(_this.itemElm, reference);\n\t\t\t\t},\n\t\t\t\t// success callback\n\t\t\t\tfunction () {\n\t\t\t\t\treturn _this.currentSibling = reference;\n\t\t\t\t});\n\t\t\t}\n\t\t}\n\t}, {\n\t\tkey: 'renderMirrorImage',\n\t\tvalue: function renderMirrorImage(itemElm, mirrorContainer) {\n\n\t\t\tvar rect = itemElm.getBoundingClientRect();\n\t\t\tvar mirrorWithParent = this.getConfig('mirrorWithParent');\n\t\t\tvar mirror = mirrorWithParent ? this.utils.getParent(itemElm).cloneNode(false) : itemElm.cloneNode(true);\n\n\t\t\tif (mirrorWithParent) mirror.appendChild(itemElm.cloneNode(true));\n\n\t\t\tmirror.style.width = this.utils.getRectWidth(rect) + 'px';\n\t\t\tmirror.style.height = this.utils.getRectHeight(rect) + 'px';\n\t\t\tthis.domClassManager.rm(mirror, 'dragon-transit');\n\n\t\t\tif (this.getConfig('mirrorAbsolute')) this.domClassManager.add(mirror, 'dragon-mirror-abs');else this.domClassManager.add(mirror, 'dragon-mirror');\n\n\t\t\tif (!mirrorContainer) mirrorContainer = (mirrorWithParent ? this.utils.getParent(this.utils.getParent(itemElm)) : this.utils.getParent(itemElm)) || document.body;\n\n\t\t\tmirrorContainer.appendChild(mirror);\n\t\t\tthis.domClassManager.add(mirrorContainer, 'dragon-unselectable');\n\n\t\t\treturn mirror;\n\t\t}\n\t}, {\n\t\tkey: 'removeMirrorImage',\n\t\tvalue: function removeMirrorImage() {\n\n\t\t\tvar mirrorContainer = this.utils.getParent(this.mirror);\n\t\t\tthis.domClassManager.rm(mirrorContainer, 'dragon-unselectable');\n\t\t\tmirrorContainer.removeChild(this.mirror);\n\t\t\tthis.mirror = null;\n\t\t}\n\t}, {\n\t\tkey: 'mouseup',\n\t\tvalue: function mouseup(e) {\n\n\t\t\tthis.release(this.utils.getCoord('clientX', e), this.utils.getCoord('clientY', e));\n\t\t}\n\t}, {\n\t\tkey: 'release',\n\t\tvalue: function release(x, y) {\n\n\t\t\tif (x == undefined) x = this.x;\n\n\t\t\tif (y == undefined) y = this.y;\n\n\t\t\tif (this.state != 'dragging') return this.cancel();\n\n\t\t\tthis.state = 'released';\n\n\t\t\t// if requestAnimationFrame mode is used, cancel latest request\n\t\t\tif (this.actualFrame) {\n\t\t\t\twindow.cancelAnimationFrame(this.actualFrame);\n\t\t\t\tthis.actualFrame = null;\n\t\t\t}\n\n\t\t\tvar elementBehindPoint = this.utils.getElementBehindPoint(this.mirror, x, y, this._cachedAbs);\n\t\t\tvar dropTarget = this.findDropTarget(elementBehindPoint);\n\n\t\t\tif (dropTarget && dropTarget !== this.originContElm) {\n\n\t\t\t\tthis.drop(dropTarget);\n\t\t\t} else {\n\n\t\t\t\tthis.cancel();\n\t\t\t}\n\t\t}\n\t}, {\n\t\tkey: 'drop',\n\t\tvalue: function drop(dropTarget) {\n\n\t\t\tif (this.state != 'dragging' && this.state != 'released') return;\n\n\t\t\tvar container = this.dragon.getContainer(dropTarget);\n\t\t\tcontainer.addItem(this.item, this.utils.domIndexOf(dropTarget, this.itemElm));\n\t\t\tthis.state = 'dropped';\n\n\t\t\tthis.cleanup();\n\t\t}\n\t}, {\n\t\tkey: 'remove',\n\t\tvalue: function remove() {\n\n\t\t\tif (this.state != 'dragging') return;\n\n\t\t\tvar parent = this.utils.getParent(this.itemElm);\n\t\t\tif (parent) {\n\t\t\t\tparent.removeChild(this.itemElm);\n\t\t\t}\n\n\t\t\tthis.state = 'removed';\n\n\t\t\tthis.cleanup();\n\t\t}\n\t}, {\n\t\tkey: 'cancel',\n\t\tvalue: function cancel(reverts) {\n\n\t\t\tif (this.state == 'dragging') {\n\n\t\t\t\tvar parent = this.utils.getParent(this.itemElm);\n\t\t\t\tvar initial = this.isInitialPlacement(parent);\n\t\t\t\tif (initial === false && reverts) {\n\t\t\t\t\tthis.originContElm.insertBefore(this.itemElm, this.initialSibling);\n\t\t\t\t}\n\t\t\t}\n\n\t\t\tthis.state = 'cancelled';\n\n\t\t\tthis.cleanup();\n\t\t}\n\t}, {\n\t\tkey: 'cleanup',\n\t\tvalue: function cleanup() {\n\n\t\t\tthis.mouseEvents('remove');\n\n\t\t\tif (this.mirror) this.removeMirrorImage();\n\n\t\t\tif (this.itemElm) {\n\t\t\t\tthis.domClassManager.rm(this.itemElm, 'dragon-transit');\n\t\t\t}\n\t\t}\n\t}, {\n\t\tkey: 'isInitialPlacement',\n\t\tvalue: function isInitialPlacement(target, s) {\n\n\t\t\tvar sibling = void 0;\n\n\t\t\tif (s !== void 0) {\n\n\t\t\t\tsibling = s;\n\t\t\t} else if (this.mirror) {\n\n\t\t\t\tsibling = this.currentSibling;\n\t\t\t} else {\n\n\t\t\t\tsibling = this.utils.nextEl(this.itemElm);\n\t\t\t}\n\n\t\t\treturn target === this.originContElm && sibling === this.initialSibling;\n\t\t}\n\t}]);\n\n\treturn Drag;\n}(), (_applyDecoratedDescriptor(_class.prototype, 'destroy', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'destroy'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'mouseEvents', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'mouseEvents'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'protectGrab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'protectGrab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'mousemove', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'mousemove'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'startByMouseMove', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'startByMouseMove'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'start', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'start'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'drag', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'drag'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'renderMirrorImage', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'renderMirrorImage'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'removeMirrorImage', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'removeMirrorImage'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'mouseup', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'mouseup'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'release', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'release'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'drop', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'drop'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'remove', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'remove'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'cancel', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'cancel'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'cleanup', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'cleanup'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'isInitialPlacement', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'isInitialPlacement'), _class.prototype)), _class);\nexports.default = Drag;\n\n//# sourceURL=webpack://dragon/./node_modules/@dragon/core/drag.js?");
 
 /***/ }),
-/* 3 */
+
+/***/ "./node_modules/@dragon/core/dragon.js":
+/*!*********************************************!*\
+  !*** ./node_modules/@dragon/core/dragon.js ***!
+  \*********************************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.default = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _desc, _value, _class;
-
-var _item = __webpack_require__(6);
-
-var _item2 = _interopRequireDefault(_item);
-
-var _middle = __webpack_require__(1);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
-	var desc = {};
-	Object['ke' + 'ys'](descriptor).forEach(function (key) {
-		desc[key] = descriptor[key];
-	});
-	desc.enumerable = !!desc.enumerable;
-	desc.configurable = !!desc.configurable;
-
-	if ('value' in desc || desc.initializer) {
-		desc.writable = true;
-	}
-
-	desc = decorators.slice().reverse().reduce(function (desc, decorator) {
-		return decorator(target, property, desc) || desc;
-	}, desc);
-
-	if (context && desc.initializer !== void 0) {
-		desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
-		desc.initializer = undefined;
-	}
-
-	if (desc.initializer === void 0) {
-		Object['define' + 'Property'](target, property, desc);
-		desc = null;
-	}
-
-	return desc;
-}
-
-var Container = (_class = function () {
-	function Container(dragon, elm, config) {
-		_classCallCheck(this, Container);
-
-		if (!config) config = {};
-
-		this.config = config;
-		this.id = config.id || 'containerID_' + Date.now();
-		this.dragon = Object.assign(Object.create(dragon.config), config);
-		this.utils = dragon.utils;
-		this.getConfig = this.utils.getConfig.bind(this);
-		this.items = [];
-		this.elm = elm;
-
-		this._initItems();
-	}
-
-	_createClass(Container, [{
-		key: 'grab',
-		value: function grab(itemElm) {
-
-			var item = this.items[this.utils.getIndexByElm(this.items, itemElm)];
-			return item ? item.grab() : null;
-		}
-	}, {
-		key: '_initItem',
-		value: function _initItem(itemOrElm) {
-
-			this.addItem(itemOrElm, this.items.length, null, true);
-		}
-	}, {
-		key: 'addItem',
-		value: function addItem(itemOrElm, index, config, init) {
-
-			index = index || 0;
-
-			var item = void 0;
-
-			if (itemOrElm instanceof _item2.default) {
-
-				itemOrElm.container = this;
-				item = itemOrElm;
-			} else {
-
-				item = new _item2.default(this, itemOrElm, config);
-			}
-
-			this.items.splice(index, 0, item);
-
-			if (!init && !this.elm.contains(item.elm)) {
-				// sync DOM
-				var reference = this.elm.children[index];
-
-				if (reference) this.elm.insertBefore(item.elm, reference);else this.elm.appendChild(item.elm);
-			}
-
-			return item;
-		}
-	}, {
-		key: 'removeItem',
-		value: function removeItem(itemOrElm) {
-
-			var index = void 0;
-			var item = void 0;
-
-			if (itemOrElm instanceof _item2.default) {
-
-				itemOrElm.container = null;
-				index = this.items.indexOf(itemOrElm);
-			} else {
-
-				index = this.utils.getIndexByElm(this.items, itemOrElm);
-			}
-
-			item = this.items.splice(index, 1)[0];
-
-			if (this.elm.contains(item.elm)) {
-				// sync DOM
-				this.elm.removeChild(item.elm);
-			}
-
-			return item;
-		}
-	}, {
-		key: '_initItems',
-		value: function _initItems() {
-
-			var arr = this.utils.toArray(this.elm.children);
-			var len = arr.length;
-
-			for (var i = 0; i < len; i++) {
-				this._initItem(arr[i]);
-			}
-		}
-	}]);
-
-	return Container;
-}(), (_applyDecoratedDescriptor(_class.prototype, 'grab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'grab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'addItem', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'addItem'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'removeItem', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'removeItem'), _class.prototype)), _class);
-exports.default = Container;
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\nexports.default = undefined;\n\nvar _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();\n\nvar _desc, _value, _class;\n\nvar _container = __webpack_require__(/*! ./container */ \"./node_modules/@dragon/core/container.js\");\n\nvar _container2 = _interopRequireDefault(_container);\n\nvar _item = __webpack_require__(/*! ./item */ \"./node_modules/@dragon/core/item.js\");\n\nvar _item2 = _interopRequireDefault(_item);\n\nvar _drag = __webpack_require__(/*! ./drag */ \"./node_modules/@dragon/core/drag.js\");\n\nvar _drag2 = _interopRequireDefault(_drag);\n\nvar _middle = __webpack_require__(/*! middle.js */ \"./node_modules/middle.js/dist/middle.es.js\");\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {\n\tvar desc = {};\n\tObject['ke' + 'ys'](descriptor).forEach(function (key) {\n\t\tdesc[key] = descriptor[key];\n\t});\n\tdesc.enumerable = !!desc.enumerable;\n\tdesc.configurable = !!desc.configurable;\n\n\tif ('value' in desc || desc.initializer) {\n\t\tdesc.writable = true;\n\t}\n\n\tdesc = decorators.slice().reverse().reduce(function (desc, decorator) {\n\t\treturn decorator(target, property, desc) || desc;\n\t}, desc);\n\n\tif (context && desc.initializer !== void 0) {\n\t\tdesc.value = desc.initializer ? desc.initializer.call(context) : void 0;\n\t\tdesc.initializer = undefined;\n\t}\n\n\tif (desc.initializer === void 0) {\n\t\tObject['define' + 'Property'](target, property, desc);\n\t\tdesc = null;\n\t}\n\n\treturn desc;\n}\n\nvar doc = document;\n\nif (!window.dragonSpace) window.dragonSpace = {};\nvar space = window.dragonSpace;\n\n// ==============================================================================================================================================================\n// Dragon =====================================================================================================================================================\n// =============================================================================================================================================================\n/** is group of containers */\nvar Dragon = (_class = function () {\n\tfunction Dragon(config, utils) {\n\t\t_classCallCheck(this, Dragon);\n\n\t\tif (!utils || !utils.domEventManager || !utils.domClassManager) throw new Error('Dragon: dependencies not sattisfied!');\n\n\t\tconfig = config || {};\n\n\t\tif (config.nodeType == 1) // is DOM Element\n\t\t\tconfig = { containers: [config] };\n\n\t\tif (typeof config.length !== 'undefined') // is array-like\n\t\t\tconfig = { containers: utils.ensureArray(config) };\n\n\t\tthis.domEventManager = utils.domEventManager;\n\t\tthis.domClassManager = utils.domClassManager;\n\t\tthis.using = []; // array of plugins using by this dragon\n\t\tthis.defaults = {\n\t\t\tconfig: {\n\t\t\t\tmouseEvents: true,\n\t\t\t\tmirrorAbsolute: false,\n\t\t\t\tmirrorWithParent: true,\n\t\t\t\tmirrorContainer: null\n\t\t\t}\n\t\t};\n\t\tthis.utils = utils;\n\t\tthis.initSpace(config.space);\n\t\tthis.setConfig = this.utils.setConfig.bind(this, space);\n\t\tthis.setConfig(config);\n\t\tthis.getConfig = utils.getConfig.bind(this);\n\t\tthis.id = config.id || 'dragonID_' + Date.now();\n\t\tthis.containers = [];\n\t\tthis.space = space;\n\t\tthis.Container = space.classes.Container;\n\t\tthis.Item = space.classes.Item;\n\t\tthis.Drag = space.classes.Drag;\n\t\tspace.dragons.push(this);\n\n\t\tthis.addContainers(config.containerConfig);\n\t}\n\n\t_createClass(Dragon, [{\n\t\tkey: 'initSpace',\n\t\tvalue: function initSpace(newSpace) {\n\t\t\tvar _this = this;\n\n\t\t\tif (newSpace) space = newSpace;\n\n\t\t\tif (!space.config) {\n\t\t\t\t// initialisation\n\n\t\t\t\tif (!space.dragons) space.dragons = [];\n\t\t\t\tif (!space.drags) space.drags = [];\n\t\t\t\tif (!space.utils) space.utils = this.utils;\n\n\t\t\t\tif (!space.classes) space.classes = {\n\t\t\t\t\tDragon: Dragon,\n\t\t\t\t\tContainer: _container2.default,\n\t\t\t\t\tItem: _item2.default,\n\t\t\t\t\tDrag: _drag2.default\n\n\t\t\t\t\t// space.setConfig = this.utils.setConfig.bind( space, space, this.defaults, space.config )\n\t\t\t\t};space.getConfig = this.utils.getConfig.bind(space);\n\t\t\t\tspace.setConfig = this.utils.setConfig.bind(space, this.defaults);\n\t\t\t\tspace.setConfig({});\n\n\t\t\t\tthis.domEventManager(document.documentElement, 'add', 'mousedown', function (e) {\n\n\t\t\t\t\tif (_this.utils.whichMouseButton(e) == 3) return; // prevent right click dragging\n\n\t\t\t\t\te.preventDefault(); // fixes github.com/bevacqua/dragula/issues/155\n\n\t\t\t\t\tif (_this.utils.isInput(e.target)) {\n\t\t\t\t\t\t// see also: github.com/bevacqua/dragula/issues/208\n\t\t\t\t\t\te.target.focus(); // fixes github.com/bevacqua/dragula/issues/176\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\n\t\t\t\t\t_this.grab(_this.utils.getCoord('clientX', e), _this.utils.getCoord('clientY', e), e.target);\n\t\t\t\t});\n\t\t\t}\n\t\t}\n\t}, {\n\t\tkey: 'addContainers',\n\t\tvalue: function addContainers(containerElms, config) {\n\n\t\t\tcontainerElms = containerElms || this.config.containers;\n\n\t\t\tif (!containerElms) return;\n\n\t\t\tcontainerElms = this.utils.ensureArray(containerElms);\n\n\t\t\tvar len = containerElms.length;\n\t\t\tvar addedContainers = [];\n\t\t\tconfig = config || this.config.containerConf;\n\n\t\t\tfor (var i = 0, elm, container; i < len; i++) {\n\n\t\t\t\telm = containerElms[i];\n\n\t\t\t\tif (this.getContainer(elm)) {\n\n\t\t\t\t\t/* eslint-disable no-console */\n\t\t\t\t\tconsole.warn('container already registered', elm);\n\t\t\t\t\t/* eslint-enable no-console */\n\t\t\t\t} else {\n\n\t\t\t\t\tcontainer = this.createContainer(this, elm, config);\n\t\t\t\t\tthis.containers.push(container);\n\t\t\t\t\taddedContainers.push(container);\n\t\t\t\t}\n\t\t\t}\n\n\t\t\treturn addedContainers;\n\t\t}\n\t}, {\n\t\tkey: 'createContainer',\n\t\tvalue: function createContainer(container, elm, config) {\n\t\t\treturn new this.Container(container, elm, config);\n\t\t}\n\t}, {\n\t\tkey: 'getContainer',\n\t\tvalue: function getContainer(elm, own) {\n\n\t\t\tif (own) return this.containers[this.utils.getIndexByElm(this.containers, elm)];\n\n\t\t\tvar dragons = space.dragons;\n\t\t\tvar dragonsLen = dragons.length;\n\n\t\t\tfor (var i = 0, ii; i < dragonsLen; i++) {\n\n\t\t\t\tii = this.utils.getIndexByElm(dragons[i].containers, elm);\n\n\t\t\t\tif (ii > -1) return dragons[i].containers[ii];\n\t\t\t}\n\n\t\t\treturn null;\n\t\t}\n\t}, {\n\t\tkey: 'grab',\n\t\tvalue: function grab(xOrElm, y) {\n\n\t\t\tvar itemElm = y == undefined ? xOrElm : doc.elementFromPoint(xOrElm, y);\n\t\t\tvar parentElm = itemElm;\n\t\t\tvar container = void 0;\n\t\t\tvar index = void 0;\n\t\t\tvar drag = void 0;\n\n\t\t\tdo {\n\t\t\t\titemElm = parentElm; // drag target should be a top element\n\t\t\t\tparentElm = this.utils.getParent(itemElm);\n\t\t\t} while (parentElm && !this.getContainer(parentElm));\n\n\t\t\tif (!parentElm) {\n\t\t\t\t// container not found, so don't grab\n\t\t\t\treturn;\n\t\t\t}\n\n\t\t\tindex = this.utils.getIndexByElm(this.containers, parentElm);\n\t\t\tcontainer = this.containers[index];\n\t\t\tdrag = container.grab(itemElm);\n\t\t\tspace.drags.push(drag);\n\t\t\treturn drag;\n\t\t}\n\t}, {\n\t\tkey: 'findDropTarget',\n\t\tvalue: function findDropTarget(target) {\n\n\t\t\twhile (target && !this.getContainer(target)) {\n\t\t\t\ttarget = this.utils.getParent(target);\n\t\t\t}\n\n\t\t\treturn target;\n\t\t}\n\t}, {\n\t\tkey: 'use',\n\t\tvalue: function use(plugins) {\n\t\t\tvar _this2 = this;\n\n\t\t\tif (!Array.isArray(plugins)) plugins = [plugins];\n\n\t\t\tplugins.forEach(function (plugin) {\n\t\t\t\treturn _this2.using.indexOf(plugin) > -1 ? 0 : plugin(_this2);\n\t\t\t});\n\n\t\t\treturn this;\n\t\t}\n\t}]);\n\n\treturn Dragon;\n}(), (_applyDecoratedDescriptor(_class.prototype, 'initSpace', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'initSpace'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'addContainers', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'addContainers'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'createContainer', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'createContainer'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'getContainer', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'getContainer'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'grab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'grab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'findDropTarget', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'findDropTarget'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'use', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'use'), _class.prototype)), _class);\nexports.default = Dragon;\n\n//# sourceURL=webpack://dragon/./node_modules/@dragon/core/dragon.js?");
 
 /***/ }),
-/* 4 */
+
+/***/ "./node_modules/@dragon/core/item.js":
+/*!*******************************************!*\
+  !*** ./node_modules/@dragon/core/item.js ***!
+  \*******************************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.default = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _desc, _value, _class;
-
-var _middle = __webpack_require__(1);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
-	var desc = {};
-	Object['ke' + 'ys'](descriptor).forEach(function (key) {
-		desc[key] = descriptor[key];
-	});
-	desc.enumerable = !!desc.enumerable;
-	desc.configurable = !!desc.configurable;
-
-	if ('value' in desc || desc.initializer) {
-		desc.writable = true;
-	}
-
-	desc = decorators.slice().reverse().reduce(function (desc, decorator) {
-		return decorator(target, property, desc) || desc;
-	}, desc);
-
-	if (context && desc.initializer !== void 0) {
-		desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
-		desc.initializer = undefined;
-	}
-
-	if (desc.initializer === void 0) {
-		Object['define' + 'Property'](target, property, desc);
-		desc = null;
-	}
-
-	return desc;
-}
-
-var docElm = document.documentElement;
-
-var Drag = (_class = function () {
-	function Drag(item) {
-		_classCallCheck(this, Drag);
-
-		// this.mirror // mirror image
-		// this.source // source container element
-		// this.source // source Container object
-		// this.itemElm // item element being dragged
-		// this.itemOffsetX // reference x offset event from itemElement corner
-		// this.itemOffsetY // reference y
-		// this.x // reference move x - by default clientX + mirrorContainer.scrollX of first event occurrence starting the drag
-		// this.y // reference move y
-		// this.initialSibling // reference sibling when grabbed
-		// this.currentSibling // reference sibling now
-		// this.state // holds Drag state (grabbed, dragging, dropped...)
-
-		this.id = 'dragID_' + Date.now();
-		this.state = 'grabbed';
-		this.item = item;
-		this.itemElm = item.elm;
-		this.sourceContainer = item.container;
-		this.source = item.container.elm;
-		this.dragon = this.sourceContainer.dragon;
-		this.utils = this.dragon.utils;
-		this.domEventManager = this.dragon.domEventManager;
-		this.domClassManager = this.dragon.domClassManager;
-		this.findDropTarget = this.dragon.findDropTarget.bind(this.dragon);
-
-		if (this.getConfig('mouseEvents')) this.mouseEvents();
-	}
-
-	_createClass(Drag, [{
-		key: 'destroy',
-		value: function destroy() {
-
-			this.release(this.x, this.y);
-		}
-	}, {
-		key: 'mouseEvents',
-		value: function mouseEvents(remove) {
-
-			if (!this._mousemove) // if not initialised yet
-				// use requestAnimationFrame while dragging if available
-				if (window.requestAnimationFrame) {
-
-					this.move_e = null;
-					this._mousemove = this._mousemoveAF;
-				} else this._mousemove = this.mousemove;
-
-			var op = remove ? 'remove' : 'add';
-			this.domEventManager(docElm, op, 'mouseup', this.utils.bind(this, 'mouseup'));
-			this.domEventManager(docElm, op, 'mousemove', this.utils.bind(this, '_mousemove'));
-			this.domEventManager(docElm, op, 'selectstart', this.utils.bind(this, 'protectGrab')); // IE8
-			this.domEventManager(docElm, op, 'click', this.utils.bind(this, 'protectGrab'));
-		}
-	}, {
-		key: 'protectGrab',
-		value: function protectGrab(e) {
-
-			if (this.state == 'grabbed') {
-				e.preventDefault();
-			}
-		}
-	}, {
-		key: 'mousemove',
-		value: function mousemove(e) {
-
-			if (!e.target) {
-
-				e = this.move_e;
-				this.move_e = false;
-			}
-
-			if (this.state == 'grabbed') {
-
-				this.startByMouseMove(e);
-				return;
-			}
-
-			if (this.state != 'dragging') {
-
-				this.cancel();
-				return;
-			}
-
-			e.preventDefault();
-
-			this.drag(this.utils.getCoord('clientX', e), this.utils.getCoord('clientY', e));
-		}
-	}, {
-		key: '_mousemoveAF',
-		value: function _mousemoveAF(e) {
-
-			if (!this.move_e) this.actualFrame = window.requestAnimationFrame(this.mousemove);
-
-			this.move_e = e;
-		}
-	}, {
-		key: 'startByMouseMove',
-		value: function startByMouseMove(e) {
-
-			// if (whichMouseButton(e) === 0) {
-			//   release({})
-			//   return // when text is selected on an input and then dragged, mouseup doesn't fire. this is our only hope
-			// }
-
-			if (this.x == undefined) {
-
-				this.x = e.clientX;
-				this.y = e.clientY;
-				return;
-			}
-
-			// truthy check fixes github.com/bevacqua/dragula/issues/239, equality fixes github.com/bevacqua/dragula/issues/207
-			if (e.clientX !== void 0 && e.clientX === this.x && e.clientY !== void 0 && e.clientY === this.y) return;
-
-			var offset = this.utils.getOffset(this.itemElm);
-
-			this.start(this.utils.getCoord('pageX', e) - offset.left, this.utils.getCoord('pageY', e) - offset.top);
-		}
-	}, {
-		key: 'start',
-		value: function start(x, y) {
-
-			if (this.state != 'grabbed') return;
-
-			x = x || 0;
-			y = y || 0;
-
-			this._cachedAbs = this.getConfig('mirrorAbsolute');
-			this._cachedDir = this.getConfig('direction');
-
-			var itemPosition = this._cachedAbs ? this.utils.getOffset(this.itemElm) : this.itemElm.getBoundingClientRect();
-
-			if (this.x == undefined) this.x = itemPosition.left + x;
-
-			if (this.y == undefined) this.y = itemPosition.top + y;
-
-			// offset of mouse event from top left corner of the itemElm
-			this.itemOffsetX = x;
-			this.itemOffsetY = y;
-
-			this.initialSibling = this.currentSibling = this.utils.nextEl(this.itemElm);
-			this.domClassManager.add(this.itemElm, 'gu-transit');
-			this.renderMirrorImage(this.itemElm, this.getConfig('mirrorContainer'));
-
-			this.state = 'dragging';
-		}
-	}, {
-		key: 'drag',
-		value: function drag(x, y) {
-
-			if (this.state != 'dragging') return;
-
-			var mirrorX = x - this.itemOffsetX;
-			var mirrorY = y - this.itemOffsetY;
-			var mirror = this.mirror;
-
-			this.x = x;
-			this.y = y;
-
-			mirror.style.left = mirrorX + 'px';
-			mirror.style.top = mirrorY + 'px';
-
-			var elementBehindPoint = this.utils.getElementBehindPoint(mirror, x, y, this._cachedAbs);
-			var dropTarget = this.findDropTarget(elementBehindPoint);
-			var reference = void 0;
-			var immediate = dropTarget && this.utils.getImmediateChild(dropTarget, elementBehindPoint);
-
-			if (immediate) {
-
-				reference = this.utils.getReference(dropTarget, immediate, x, y, this._cachedDir, this._cachedAbs);
-			} else {
-
-				return;
-			}
-
-			if (reference === null || reference !== this.itemElm && reference !== this.utils.nextEl(this.itemElm)) {
-
-				this.currentSibling = reference;
-				dropTarget.insertBefore(this.itemElm, reference);
-			}
-		}
-	}, {
-		key: 'renderMirrorImage',
-		value: function renderMirrorImage(itemElm, mirrorContainer) {
-
-			var rect = itemElm.getBoundingClientRect();
-			var mirror = this.getConfig('mirrorWithParent') ? this.utils.getParent(itemElm).cloneNode(false) : itemElm.cloneNode(true);
-
-			if (this.getConfig('mirrorWithParent')) mirror.appendChild(itemElm.cloneNode(true));
-
-			mirror.style.width = this.utils.getRectWidth(rect) + 'px';
-			mirror.style.height = this.utils.getRectHeight(rect) + 'px';
-			this.domClassManager.rm(mirror, 'gu-transit');
-
-			if (this.getConfig('mirrorAbsolute')) this.domClassManager.add(mirror, 'gu-mirror-abs');else this.domClassManager.add(mirror, 'gu-mirror');
-
-			if (!mirrorContainer) mirrorContainer = (this.getConfig('mirrorWithParent') ? this.utils.getParent(this.utils.getParent(itemElm)) : this.utils.getParent(itemElm)) || document.body;
-
-			mirrorContainer.appendChild(mirror);
-			this.domClassManager.add(mirrorContainer, 'gu-unselectable');
-
-			this.mirror = mirror;
-		}
-	}, {
-		key: 'removeMirrorImage',
-		value: function removeMirrorImage() {
-
-			var mirrorContainer = this.utils.getParent(this.mirror);
-			this.domClassManager.rm(mirrorContainer, 'gu-unselectable');
-			mirrorContainer.removeChild(this.mirror);
-			this.mirror = null;
-		}
-	}, {
-		key: 'mouseup',
-		value: function mouseup(e) {
-
-			this.release(this.utils.getCoord('clientX', e), this.utils.getCoord('clientY', e));
-		}
-	}, {
-		key: 'release',
-		value: function release(x, y) {
-
-			if (x == undefined) x = this.x;
-
-			if (y == undefined) y = this.y;
-
-			if (this.state != 'dragging') return this.cancel();
-
-			// if requestAnimationFrame mode is used, cancel latest request
-			if (this.actualFrame) {
-				window.cancelAnimationFrame(this.actualFrame);
-				this.actualFrame = false;
-			}
-
-			var elementBehindPoint = this.utils.getElementBehindPoint(this.mirror, x, y, this._cachedAbs);
-			var dropTarget = this.findDropTarget(elementBehindPoint);
-
-			if (dropTarget && dropTarget !== this.source) {
-
-				this.drop(dropTarget);
-			} else {
-
-				this.cancel();
-			}
-		}
-	}, {
-		key: 'drop',
-		value: function drop(dropTarget) {
-
-			if (this.state != 'dragging') return;
-
-			var container = this.dragon.getContainer(dropTarget);
-			container.addItem(this.item, this.utils.domIndexOf(dropTarget, this.itemElm));
-			this.state = 'dropped';
-
-			this.cleanup();
-		}
-	}, {
-		key: 'remove',
-		value: function remove() {
-
-			if (this.state != 'dragging') return;
-
-			var parent = this.utils.getParent(this.itemElm);
-			if (parent) {
-				parent.removeChild(this.itemElm);
-			}
-
-			this.state = 'removed';
-
-			this.cleanup();
-		}
-	}, {
-		key: 'cancel',
-		value: function cancel(reverts) {
-
-			if (this.state == 'dragging') {
-
-				var parent = this.utils.getParent(this.itemElm);
-				var initial = this.isInitialPlacement(parent);
-				if (initial === false && reverts) {
-					this.source.insertBefore(this.itemElm, this.initialSibling);
-				}
-			}
-
-			this.state = 'cancelled';
-
-			this.cleanup();
-		}
-	}, {
-		key: 'cleanup',
-		value: function cleanup() {
-
-			this.mouseEvents('remove');
-
-			if (this.mirror) this.removeMirrorImage();
-
-			if (this.itemElm) {
-				this.domClassManager.rm(this.itemElm, 'gu-transit');
-			}
-		}
-	}, {
-		key: 'isInitialPlacement',
-		value: function isInitialPlacement(target, s) {
-
-			var sibling = void 0;
-
-			if (s !== void 0) {
-
-				sibling = s;
-			} else if (this.mirror) {
-
-				sibling = this.currentSibling;
-			} else {
-
-				sibling = this.utils.nextEl(this.itemElm);
-			}
-
-			return target === this.source && sibling === this.initialSibling;
-		}
-	}, {
-		key: 'getConfig',
-		value: function getConfig(prop) {
-
-			return this.item.getConfig(prop);
-		}
-	}]);
-
-	return Drag;
-}(), (_applyDecoratedDescriptor(_class.prototype, 'destroy', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'destroy'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'mouseEvents', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'mouseEvents'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'protectGrab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'protectGrab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'mousemove', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'mousemove'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'startByMouseMove', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'startByMouseMove'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'start', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'start'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'drag', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'drag'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'renderMirrorImage', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'renderMirrorImage'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'removeMirrorImage', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'removeMirrorImage'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'mouseup', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'mouseup'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'release', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'release'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'drop', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'drop'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'remove', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'remove'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'cancel', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'cancel'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'cleanup', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'cleanup'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'isInitialPlacement', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'isInitialPlacement'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'getConfig', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'getConfig'), _class.prototype)), _class);
-exports.default = Drag;
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\nexports.default = undefined;\n\nvar _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();\n\nvar _desc, _value, _class;\n\nvar _middle = __webpack_require__(/*! middle.js */ \"./node_modules/middle.js/dist/middle.es.js\");\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {\n\tvar desc = {};\n\tObject['ke' + 'ys'](descriptor).forEach(function (key) {\n\t\tdesc[key] = descriptor[key];\n\t});\n\tdesc.enumerable = !!desc.enumerable;\n\tdesc.configurable = !!desc.configurable;\n\n\tif ('value' in desc || desc.initializer) {\n\t\tdesc.writable = true;\n\t}\n\n\tdesc = decorators.slice().reverse().reduce(function (desc, decorator) {\n\t\treturn decorator(target, property, desc) || desc;\n\t}, desc);\n\n\tif (context && desc.initializer !== void 0) {\n\t\tdesc.value = desc.initializer ? desc.initializer.call(context) : void 0;\n\t\tdesc.initializer = undefined;\n\t}\n\n\tif (desc.initializer === void 0) {\n\t\tObject['define' + 'Property'](target, property, desc);\n\t\tdesc = null;\n\t}\n\n\treturn desc;\n}\n\nvar Item = (_class = function () {\n\tfunction Item(container, elm, config) {\n\t\t_classCallCheck(this, Item);\n\n\t\tif (!config) config = {};\n\n\t\tthis.id = config.id || 'itemID_' + Date.now();\n\t\tthis.container = container;\n\t\tthis.Drag = container.Drag;\n\t\tthis.utils = container.utils;\n\t\tthis.setConfig = this.utils.setConfig.bind(this, container);\n\t\tthis.setConfig(config);\n\t\tthis.getConfig = this.utils.getConfig.bind(this);\n\t\tthis.elm = elm;\n\t}\n\n\t_createClass(Item, [{\n\t\tkey: 'grab',\n\t\tvalue: function grab() {\n\n\t\t\tthis.drag = this.createDrag(this, this.config.dragConf);\n\t\t\treturn this.drag;\n\t\t}\n\t}, {\n\t\tkey: 'createDrag',\n\t\tvalue: function createDrag(item, config) {\n\t\t\treturn new this.Drag(item, config);\n\t\t}\n\t}]);\n\n\treturn Item;\n}(), (_applyDecoratedDescriptor(_class.prototype, 'grab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'grab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'createDrag', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'createDrag'), _class.prototype)), _class);\nexports.default = Item;\n\n//# sourceURL=webpack://dragon/./node_modules/@dragon/core/item.js?");
 
 /***/ }),
-/* 5 */
+
+/***/ "./node_modules/@dragon/dom-classes/classes.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/@dragon/dom-classes/classes.js ***!
+  \*****************************************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.default = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _desc, _value, _class;
-
-var _container = __webpack_require__(3);
-
-var _container2 = _interopRequireDefault(_container);
-
-var _middle = __webpack_require__(1);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
-	var desc = {};
-	Object['ke' + 'ys'](descriptor).forEach(function (key) {
-		desc[key] = descriptor[key];
-	});
-	desc.enumerable = !!desc.enumerable;
-	desc.configurable = !!desc.configurable;
-
-	if ('value' in desc || desc.initializer) {
-		desc.writable = true;
-	}
-
-	desc = decorators.slice().reverse().reduce(function (desc, decorator) {
-		return decorator(target, property, desc) || desc;
-	}, desc);
-
-	if (context && desc.initializer !== void 0) {
-		desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
-		desc.initializer = undefined;
-	}
-
-	if (desc.initializer === void 0) {
-		Object['define' + 'Property'](target, property, desc);
-		desc = null;
-	}
-
-	return desc;
-}
-
-var doc = document;
-
-if (!window.dragonSpace) window.dragonSpace = {};
-var space = window.dragonSpace;
-
-// ==============================================================================================================================================================
-// Dragon =====================================================================================================================================================
-// =============================================================================================================================================================
-/** is group of containers */
-var Dragon = (_class = function () {
-	function Dragon(config, utils, domEventManager, domClassManager) {
-		_classCallCheck(this, Dragon);
-
-		config = config || {};
-
-		if (config.nodeType == 1) // is DOM Element
-			config = { containers: [config] };
-
-		this.utils = utils;
-
-		if (typeof config.length !== 'undefined') // is array-like
-			config = { containers: this.utils.ensureArray(config) };
-
-		this.domEventManager = domEventManager;
-		this.domClassManager = domClassManager;
-		this.using = []; // array of plugins using by this dragon
-		this.config = config;
-		this.defaults = {
-			mouseEvents: true,
-			mirrorAbsolute: false,
-			mirrorWithParent: true,
-			mirrorContainer: null
-		};
-		this.id = config.id || 'dragonID_' + Date.now();
-		this.containers = [];
-
-		// init
-
-		this.initSpace(config.space);
-		this.space = space;
-		space.dragons.push(this);
-
-		this.addContainers();
-	}
-
-	_createClass(Dragon, [{
-		key: 'initSpace',
-		value: function initSpace(newSpace) {
-			var _this = this;
-
-			if (newSpace) space = newSpace;
-
-			if (!space.dragons) {
-				// initialisation
-
-				space.dragons = [];
-				space.drags = [];
-				space.utils = this.utils;
-
-				this.domEventManager(document.documentElement, 'add', 'mousedown', function (e) {
-
-					if (_this.utils.whichMouseButton(e) == 3) return; // prevent right click dragging
-
-					e.preventDefault(); // fixes github.com/bevacqua/dragula/issues/155
-
-					if (_this.utils.isInput(e.target)) {
-						// see also: github.com/bevacqua/dragula/issues/208
-						e.target.focus(); // fixes github.com/bevacqua/dragula/issues/176
-						return;
-					}
-
-					_this.grab(e.clientX, e.clientY, e.target);
-				});
-			}
-
-			if (!space.Dragon) space.Dragon = Dragon;
-		}
-	}, {
-		key: 'addContainers',
-		value: function addContainers(containerElms, config) {
-
-			containerElms = containerElms || this.config.containers;
-
-			if (!containerElms) return;
-
-			containerElms = this.utils.ensureArray(containerElms);
-
-			var len = containerElms.length;
-			var addedContainers = [];
-
-			for (var i = 0, elm, container; i < len; i++) {
-
-				elm = containerElms[i];
-
-				if (this.getContainer(elm)) {
-
-					/* eslint-disable no-console */
-					console.warn('container already registered', elm);
-					/* eslint-enable no-console */
-				} else {
-
-					container = new _container2.default(this, elm, config);
-					this.containers.push(container);
-					addedContainers.push(container);
-				}
-			}
-
-			return addedContainers;
-		}
-	}, {
-		key: 'getContainer',
-		value: function getContainer(elm, own) {
-
-			if (own) return this.containers[this.utils.getIndexByElm(this.containers, elm)];
-
-			var dragons = space.dragons;
-			var dragonsLen = dragons.length;
-
-			for (var i = 0, ii; i < dragonsLen; i++) {
-
-				ii = this.utils.getIndexByElm(dragons[i].containers, elm);
-
-				if (ii > -1) return dragons[i].containers[ii];
-			}
-
-			return null;
-		}
-	}, {
-		key: 'grab',
-		value: function grab(xOrElm, y) {
-
-			var itemElm = y == undefined ? xOrElm : doc.elementFromPoint(xOrElm, y);
-			var parentElm = itemElm;
-			var container = void 0;
-			var index = void 0;
-			var drag = void 0;
-
-			do {
-				itemElm = parentElm; // drag target should be a top element
-				parentElm = this.utils.getParent(itemElm);
-			} while (parentElm && !this.getContainer(parentElm));
-
-			if (!parentElm) {
-				// container not found, so don't grab
-				return;
-			}
-
-			index = this.utils.getIndexByElm(this.containers, parentElm);
-			container = this.containers[index];
-			drag = container.grab(itemElm);
-			space.drags.push(drag);
-			return drag;
-		}
-	}, {
-		key: 'findDropTarget',
-		value: function findDropTarget(target) {
-
-			while (target && !this.getContainer(target)) {
-				target = this.utils.getParent(target);
-			}
-
-			return target;
-		}
-	}, {
-		key: 'getConfig',
-		value: function getConfig(prop) {
-
-			prop = this.config.hasOwnProperty(prop) ? this.config[prop] : this.defaults[prop];
-			return typeof prop == 'function' ? prop() : prop;
-		}
-	}, {
-		key: 'use',
-		value: function use(plugins) {
-			var _this2 = this;
-
-			if (!Array.isArray(plugins)) plugins = [plugins];
-
-			plugins.forEach(function (plugin) {
-				return _this2.using.indexOf(plugin) > -1 ? 0 : plugin(_this2);
-			});
-
-			return this;
-		}
-	}]);
-
-	return Dragon;
-}(), (_applyDecoratedDescriptor(_class.prototype, 'initSpace', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'initSpace'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'addContainers', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'addContainers'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'getContainer', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'getContainer'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'grab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'grab'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'findDropTarget', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'findDropTarget'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'getConfig', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'getConfig'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'use', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'use'), _class.prototype)), _class);
-exports.default = Dragon;
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\nvar cache = {};\nvar start = '(?:^|\\\\s)';\nvar end = '(?:\\\\s|$)';\n\nfunction lookup(className) {\n\n\tvar cached = cache[className];\n\n\tif (cached) {\n\n\t\tcached.lastIndex = 0;\n\t} else {\n\n\t\tcache[className] = cached = new RegExp(start + className + end, 'g');\n\t}\n\n\treturn cached;\n}\n\nfunction add(el, className) {\n\n\tvar current = el.className;\n\n\tif (!current.length) {\n\n\t\tel.className = className;\n\t} else if (!lookup(className).test(current)) {\n\n\t\tel.className += ' ' + className;\n\t}\n}\n\nfunction rm(el, className) {\n\n\tel.className = el.className.replace(lookup(className), ' ').trim();\n}\n\nexports.default = {\n\tadd: add,\n\trm: rm\n};\n\n//# sourceURL=webpack://dragon/./node_modules/@dragon/dom-classes/classes.js?");
 
 /***/ }),
-/* 6 */
+
+/***/ "./node_modules/@dragon/polyfills/polyfills.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/@dragon/polyfills/polyfills.js ***!
+  \*****************************************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.default = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _desc, _value, _class;
-
-var _drag = __webpack_require__(4);
-
-var _drag2 = _interopRequireDefault(_drag);
-
-var _middle = __webpack_require__(1);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
-	var desc = {};
-	Object['ke' + 'ys'](descriptor).forEach(function (key) {
-		desc[key] = descriptor[key];
-	});
-	desc.enumerable = !!desc.enumerable;
-	desc.configurable = !!desc.configurable;
-
-	if ('value' in desc || desc.initializer) {
-		desc.writable = true;
-	}
-
-	desc = decorators.slice().reverse().reduce(function (desc, decorator) {
-		return decorator(target, property, desc) || desc;
-	}, desc);
-
-	if (context && desc.initializer !== void 0) {
-		desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
-		desc.initializer = undefined;
-	}
-
-	if (desc.initializer === void 0) {
-		Object['define' + 'Property'](target, property, desc);
-		desc = null;
-	}
-
-	return desc;
-}
-
-var Item = (_class = function () {
-	function Item(container, elm, config) {
-		_classCallCheck(this, Item);
-
-		if (!config) config = {};
-
-		this.Drag = _drag2.default;
-		this.config = Object.assign(Object.create(container.config), config);
-		this.id = config.id || 'itemID_' + Date.notaciaw();
-		this.container = container;
-		this.utils = container.utils;
-		this.getConfig = this.utils.getConfig.bind(this);
-		this.elm = elm;
-	}
-
-	_createClass(Item, [{
-		key: 'grab',
-		value: function grab() {
-
-			this.drag = new this.Drag(this);
-			return this.drag;
-		}
-	}]);
-
-	return Item;
-}(), (_applyDecoratedDescriptor(_class.prototype, 'grab', [_middle.decorator], Object.getOwnPropertyDescriptor(_class.prototype, 'grab'), _class.prototype)), _class);
-exports.default = Item;
+eval("\n\n/**\n * Element.classList polyfill for IE<10\n * Polyfill from https://github.com/remy/polyfills/blob/master/classList.js#Polyfill\n */\n\n(function () {\n\n\tif (typeof window.Element === 'undefined' || 'classList' in document.documentElement) return;\n\n\tvar prototype = Array.prototype,\n\t    push = prototype.push,\n\t    splice = prototype.splice,\n\t    join = prototype.join;\n\n\tfunction DOMTokenList(el) {\n\t\tthis.el = el;\n\t\t// The className needs to be trimmed and split on whitespace\n\t\t// to retrieve a list of classes.\n\t\tvar classes = el.className.replace(/^\\s+|\\s+$/g, '').split(/\\s+/);\n\t\tfor (var i = 0; i < classes.length; i++) {\n\t\t\tpush.call(this, classes[i]);\n\t\t}\n\t}\n\n\tDOMTokenList.prototype = {\n\t\tadd: function add(token) {\n\t\t\tif (this.contains(token)) return;\n\t\t\tpush.call(this, token);\n\t\t\tthis.el.className = this.toString();\n\t\t},\n\t\tcontains: function contains(token) {\n\t\t\treturn this.el.className.indexOf(token) != -1;\n\t\t},\n\t\titem: function item(index) {\n\t\t\treturn this[index] || null;\n\t\t},\n\t\tremove: function remove(token) {\n\t\t\tif (!this.contains(token)) return;\n\t\t\tvar i = void 0;\n\t\t\tfor (i = 0; i < this.length; i++) {\n\t\t\t\tif (this[i] == token) break;\n\t\t\t}\n\t\t\tsplice.call(this, i, 1);\n\t\t\tthis.el.className = this.toString();\n\t\t},\n\t\ttoString: function toString() {\n\t\t\treturn join.call(this, ' ');\n\t\t},\n\t\ttoggle: function toggle(token) {\n\t\t\tif (!this.contains(token)) {\n\t\t\t\tthis.add(token);\n\t\t\t} else {\n\t\t\t\tthis.remove(token);\n\t\t\t}\n\n\t\t\treturn this.contains(token);\n\t\t}\n\t};\n\n\twindow.DOMTokenList = DOMTokenList;\n\n\tfunction defineElementGetter(obj, prop, getter) {\n\t\tif (Object.defineProperty) {\n\t\t\tObject.defineProperty(obj, prop, {\n\t\t\t\tget: getter\n\t\t\t});\n\t\t} else {\n\t\t\tobj.__defineGetter__(prop, getter);\n\t\t}\n\t}\n\n\tdefineElementGetter(Element.prototype, 'classList', function () {\n\t\treturn new DOMTokenList(this);\n\t});\n})();\n\n//# sourceURL=webpack://dragon/./node_modules/@dragon/polyfills/polyfills.js?");
 
 /***/ }),
-/* 7 */
+
+/***/ "./node_modules/@dragon/touchy/touchy.js":
+/*!***********************************************!*\
+  !*** ./node_modules/@dragon/touchy/touchy.js ***!
+  \***********************************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-var cache = {};
-var start = '(?:^|\\s)';
-var end = '(?:\\s|$)';
-
-function lookup(className) {
-
-	var cached = cache[className];
-
-	if (cached) {
-
-		cached.lastIndex = 0;
-	} else {
-
-		cache[className] = cached = new RegExp(start + className + end, 'g');
-	}
-
-	return cached;
-}
-
-function add(el, className) {
-
-	var current = el.className;
-
-	if (!current.length) {
-
-		el.className = className;
-	} else if (!lookup(className).test(current)) {
-
-		el.className += ' ' + className;
-	}
-}
-
-function rm(el, className) {
-
-	el.className = el.className.replace(lookup(className), ' ').trim();
-}
-
-exports.default = {
-	add: add,
-	rm: rm
-};
+eval("/* WEBPACK VAR INJECTION */(function(global) {\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\nexports.default = touchy;\n\nvar _crossvent = __webpack_require__(/*! crossvent */ \"./node_modules/crossvent/src/crossvent.js\");\n\nvar _crossvent2 = _interopRequireDefault(_crossvent);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nfunction touchy(el, op, type, fn) {\n\n\tvar touch = {\n\t\tmouseup: 'touchend',\n\t\tmousedown: 'touchstart',\n\t\tmousemove: 'touchmove'\n\t};\n\n\tvar pointers = {\n\t\tmouseup: 'pointerup',\n\t\tmousedown: 'pointerdown',\n\t\tmousemove: 'pointermove'\n\t};\n\n\tvar microsoft = {\n\t\tmouseup: 'MSPointerUp',\n\t\tmousedown: 'MSPointerDown',\n\t\tmousemove: 'MSPointerMove'\n\n\t\t/** @namespace global.navigator.pointerEnabled -- resolving webstorm unresolved variables */\n\t\t/** @namespace global.navigator.msPointerEnabled -- resolving webstorm unresolved variables */\n\t};if (global.navigator.pointerEnabled) {\n\n\t\t_crossvent2.default[op](el, pointers[type], fn, { passive: false });\n\t} else if (global.navigator.msPointerEnabled) {\n\n\t\t_crossvent2.default[op](el, microsoft[type], fn, { passive: false });\n\t} else {\n\n\t\t_crossvent2.default[op](el, touch[type], fn, { passive: false });\n\t\t_crossvent2.default[op](el, type, fn, { passive: false });\n\t}\n}\n/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ \"./node_modules/webpack/buildin/global.js\")))\n\n//# sourceURL=webpack://dragon/./node_modules/@dragon/touchy/touchy.js?");
 
 /***/ }),
-/* 8 */
+
+/***/ "./node_modules/@dragon/utils/utils.js":
+/*!*********************************************!*\
+  !*** ./node_modules/@dragon/utils/utils.js ***!
+  \*********************************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
-
-/**
- * Element.classList polyfill for IE<10
- * Polyfill from https://github.com/remy/polyfills/blob/master/classList.js#Polyfill
- */
-
-(function () {
-
-	if (typeof window.Element === 'undefined' || 'classList' in document.documentElement) return;
-
-	var prototype = Array.prototype,
-	    push = prototype.push,
-	    splice = prototype.splice,
-	    join = prototype.join;
-
-	function DOMTokenList(el) {
-		this.el = el;
-		// The className needs to be trimmed and split on whitespace
-		// to retrieve a list of classes.
-		var classes = el.className.replace(/^\s+|\s+$/g, '').split(/\s+/);
-		for (var i = 0; i < classes.length; i++) {
-			push.call(this, classes[i]);
-		}
-	}
-
-	DOMTokenList.prototype = {
-		add: function add(token) {
-			if (this.contains(token)) return;
-			push.call(this, token);
-			this.el.className = this.toString();
-		},
-		contains: function contains(token) {
-			return this.el.className.indexOf(token) != -1;
-		},
-		item: function item(index) {
-			return this[index] || null;
-		},
-		remove: function remove(token) {
-			if (!this.contains(token)) return;
-			var i = void 0;
-			for (i = 0; i < this.length; i++) {
-				if (this[i] == token) break;
-			}
-			splice.call(this, i, 1);
-			this.el.className = this.toString();
-		},
-		toString: function toString() {
-			return join.call(this, ' ');
-		},
-		toggle: function toggle(token) {
-			if (!this.contains(token)) {
-				this.add(token);
-			} else {
-				this.remove(token);
-			}
-
-			return this.contains(token);
-		}
-	};
-
-	window.DOMTokenList = DOMTokenList;
-
-	function defineElementGetter(obj, prop, getter) {
-		if (Object.defineProperty) {
-			Object.defineProperty(obj, prop, {
-				get: getter
-			});
-		} else {
-			obj.__defineGetter__(prop, getter);
-		}
-	}
-
-	defineElementGetter(Element.prototype, 'classList', function () {
-		return new DOMTokenList(this);
-	});
-})();
+eval("/* WEBPACK VAR INJECTION */(function(global) {\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\nexports.domClassManager = exports.domEventManager = undefined;\nexports.setConfig = setConfig;\nexports.getConfig = getConfig;\nexports.getImmediateChild = getImmediateChild;\nexports.getReference = getReference;\nexports.getCoord = getCoord;\nexports.getEventHost = getEventHost;\nexports.whichMouseButton = whichMouseButton;\nexports.getOffset = getOffset;\nexports.getScroll = getScroll;\nexports.getElementBehindPoint = getElementBehindPoint;\nexports.getRectWidth = getRectWidth;\nexports.getRectHeight = getRectHeight;\nexports.getParent = getParent;\nexports.nextEl = nextEl;\nexports.toArray = toArray;\nexports.ensureArray = ensureArray;\nexports.bind = bind;\nexports.domIndexOf = domIndexOf;\nexports.isInput = isInput;\nexports.isEditable = isEditable;\nexports.getIndexByElm = getIndexByElm;\nexports.hierarchySafe = hierarchySafe;\n\nvar _touchy = __webpack_require__(/*! @dragon/touchy */ \"./node_modules/@dragon/touchy/touchy.js\");\n\nvar _touchy2 = _interopRequireDefault(_touchy);\n\nvar _domClasses = __webpack_require__(/*! @dragon/dom-classes */ \"./node_modules/@dragon/dom-classes/classes.js\");\n\nvar _domClasses2 = _interopRequireDefault(_domClasses);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\n/* global global */\nvar doc = document; // cross dom event management\n\nvar docElm = doc.documentElement;\n\nexports.default = {\n\n\t// domEventManager: touchy,\n\t// domClassManager: classes,\n\t// getConfig: getConfig,\n\t// getImmediateChild: getImmediateChild,\n\t// getReference: getReference,\n\t// getCoord: getCoord,\n\t// getEventHost: getEventHost,\n\t// getOffset: getOffset,\n\t// getScroll: getScroll,\n\t// getElementBehindPoint: getElementBehindPoint,\n\t// getRectWidth: getRectWidth,\n\t// getRectHeight: getRectHeight,\n\t// getParent: getParent,\n\t// nextEl: nextEl,\n\t// toArray: toArray,\n\t// bind: bind,\n\t// domIndexOf: domIndexOf,\n\t// isInput: isInput,\n\t// isEditable: isEditable,\n\t// getIndexByElm: getIndexByElm,\n\t// ensureArray: ensureArray,\n};\nexports.domEventManager = _touchy2.default;\nexports.domClassManager = _domClasses2.default;\nfunction setConfig(parent, config) {\n\n\tthis.config = Object.assign(Object.create(parent.config), config);\n}\n\nfunction getConfig(prop) {\n\n\tprop = this.config[prop];\n\treturn typeof prop == 'function' ? prop(this) : prop;\n}\n\nfunction getImmediateChild(dropTarget, target) {\n\n\tvar immediate = target;\n\n\twhile (immediate !== dropTarget && getParent(immediate) !== dropTarget) {\n\t\timmediate = getParent(immediate);\n\t}\n\n\tif (immediate === docElm) {\n\t\treturn null;\n\t}\n\n\treturn immediate;\n}\n\nfunction getReference(dropTarget, target, x, y, direction, abs) {\n\n\tvar horizontal = direction === 'horizontal';\n\n\tif (abs) {\n\t\tx = x - getScroll('scrollLeft', 'pageXOffset');\n\t\ty = y - getScroll('scrollTop', 'pageYOffset');\n\t}\n\treturn target !== dropTarget ? inside() : outside(); // reference\n\n\tfunction outside() {\n\t\t// slower, but able to figure out any position\n\t\tvar len = dropTarget.children.length,\n\t\t    i = void 0,\n\t\t    el = void 0,\n\t\t    rect = void 0;\n\n\t\tfor (i = 0; i < len; i++) {\n\n\t\t\tel = dropTarget.children[i];\n\t\t\trect = el.getBoundingClientRect();\n\n\t\t\tif (horizontal && rect.left + rect.width / 2 > x) {\n\t\t\t\treturn el;\n\t\t\t}\n\n\t\t\tif (!horizontal && rect.top + rect.height / 2 > y) {\n\t\t\t\treturn el;\n\t\t\t}\n\t\t}\n\n\t\treturn null;\n\t}\n\n\tfunction inside() {\n\t\t// faster, but only available if dropped inside a child element\n\n\t\tvar rect = target.getBoundingClientRect();\n\n\t\tif (horizontal) {\n\t\t\treturn resolve(x > rect.left + getRectWidth(rect) / 2);\n\t\t}\n\n\t\treturn resolve(y > rect.top + getRectHeight(rect) / 2);\n\t}\n\n\tfunction resolve(after) {\n\n\t\treturn after ? nextEl(target) : target;\n\t}\n}\n\nfunction getCoord(coord, e) {\n\n\tvar host = getEventHost(e);\n\tvar missMap = {\n\t\tpageX: 'clientX', // IE8\n\t\tpageY: 'clientY' // IE8\n\t};\n\n\tif (coord in missMap && !(coord in host) && missMap[coord] in host) {\n\t\tcoord = missMap[coord];\n\t}\n\n\treturn host[coord];\n}\n\nfunction getEventHost(e) {\n\n\t// on touchend event, we have to use `e.changedTouches`\n\t// see http://stackoverflow.com/questions/7192563/touchend-event-properties\n\t// see github.com/bevacqua/dragula/issues/34\n\tif (e.targetTouches && e.targetTouches.length) {\n\t\treturn e.targetTouches[0];\n\t}\n\n\tif (e.changedTouches && e.changedTouches.length) {\n\t\treturn e.changedTouches[0];\n\t}\n\n\treturn e;\n}\n\nfunction whichMouseButton(e) {\n\n\t// if (e.touches !== void 0) { return e.touches.length }\n\tif (e.touches !== void 0) {\n\t\treturn 1;\n\t} // accept all touches\n\tif (e.which !== void 0 && e.which !== 0) {\n\t\treturn e.which;\n\t} // see github.com/bevacqua/dragula/issues/261\n\tif (e.buttons !== void 0) {\n\t\treturn e.buttons;\n\t}\n\tvar button = e.button;\n\tif (button !== void 0) {\n\t\t// see github.com/jquery/jquery/blob/99e8ff1baa7ae341e94bb89c3e84570c7c3ad9ea/src/event.js#L573-L575\n\t\treturn button & 1 ? 1 : button & 2 ? 3 : button & 4 ? 2 : 0;\n\t}\n}\n\n// get offset of element from top left corner of document\nfunction getOffset(el, size) {\n\n\tvar rect = el.getBoundingClientRect();\n\tvar result = {\n\t\tleft: rect.left + getScroll('scrollLeft', 'pageXOffset'),\n\t\ttop: rect.top + getScroll('scrollTop', 'pageYOffset')\n\t};\n\n\tif (size) {\n\n\t\tresult.width = getRectWidth(rect);\n\t\tresult.height = getRectHeight(rect);\n\t}\n\n\treturn result;\n}\n\nfunction getScroll(scrollProp, offsetProp) {\n\n\tif (typeof global[offsetProp] !== 'undefined') {\n\t\treturn global[offsetProp];\n\t}\n\n\tif (docElm.clientHeight) {\n\t\treturn docElm[scrollProp];\n\t}\n\n\treturn doc.body[scrollProp];\n}\n\nfunction getElementBehindPoint(elmToHide, x, y, abs) {\n\n\tvar state = elmToHide.className;\n\tvar el = void 0;\n\n\t// hide elmToHide\n\telmToHide.className += ' dragon-hide';\n\t// look at the position\n\tel = doc.elementFromPoint(abs ? x - getScroll('scrollLeft', 'pageXOffset') : x, abs ? y - getScroll('scrollTop', 'pageYOffset') : y);\n\t// show elmToHide back\n\telmToHide.className = state;\n\n\treturn el;\n}\n\nfunction getRectWidth(rect) {\n\n\treturn rect.width || rect.right - rect.left;\n}\n\nfunction getRectHeight(rect) {\n\n\treturn rect.height || rect.bottom - rect.top;\n}\n\nfunction getParent(el) {\n\n\treturn el.parentNode === doc ? null : el.parentNode;\n}\n\nfunction nextEl(el) {\n\n\treturn el.nextElementSibling || manually();\n\n\tfunction manually() {\n\t\tvar sibling = el;\n\t\tdo {\n\t\t\tsibling = sibling.nextSibling;\n\t\t} while (sibling && sibling.nodeType !== 1);\n\t\treturn sibling;\n\t}\n}\n\nfunction toArray(obj) {\n\n\treturn [].slice.call(obj);\n}\n\nfunction ensureArray(it) {\n\n\tif (Array.isArray(it)) return it;else if (it.length && it.length != 0) return toArray(it);else return [it];\n}\n\nfunction bind(obj, methodName) {\n\n\tvar bindedName = '_binded_' + methodName;\n\n\tif (!obj[bindedName]) obj[bindedName] = function () {\n\t\treturn obj[methodName].apply(obj, arguments);\n\t};\n\n\treturn obj[bindedName];\n}\n\nfunction domIndexOf(parent, child) {\n\t// Possible problems with IE8- ? https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/children#Browser_compatibility\n\treturn Array.prototype.indexOf.call(parent.children, child);\n}\n\nfunction isInput(el) {\n\treturn el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || isEditable(el);\n}\n\nfunction isEditable(el) {\n\n\tif (!el) {\n\t\treturn false;\n\t}\n\t// no parents were editable\n\tif (el.contentEditable === 'false') {\n\t\treturn false;\n\t}\n\t// stop the lookup\n\tif (el.contentEditable === 'true') {\n\t\treturn true;\n\t}\n\t// found a contentEditable element in the chain\n\treturn isEditable(getParent(el)); // contentEditable is set to 'inherit'\n}\n\nfunction getIndexByElm(sourceArray, elm) {\n\n\tvar len = sourceArray.length;\n\n\tfor (var i = 0; i < len; i++) {\n\n\t\tif (sourceArray[i].elm == elm) return i;\n\t}\n\n\treturn -1;\n}\n\nfunction hierarchySafe(fn, success, fail) {\n\n\ttry {\n\t\t// dom edit fn to protect\n\t\tfn();\n\t\tif (success) success();\n\t} catch (e) {\n\t\t// console.dir(e)\n\t\tif (e.name !== 'HierarchyRequestError') // fixing: Uncaught DOMException: Failed to execute 'insertBefore' on 'Node': The new child element contains the parent.\n\t\t\tconsole.error(e); // eslint-disable-line no-console\n\n\t\tif (fail) fail();\n\t}\n}\n/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ \"./node_modules/webpack/buildin/global.js\")))\n\n//# sourceURL=webpack://dragon/./node_modules/@dragon/utils/utils.js?");
 
 /***/ }),
-/* 9 */
+
+/***/ "./node_modules/crossvent/src/crossvent.js":
+/*!*************************************************!*\
+  !*** ./node_modules/crossvent/src/crossvent.js ***!
+  \*************************************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.default = touchy;
-
-var _crossvent = __webpack_require__(11);
-
-var _crossvent2 = _interopRequireDefault(_crossvent);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function touchy(el, op, type, fn) {
-
-	var touch = {
-		mouseup: 'touchend',
-		mousedown: 'touchstart',
-		mousemove: 'touchmove'
-	};
-
-	var pointers = {
-		mouseup: 'pointerup',
-		mousedown: 'pointerdown',
-		mousemove: 'pointermove'
-	};
-
-	var microsoft = {
-		mouseup: 'MSPointerUp',
-		mousedown: 'MSPointerDown',
-		mousemove: 'MSPointerMove'
-
-		/** @namespace global.navigator.pointerEnabled -- resolving webstorm unresolved variables */
-		/** @namespace global.navigator.msPointerEnabled -- resolving webstorm unresolved variables */
-	};if (global.navigator.pointerEnabled) {
-
-		_crossvent2.default[op](el, pointers[type] || type, fn);
-	} else if (global.navigator.msPointerEnabled) {
-
-		_crossvent2.default[op](el, microsoft[type] || type, fn);
-	} else {
-
-		_crossvent2.default[op](el, touch[type] || type, fn);
-		_crossvent2.default[op](el, type, fn);
-	}
-}
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+eval("/* WEBPACK VAR INJECTION */(function(global) {\n\nvar customEvent = __webpack_require__(/*! custom-event */ \"./node_modules/custom-event/index.js\");\nvar eventmap = __webpack_require__(/*! ./eventmap */ \"./node_modules/crossvent/src/eventmap.js\");\nvar doc = global.document;\nvar addEvent = addEventEasy;\nvar removeEvent = removeEventEasy;\nvar hardCache = [];\n\nif (!global.addEventListener) {\n  addEvent = addEventHard;\n  removeEvent = removeEventHard;\n}\n\nmodule.exports = {\n  add: addEvent,\n  remove: removeEvent,\n  fabricate: fabricateEvent\n};\n\nfunction addEventEasy(el, type, fn, capturing) {\n  return el.addEventListener(type, fn, capturing);\n}\n\nfunction addEventHard(el, type, fn) {\n  return el.attachEvent('on' + type, wrap(el, type, fn));\n}\n\nfunction removeEventEasy(el, type, fn, capturing) {\n  return el.removeEventListener(type, fn, capturing);\n}\n\nfunction removeEventHard(el, type, fn) {\n  var listener = unwrap(el, type, fn);\n  if (listener) {\n    return el.detachEvent('on' + type, listener);\n  }\n}\n\nfunction fabricateEvent(el, type, model) {\n  var e = eventmap.indexOf(type) === -1 ? makeCustomEvent() : makeClassicEvent();\n  if (el.dispatchEvent) {\n    el.dispatchEvent(e);\n  } else {\n    el.fireEvent('on' + type, e);\n  }\n  function makeClassicEvent() {\n    var e;\n    if (doc.createEvent) {\n      e = doc.createEvent('Event');\n      e.initEvent(type, true, true);\n    } else if (doc.createEventObject) {\n      e = doc.createEventObject();\n    }\n    return e;\n  }\n  function makeCustomEvent() {\n    return new customEvent(type, { detail: model });\n  }\n}\n\nfunction wrapperFactory(el, type, fn) {\n  return function wrapper(originalEvent) {\n    var e = originalEvent || global.event;\n    e.target = e.target || e.srcElement;\n    e.preventDefault = e.preventDefault || function preventDefault() {\n      e.returnValue = false;\n    };\n    e.stopPropagation = e.stopPropagation || function stopPropagation() {\n      e.cancelBubble = true;\n    };\n    e.which = e.which || e.keyCode;\n    fn.call(el, e);\n  };\n}\n\nfunction wrap(el, type, fn) {\n  var wrapper = unwrap(el, type, fn) || wrapperFactory(el, type, fn);\n  hardCache.push({\n    wrapper: wrapper,\n    element: el,\n    type: type,\n    fn: fn\n  });\n  return wrapper;\n}\n\nfunction unwrap(el, type, fn) {\n  var i = find(el, type, fn);\n  if (i) {\n    var wrapper = hardCache[i].wrapper;\n    hardCache.splice(i, 1); // free up a tad of memory\n    return wrapper;\n  }\n}\n\nfunction find(el, type, fn) {\n  var i, item;\n  for (i = 0; i < hardCache.length; i++) {\n    item = hardCache[i];\n    if (item.element === el && item.type === type && item.fn === fn) {\n      return i;\n    }\n  }\n}\n/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ \"./node_modules/webpack/buildin/global.js\")))\n\n//# sourceURL=webpack://dragon/./node_modules/crossvent/src/crossvent.js?");
 
 /***/ }),
-/* 10 */
+
+/***/ "./node_modules/crossvent/src/eventmap.js":
+/*!************************************************!*\
+  !*** ./node_modules/crossvent/src/eventmap.js ***!
+  \************************************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.getImmediateChild = getImmediateChild;
-exports.getReference = getReference;
-exports.getCoord = getCoord;
-exports.getEventHost = getEventHost;
-exports.whichMouseButton = whichMouseButton;
-exports.getOffset = getOffset;
-exports.getScroll = getScroll;
-exports.getElementBehindPoint = getElementBehindPoint;
-exports.getRectWidth = getRectWidth;
-exports.getRectHeight = getRectHeight;
-exports.getParent = getParent;
-exports.nextEl = nextEl;
-exports.toArray = toArray;
-exports.ensureArray = ensureArray;
-exports.bind = bind;
-exports.domIndexOf = domIndexOf;
-exports.isInput = isInput;
-exports.isEditable = isEditable;
-exports.getIndexByElm = getIndexByElm;
-var doc = document;
-var docElm = doc.documentElement;
-
-exports.default = {
-
-	// getImmediateChild: getImmediateChild,
-	// getReference: getReference,
-	// getCoord: getCoord,
-	// getEventHost: getEventHost,
-	// getOffset: getOffset,
-	// getScroll: getScroll,
-	// getElementBehindPoint: getElementBehindPoint,
-	// getRectWidth: getRectWidth,
-	// getRectHeight: getRectHeight,
-	// getParent: getParent,
-	// nextEl: nextEl,
-	// toArray: toArray,
-	// bind: bind,
-	// domIndexOf: domIndexOf,
-	// isInput: isInput,
-	// isEditable: isEditable,
-	// getIndexByElm: getIndexByElm,
-	// ensureArray: ensureArray,
-};
-function getImmediateChild(dropTarget, target) {
-
-	var immediate = target;
-
-	while (immediate !== dropTarget && getParent(immediate) !== dropTarget) {
-		immediate = getParent(immediate);
-	}
-
-	if (immediate === docElm) {
-		return null;
-	}
-
-	return immediate;
-}
-
-function getReference(dropTarget, target, x, y, direction, abs) {
-
-	var horizontal = direction === 'horizontal';
-
-	if (abs) {
-		x = x - getScroll('scrollLeft', 'pageXOffset');
-		y = y - getScroll('scrollTop', 'pageYOffset');
-	}
-	return target !== dropTarget ? inside() : outside(); // reference
-
-	function outside() {
-		// slower, but able to figure out any position
-		var len = dropTarget.children.length,
-		    i = void 0,
-		    el = void 0,
-		    rect = void 0;
-
-		for (i = 0; i < len; i++) {
-
-			el = dropTarget.children[i];
-			rect = el.getBoundingClientRect();
-
-			if (horizontal && rect.left + rect.width / 2 > x) {
-				return el;
-			}
-
-			if (!horizontal && rect.top + rect.height / 2 > y) {
-				return el;
-			}
-		}
-
-		return null;
-	}
-
-	function inside() {
-		// faster, but only available if dropped inside a child element
-
-		var rect = target.getBoundingClientRect();
-
-		if (horizontal) {
-			return resolve(x > rect.left + getRectWidth(rect) / 2);
-		}
-
-		return resolve(y > rect.top + getRectHeight(rect) / 2);
-	}
-
-	function resolve(after) {
-
-		return after ? nextEl(target) : target;
-	}
-}
-
-function getCoord(coord, e) {
-
-	var host = getEventHost(e);
-	var missMap = {
-		pageX: 'clientX', // IE8
-		pageY: 'clientY' // IE8
-	};
-
-	if (coord in missMap && !(coord in host) && missMap[coord] in host) {
-		coord = missMap[coord];
-	}
-
-	return host[coord];
-}
-
-function getEventHost(e) {
-
-	// on touchend event, we have to use `e.changedTouches`
-	// see http://stackoverflow.com/questions/7192563/touchend-event-properties
-	// see github.com/bevacqua/dragula/issues/34
-	if (e.targetTouches && e.targetTouches.length) {
-		return e.targetTouches[0];
-	}
-
-	if (e.changedTouches && e.changedTouches.length) {
-		return e.changedTouches[0];
-	}
-
-	return e;
-}
-
-function whichMouseButton(e) {
-
-	// if (e.touches !== void 0) { return e.touches.length }
-	if (e.touches !== void 0) {
-		return 1;
-	} // accept all touches
-	if (e.which !== void 0 && e.which !== 0) {
-		return e.which;
-	} // see github.com/bevacqua/dragula/issues/261
-	if (e.buttons !== void 0) {
-		return e.buttons;
-	}
-	var button = e.button;
-	if (button !== void 0) {
-		// see github.com/jquery/jquery/blob/99e8ff1baa7ae341e94bb89c3e84570c7c3ad9ea/src/event.js#L573-L575
-		return button & 1 ? 1 : button & 2 ? 3 : button & 4 ? 2 : 0;
-	}
-}
-
-// get offset of element from top left corner of document
-function getOffset(el, size) {
-
-	var rect = el.getBoundingClientRect();
-	var result = {
-		left: rect.left + getScroll('scrollLeft', 'pageXOffset'),
-		top: rect.top + getScroll('scrollTop', 'pageYOffset')
-	};
-
-	if (size) {
-
-		result.width = getRectWidth(rect);
-		result.height = getRectHeight(rect);
-	}
-
-	return result;
-}
-
-function getScroll(scrollProp, offsetProp) {
-
-	if (typeof global[offsetProp] !== 'undefined') {
-		return global[offsetProp];
-	}
-
-	if (docElm.clientHeight) {
-		return docElm[scrollProp];
-	}
-
-	return doc.body[scrollProp];
-}
-
-function getElementBehindPoint(elmToHide, x, y, abs) {
-
-	var state = elmToHide.className;
-	var el = void 0;
-
-	// hide elmToHide
-	elmToHide.className += ' gu-hide';
-	// look at the position
-	el = doc.elementFromPoint(abs ? x - getScroll('scrollLeft', 'pageXOffset') : x, abs ? y - getScroll('scrollTop', 'pageYOffset') : y);
-	// show elmToHide back
-	elmToHide.className = state;
-
-	return el;
-}
-
-function getRectWidth(rect) {
-
-	return rect.width || rect.right - rect.left;
-}
-
-function getRectHeight(rect) {
-
-	return rect.height || rect.bottom - rect.top;
-}
-
-function getParent(el) {
-
-	return el.parentNode === doc ? null : el.parentNode;
-}
-
-function nextEl(el) {
-
-	return el.nextElementSibling || manually();
-
-	function manually() {
-		var sibling = el;
-		do {
-			sibling = sibling.nextSibling;
-		} while (sibling && sibling.nodeType !== 1);
-		return sibling;
-	}
-}
-
-function toArray(obj) {
-
-	return [].slice.call(obj);
-}
-
-function ensureArray(it) {
-
-	if (Array.isArray(it)) return it;else if (it.length && it.length != 0) return toArray(it);else return [it];
-}
-
-function bind(obj, methodName) {
-
-	var bindedName = '_binded_' + methodName;
-
-	if (!obj[bindedName]) obj[bindedName] = function () {
-		return obj[methodName].apply(obj, arguments);
-	};
-
-	return obj[bindedName];
-}
-
-function domIndexOf(parent, child) {
-	// Possible problems with IE8- ? https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/children#Browser_compatibility
-	return Array.prototype.indexOf.call(parent.children, child);
-}
-
-function isInput(el) {
-	return el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || isEditable(el);
-}
-
-function isEditable(el) {
-
-	if (!el) {
-		return false;
-	}
-	// no parents were editable
-	if (el.contentEditable === 'false') {
-		return false;
-	}
-	// stop the lookup
-	if (el.contentEditable === 'true') {
-		return true;
-	}
-	// found a contentEditable element in the chain
-	return isEditable(getParent(el)); // contentEditable is set to 'inherit'
-}
-
-function getIndexByElm(sourceArray, elm) {
-
-	var len = sourceArray.length;
-
-	for (var i = 0; i < len; i++) {
-
-		if (sourceArray[i].elm == elm) return i;
-	}
-
-	return -1;
-}
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+eval("/* WEBPACK VAR INJECTION */(function(global) {\n\nvar eventmap = [];\nvar eventname = '';\nvar ron = /^on/;\n\nfor (eventname in global) {\n  if (ron.test(eventname)) {\n    eventmap.push(eventname.slice(2));\n  }\n}\n\nmodule.exports = eventmap;\n/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ \"./node_modules/webpack/buildin/global.js\")))\n\n//# sourceURL=webpack://dragon/./node_modules/crossvent/src/eventmap.js?");
 
 /***/ }),
-/* 11 */
+
+/***/ "./node_modules/custom-event/index.js":
+/*!********************************************!*\
+  !*** ./node_modules/custom-event/index.js ***!
+  \********************************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-var customEvent = __webpack_require__(13);
-var eventmap = __webpack_require__(12);
-var doc = global.document;
-var addEvent = addEventEasy;
-var removeEvent = removeEventEasy;
-var hardCache = [];
-
-if (!global.addEventListener) {
-  addEvent = addEventHard;
-  removeEvent = removeEventHard;
-}
-
-module.exports = {
-  add: addEvent,
-  remove: removeEvent,
-  fabricate: fabricateEvent
-};
-
-function addEventEasy(el, type, fn, capturing) {
-  return el.addEventListener(type, fn, capturing);
-}
-
-function addEventHard(el, type, fn) {
-  return el.attachEvent('on' + type, wrap(el, type, fn));
-}
-
-function removeEventEasy(el, type, fn, capturing) {
-  return el.removeEventListener(type, fn, capturing);
-}
-
-function removeEventHard(el, type, fn) {
-  var listener = unwrap(el, type, fn);
-  if (listener) {
-    return el.detachEvent('on' + type, listener);
-  }
-}
-
-function fabricateEvent(el, type, model) {
-  var e = eventmap.indexOf(type) === -1 ? makeCustomEvent() : makeClassicEvent();
-  if (el.dispatchEvent) {
-    el.dispatchEvent(e);
-  } else {
-    el.fireEvent('on' + type, e);
-  }
-  function makeClassicEvent() {
-    var e;
-    if (doc.createEvent) {
-      e = doc.createEvent('Event');
-      e.initEvent(type, true, true);
-    } else if (doc.createEventObject) {
-      e = doc.createEventObject();
-    }
-    return e;
-  }
-  function makeCustomEvent() {
-    return new customEvent(type, { detail: model });
-  }
-}
-
-function wrapperFactory(el, type, fn) {
-  return function wrapper(originalEvent) {
-    var e = originalEvent || global.event;
-    e.target = e.target || e.srcElement;
-    e.preventDefault = e.preventDefault || function preventDefault() {
-      e.returnValue = false;
-    };
-    e.stopPropagation = e.stopPropagation || function stopPropagation() {
-      e.cancelBubble = true;
-    };
-    e.which = e.which || e.keyCode;
-    fn.call(el, e);
-  };
-}
-
-function wrap(el, type, fn) {
-  var wrapper = unwrap(el, type, fn) || wrapperFactory(el, type, fn);
-  hardCache.push({
-    wrapper: wrapper,
-    element: el,
-    type: type,
-    fn: fn
-  });
-  return wrapper;
-}
-
-function unwrap(el, type, fn) {
-  var i = find(el, type, fn);
-  if (i) {
-    var wrapper = hardCache[i].wrapper;
-    hardCache.splice(i, 1); // free up a tad of memory
-    return wrapper;
-  }
-}
-
-function find(el, type, fn) {
-  var i, item;
-  for (i = 0; i < hardCache.length; i++) {
-    item = hardCache[i];
-    if (item.element === el && item.type === type && item.fn === fn) {
-      return i;
-    }
-  }
-}
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+eval("/* WEBPACK VAR INJECTION */(function(global) {\n\nvar NativeCustomEvent = global.CustomEvent;\n\nfunction useNative() {\n  try {\n    var p = new NativeCustomEvent('cat', { detail: { foo: 'bar' } });\n    return 'cat' === p.type && 'bar' === p.detail.foo;\n  } catch (e) {}\n  return false;\n}\n\n/**\n * Cross-browser `CustomEvent` constructor.\n *\n * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent.CustomEvent\n *\n * @public\n */\n\nmodule.exports = useNative() ? NativeCustomEvent :\n\n// IE >= 9\n'undefined' !== typeof document && 'function' === typeof document.createEvent ? function CustomEvent(type, params) {\n  var e = document.createEvent('CustomEvent');\n  if (params) {\n    e.initCustomEvent(type, params.bubbles, params.cancelable, params.detail);\n  } else {\n    e.initCustomEvent(type, false, false, void 0);\n  }\n  return e;\n} :\n\n// IE <= 8\nfunction CustomEvent(type, params) {\n  var e = document.createEventObject();\n  e.type = type;\n  if (params) {\n    e.bubbles = Boolean(params.bubbles);\n    e.cancelable = Boolean(params.cancelable);\n    e.detail = params.detail;\n  } else {\n    e.bubbles = false;\n    e.cancelable = false;\n    e.detail = void 0;\n  }\n  return e;\n};\n/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ \"./node_modules/webpack/buildin/global.js\")))\n\n//# sourceURL=webpack://dragon/./node_modules/custom-event/index.js?");
 
 /***/ }),
-/* 12 */
+
+/***/ "./node_modules/middle.js/dist/middle.es.js":
+/*!**************************************************!*\
+  !*** ./node_modules/middle.js/dist/middle.es.js ***!
+  \**************************************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-var eventmap = [];
-var eventname = '';
-var ron = /^on/;
-
-for (eventname in global) {
-  if (ron.test(eventname)) {
-    eventmap.push(eventname.slice(2));
-  }
-}
-
-module.exports = eventmap;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nfunction middle(e, t) {\n  var _ = function t() {\n    var n = Array.prototype.slice.call(arguments);return void 0 === _._m_ctx && (_._m_ctx = this), _._m_stack.length === _._m_index ? (_._m_index = 0, e.apply(_._m_ctx, n)) : (n.unshift(t), _._m_stack[_._m_index++].apply(_._m_ctx, n));\n  };return _._m_stack = [], _._m_index = 0, _._m_ctx = t, _.use = function (e, t) {\n    _._m_stack.push(e.bind(t));\n  }, _;\n}function decorator(e, t, _) {\n  if (e) {\n    var n = _.writable,\n        i = _.enumerable;return { get: function get() {\n        var e = middle(_.value, this);return Object.defineProperty(this, t, { value: e, writable: n, enumerable: i }), e;\n      } };\n  }\n}exports.decorator = decorator;\nexports.default = middle;\n//# sourceMappingURL=middle.es.js.map\n\n//# sourceURL=webpack://dragon/./node_modules/middle.js/dist/middle.es.js?");
 
 /***/ }),
-/* 13 */
+
+/***/ "./node_modules/webpack/buildin/global.js":
+/*!***********************************!*\
+  !*** (webpack)/buildin/global.js ***!
+  \***********************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-var NativeCustomEvent = global.CustomEvent;
-
-function useNative() {
-  try {
-    var p = new NativeCustomEvent('cat', { detail: { foo: 'bar' } });
-    return 'cat' === p.type && 'bar' === p.detail.foo;
-  } catch (e) {}
-  return false;
-}
-
-/**
- * Cross-browser `CustomEvent` constructor.
- *
- * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent.CustomEvent
- *
- * @public
- */
-
-module.exports = useNative() ? NativeCustomEvent :
-
-// IE >= 9
-'undefined' !== typeof document && 'function' === typeof document.createEvent ? function CustomEvent(type, params) {
-  var e = document.createEvent('CustomEvent');
-  if (params) {
-    e.initCustomEvent(type, params.bubbles, params.cancelable, params.detail);
-  } else {
-    e.initCustomEvent(type, false, false, void 0);
-  }
-  return e;
-} :
-
-// IE <= 8
-function CustomEvent(type, params) {
-  var e = document.createEventObject();
-  e.type = type;
-  if (params) {
-    e.bubbles = Boolean(params.bubbles);
-    e.cancelable = Boolean(params.cancelable);
-    e.detail = params.detail;
-  } else {
-    e.bubbles = false;
-    e.cancelable = false;
-    e.detail = void 0;
-  }
-  return e;
-};
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+eval("\n\nvar _typeof = typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; };\n\nvar g;\n\n// This works in non-strict mode\ng = function () {\n\treturn this;\n}();\n\ntry {\n\t// This works if eval is allowed (see CSP)\n\tg = g || Function(\"return this\")() || (1, eval)(\"this\");\n} catch (e) {\n\t// This works if the window reference is available\n\tif ((typeof window === \"undefined\" ? \"undefined\" : _typeof(window)) === \"object\") g = window;\n}\n\n// g can still be undefined, but nothing to do about it...\n// We return undefined, instead of nothing here, so it's\n// easier to handle this case. if(!global) { ...}\n\nmodule.exports = g;\n\n//# sourceURL=webpack://dragon/(webpack)/buildin/global.js?");
 
 /***/ }),
-/* 14 */
+
+/***/ "./src/dragon.lib.js":
+/*!***************************!*\
+  !*** ./src/dragon.lib.js ***!
+  \***************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n\tvalue: true\n});\nexports.utils = exports.Dragon = undefined;\nexports.default = dragon;\n\n__webpack_require__(/*! @dragon/polyfills */ \"./node_modules/@dragon/polyfills/polyfills.js\");\n\nvar _core = __webpack_require__(/*! @dragon/core */ \"./node_modules/@dragon/core/core.js\");\n\nvar _core2 = _interopRequireDefault(_core);\n\nvar _utils = __webpack_require__(/*! @dragon/utils */ \"./node_modules/@dragon/utils/utils.js\");\n\nvar utils = _interopRequireWildcard(_utils);\n\nfunction _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nfunction dragon(config) {\n\n\treturn new _core2.default(config, utils);\n}\n\nexports.Dragon = _core2.default;\nexports.utils = utils;\n\n//# sourceURL=webpack://dragon/./src/dragon.lib.js?");
 
+/***/ }),
 
-// workaround from https://github.com/webpack/webpack/issues/3929
-module.exports = __webpack_require__(2).default;
+/***/ "./src/webpack.entry.js":
+/*!******************************!*\
+  !*** ./src/webpack.entry.js ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\n\n// workaround from https://github.com/webpack/webpack/issues/3929\nmodule.exports = __webpack_require__(/*! ../src/dragon.lib */ \"./src/dragon.lib.js\").default;\n\n//# sourceURL=webpack://dragon/./src/webpack.entry.js?");
 
 /***/ })
-/******/ ]);
+
+/******/ });
 });

@@ -1,6 +1,6 @@
 {
   "name": "@dragon/core",
-  "version": "0.1.11",
+  "version": "0.1.13",
   "description": "Dragon library core",
   "main": "core.es5.js",
   "module": "core.js",
@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/luckylooke/dragon",
   "dependencies": {
-    "middle.js": "^3.0.3"
+    "middle.js": "^4.0.0"
   },
   "devDependencies": {
     "css-loader": "^0.28.7",

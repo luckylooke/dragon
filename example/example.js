@@ -4,18 +4,18 @@
 let animationRunning = false;
 
 setTimeout( () => {
-	
+
 	console.log('dingdong', dragon);
 
 	let testDragon = dragon( {
-		containers: document.getElementsByClassName( 'container' ),
+		containers: document.getElementsByClassName('container'),
 		mouseEvents: () => !animationRunning,
 		mirrorAbsolute: () => animationRunning,
 	} )
 
-	let test1item = document.getElementById( 'test1' )
-	let test2item = document.getElementById( 'test2' )
-	let rightContainer = document.getElementById( 'right-defaults' )
+	let test1item = document.getElementById('test1')
+	let test2item = document.getElementById('test2')
+	let rightContainer = document.getElementById('right-defaults')
 
 	//
 	// let getOffset = testDragon.space.utils.getOffset
@@ -24,7 +24,7 @@ setTimeout( () => {
 
 	animate( testDragon, test1item, rightContainer )
 
-	console.log( 'testDragon', testDragon )
+	console.log('testDragon', testDragon )
 
 }, 10 )
 
@@ -60,7 +60,7 @@ function animate( dragon, itemElm, destElm, duration ) {
 
 	function step( time ) {
 
-		// console.log( 'step', drag.x, drag.y );
+		// console.log('step', drag.x, drag.y );
 
 		if ( i < steps ) {
 
@@ -68,7 +68,7 @@ function animate( dragon, itemElm, destElm, duration ) {
 
 				let ease = easeInOutQuadDiff( i++ / steps, i-- / steps )
 				let ease2 = easeInOutQuartDiff( i++ / steps, i / steps )
-				// console.log( 'step', distanceX * ease, distanceY * ease2 )
+				// console.log('step', distanceX * ease, distanceY * ease2 )
 				drag.drag( drag.x + distanceX * ease, drag.y + distanceY * ease2 )
 				step( time )
 			}, time )

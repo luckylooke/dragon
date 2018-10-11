@@ -3,6 +3,7 @@ import Container from './container'
 import Item from './item'
 import Drag from './drag'
 import { decorator as middle } from 'middle.js'
+// import env from './env'
 
 let doc = document
 
@@ -16,20 +17,23 @@ let space = window.dragonSpace
 /** is group of containers */
 export default class Dragon {
 
-	constructor( config, utils, domEventManager, domClassManager ) {
+	constructor( config, utils ) {
 
-		if ( !utils || !domEventManager || !domClassManager) throw new Error('Dragon: dependencies not sattisfied!')
+    // if ( env.DEV )
+    //   console.log('testXXX', config, utils )
+
+    if ( !utils || !utils.domEventManager || !utils.domClassManager) throw new Error('Dragon: dependencies not sattisfied!')
 
 		config = config || {}
 
 		if ( config.nodeType == 1 ) // is DOM Element
 			config = { containers: [ config ] }
 
-		if ( typeof config.length !== 'undefined' ) // is array-like
+		if ( typeof config.length !== 'undefined') // is array-like
 			config = { containers: utils.ensureArray( config ) }
 
-		this.domEventManager = domEventManager
-		this.domClassManager = domClassManager
+		this.domEventManager = utils.domEventManager
+		this.domClassManager = utils.domClassManager
 		this.using = [] // array of plugins using by this dragon
 		this.defaults = {
 			config: {
@@ -47,10 +51,12 @@ export default class Dragon {
 		this.id = config.id || 'dragonID_' + Date.now()
 		this.containers = []
 		this.space = space
-		this.Container = Container
+		this.Container = space.classes.Container
+		this.Item = space.classes.Item
+		this.Drag = space.classes.Drag
 		space.dragons.push( this )
 
-		this.addContainers()
+		this.addContainers( config.containerConfig )
 	}
 
 	@middle
@@ -65,10 +71,13 @@ export default class Dragon {
 			if ( !space.drags ) 	space.drags = []
 			if ( !space.utils ) 	space.utils = this.utils
 
-			if ( !space.Dragon ) 	space.Dragon = Dragon
-			if ( !space.Container ) space.Container = Container
-			if ( !space.Item ) 		space.Item = Item
-			if ( !space.Drag ) 		space.Drag = Drag
+      if ( !space.classes )
+        space.classes = {
+          Dragon,
+          Container,
+          Item,
+          Drag,
+        }
 
       // space.setConfig = this.utils.setConfig.bind( space, space, this.defaults, space.config )
       space.getConfig = this.utils.getConfig.bind( space )
@@ -87,7 +96,7 @@ export default class Dragon {
 					return
 				}
 
-				this.grab( this.utils.getCoord( 'clientX', e ), this.utils.getCoord( 'clientY', e ), e.target )
+				this.grab( this.utils.getCoord('clientX', e ), this.utils.getCoord('clientY', e ), e.target )
 			})
 		}
 	}
@@ -102,7 +111,8 @@ export default class Dragon {
 		containerElms = this.utils.ensureArray( containerElms )
 
 		let len = containerElms.length
-		let addedContainers = []
+    let addedContainers = []
+    config = config || this.config.containerConf
 
 		for ( let i = 0, elm, container; i < len; i++ ) {
 
@@ -111,18 +121,23 @@ export default class Dragon {
 			if ( this.getContainer( elm ) ) {
 
 				/* eslint-disable no-console */
-				console.warn( 'container already registered', elm )
+				console.warn('container already registered', elm )
 				/* eslint-enable no-console */
 			}
 			else {
 
-				container = new this.Container( this, elm, config )
+				container = this.createContainer( this, elm, config )
 				this.containers.push( container )
 				addedContainers.push( container )
 			}
 		}
 
 		return addedContainers
+	}
+
+	@middle
+	createContainer( container, elm, config ) {
+		return new this.Container( container, elm, config )
 	}
 
 	@middle

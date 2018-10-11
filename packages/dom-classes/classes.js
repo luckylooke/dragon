@@ -12,7 +12,7 @@ function lookup( className ) {
 	}
 	else {
 
-		cache[ className ] = cached = new RegExp( start + className + end, 'g' )
+		cache[ className ] = cached = new RegExp( start + className + end, 'g')
 	}
 
 	return cached
@@ -34,7 +34,7 @@ function add( el, className ) {
 
 function rm( el, className ) {
 
-	el.className = el.className.replace( lookup( className ), ' ' ).trim()
+	el.className = el.className.replace( lookup( className ), ' ').trim()
 }
 
 export default {

@@ -1,8 +1,11 @@
 
 // rainbow background
-$gradientStart: #FDB99B; 
-$gradientMiddle: #CF8BF3;
-$gradientEnd: #A770EF;
+// $gradientStart: #FDB99B;
+// $gradientMiddle: #CF8BF3;
+// $gradientEnd: #A770EF;
+$gradientStart: #cec8bf;
+$gradientMiddle: #e9fbf1;
+$gradientEnd: #65c2d8;
 $rainbowGradient: linear-gradient(to bottom, $gradientStart, $gradientMiddle, $gradientEnd );
 
 $a: white;

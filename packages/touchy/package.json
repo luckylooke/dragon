@@ -1,6 +1,6 @@
 {
   "name": "@dragon/touchy",
-  "version": "0.1.8",
+  "version": "0.1.10",
   "description": "Vanilla js DOM event manager for dragon",
   "main": "touchy.es5.js",
   "module": "touchy.js",

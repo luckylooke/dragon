@@ -8,9 +8,9 @@ import * as utils from '../../packages/utils/utils'
 import touchy from '../../packages/touchy/touchy'
 import classes from '../../packages/dom-classes/classes'
 
-describe( 'Dragon Spec', function () {
+describe('Dragon Spec', function () {
 
-	it( 'should have been initialised properly', function () {
+	it('should have been initialised properly', function () {
 		// Arrange
 		let dragon = new Dragon( {}, utils, touchy, classes )
 
@@ -21,7 +21,7 @@ describe( 'Dragon Spec', function () {
 		expect( dragon.defaults ).toBeDefined()
 	} )
 
-	it( 'should have default space property initialised properly', function () {
+	it('should have default space property initialised properly', function () {
 		// Arrange
 		let dragon = new Dragon( {}, utils, touchy, classes )
 		let space = dragon.space
@@ -35,7 +35,7 @@ describe( 'Dragon Spec', function () {
 		expect( space.dragons ).toContain( dragon )
 	} )
 
-	it( 'should have correctly defined space property', function () {
+	it('should have correctly defined space property', function () {
 		// Arrange
 		let mySpace = {}
 		let dragon = new Dragon( { space: mySpace }, utils, touchy, classes )
@@ -45,7 +45,7 @@ describe( 'Dragon Spec', function () {
 		expect( mySpace.dragons ).toBeDefined()
 	} )
 
-	it( 'should have add containers provided to constructor', function () {
+	it('should have add containers provided to constructor', function () {
 		// Arrange
 		let containerElm = document.createElement('div')
 		let containerElm2 = document.createElement('div')
@@ -55,7 +55,7 @@ describe( 'Dragon Spec', function () {
 		expect( dragon.containers.length ).toEqual( 2 )
 	} )
 
-	it( 'should have add containers provided via options to constructor', function () {
+	it('should have add containers provided via options to constructor', function () {
 		// Arrange
 		let containerElm = document.createElement('div')
 		let containerElm2 = document.createElement('div')
@@ -65,9 +65,9 @@ describe( 'Dragon Spec', function () {
 		expect( dragon.containers.length ).toEqual( 2 )
 	} )
 
-	describe( 'dragon.addContainers', function () {
+	describe('dragon.addContainers', function () {
 
-		it( 'should add containers to dragon', function () {
+		it('should add containers to dragon', function () {
 			// Arrange
 			let containerElm = document.createElement('div')
 			let containerElm2 = document.createElement('div')
@@ -91,9 +91,9 @@ describe( 'Dragon Spec', function () {
 		} )
 	} )
 
-	describe( 'dragon.getContainer', function () {
+	describe('dragon.getContainer', function () {
 
-		it( 'should get containerElm instance from dragon', function () {
+		it('should get containerElm instance from dragon', function () {
 			// Arrange
 			let containerElm = document.createElement('div')
 			let containerElm2 = document.createElement('div')
@@ -110,9 +110,9 @@ describe( 'Dragon Spec', function () {
 		} )
 	} )
 
-	describe( 'dragon.grab', function () {
+	describe('dragon.grab', function () {
 
-		it( 'should grab element provided', function () {
+		it('should grab element provided', function () {
 			// Arrange
 			let containerElm = document.createElement('div')
 			let itemElm = document.createElement('div')
@@ -129,7 +129,7 @@ describe( 'Dragon Spec', function () {
 			expect( drag.item.elm ).toEqual( itemElm )
 		} )
 
-		it( 'should grab element by coordinates', function () {
+		it('should grab element by coordinates', function () {
 			// Arrange
 			let containerElm = document.createElement('div')
 			let itemElm = document.createElement('div')
@@ -154,9 +154,9 @@ describe( 'Dragon Spec', function () {
 		} )
 	} )
 
-	describe( 'dragon.findDropTarget', function () {
+	describe('dragon.findDropTarget', function () {
 
-		it( 'should find target containerElm in DOM tree, if there is any', function () {
+		it('should find target containerElm in DOM tree, if there is any', function () {
 			// Arrange
 			let div = document.createElement('div')
 			let div1 = document.createElement('div')
@@ -180,28 +180,28 @@ describe( 'Dragon Spec', function () {
 		} )
 	} )
 
-	describe( 'dragon.getConfig', function () {
+	describe('dragon.getConfig', function () {
 
-		it( 'should return config value or default if not set by input config ', function () {
+		it('should return config value or default if not set by input config ', function () {
 			// Arrange
 			let dragon = new Dragon( {}, utils, touchy, classes )
 			let dragon2 = new Dragon( { mouseEvents: false }, utils, touchy, classes )
 
 			// Act
-			let configVal = dragon.getConfig( 'mouseEvents' )
-			let configVal2 = dragon2.getConfig( 'mouseEvents' )
+			let configVal = dragon.getConfig('mouseEvents')
+			let configVal2 = dragon2.getConfig('mouseEvents')
 
 			// Assert
 			expect( configVal ).toEqual( true )
 			expect( configVal2 ).toEqual( false )
 		} )
 
-		it( 'should return config value and get value from function if provided instead of value', function () {
+		it('should return config value and get value from function if provided instead of value', function () {
 			// Arrange
 			let dragon = new Dragon( { mouseEvents: () => false }, utils, touchy, classes )
 
 			// Act
-			let configVal = dragon.getConfig( 'mouseEvents' )
+			let configVal = dragon.getConfig('mouseEvents')
 
 			// Assert
 			expect( configVal ).toEqual( false )

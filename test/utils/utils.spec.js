@@ -6,9 +6,9 @@
 // import Container from './../src/container.js'
 import * as utils from '../../packages/utils/utils.js'
 
-describe( 'utils.getImmediateChild', function () {
+describe('utils.getImmediateChild', function () {
 
-	it( 'should have found immediate child of a dropTraget', function () {
+	it('should have found immediate child of a dropTraget', function () {
 
 		// Arrange
 		let div = document.createElement('div')
@@ -28,9 +28,9 @@ describe( 'utils.getImmediateChild', function () {
 	} )
 } )
 
-describe( 'utils.getOffset', function () {
+describe('utils.getOffset', function () {
 
-	it( 'should have return object with element offset params', function () {
+	it('should have return object with element offset params', function () {
 
 		// Arrange
 		let div = document.createElement('div')
@@ -66,9 +66,9 @@ describe( 'utils.getOffset', function () {
 	} )
 } )
 
-describe( 'utils.getRectWidth', function () {
+describe('utils.getRectWidth', function () {
 
-	it( 'should have return width', function () {
+	it('should have return width', function () {
 
 		// Arrange
 		let rect = { width: 100 }
@@ -84,9 +84,9 @@ describe( 'utils.getRectWidth', function () {
 	} )
 } )
 
-describe( 'utils.getRectHeight', function () {
+describe('utils.getRectHeight', function () {
 
-	it( 'should have return height', function () {
+	it('should have return height', function () {
 
 		// Arrange
 		let rect = { height: 100 }
@@ -102,9 +102,9 @@ describe( 'utils.getRectHeight', function () {
 	} )
 } )
 
-describe( 'utils.getParent', function () {
+describe('utils.getParent', function () {
 
-	it( 'should have return parent of given element or null if the parent is document', function () {
+	it('should have return parent of given element or null if the parent is document', function () {
 
 		// Arrange
 		let div = document.createElement('div')
@@ -123,9 +123,9 @@ describe( 'utils.getParent', function () {
 	} )
 } )
 
-describe( 'utils.nextEl', function () {
+describe('utils.nextEl', function () {
 
-	it( 'should have return next sibling element of given element or null if there is no sibling', function () {
+	it('should have return next sibling element of given element or null if there is no sibling', function () {
 
 		// Arrange
 		let div = document.createElement('div')
@@ -146,9 +146,9 @@ describe( 'utils.nextEl', function () {
 	} )
 } )
 
-describe( 'utils.toArray', function () {
+describe('utils.toArray', function () {
 
-	it( 'should have return real array from array-like or array object if input is array already', function () {
+	it('should have return real array from array-like or array object if input is array already', function () {
 
 		// Arrange
 		let div = document.createElement('div')
@@ -166,7 +166,7 @@ describe( 'utils.toArray', function () {
 		document.body.appendChild( div )
 
 		// Act
-		let isArr = Array.isArray( utils.toArray( document.getElementsByClassName( 'test' ) ) )
+		let isArr = Array.isArray( utils.toArray( document.getElementsByClassName('test') ) )
 		let isArr2 = Array.isArray( utils.toArray( { 0: {}, 1: '', 2: 11 } ) )
 		let isArr3 = Array.isArray( utils.toArray( [ {}, '', 11 ] ) )
 
@@ -177,9 +177,9 @@ describe( 'utils.toArray', function () {
 	} )
 } )
 
-describe( 'utils.bind', function () {
+describe('utils.bind', function () {
 
-	it( 'should create method with binded context to provided object and return it', function () {
+	it('should create method with binded context to provided object and return it', function () {
 
 		// Arrange
 		let obj = {
@@ -190,17 +190,17 @@ describe( 'utils.bind', function () {
 		}
 
 		// Act
-		let bindedMethod = utils.bind( obj, 'method' )
+		let bindedMethod = utils.bind( obj, 'method')
 
 		// Assert
-		expect( obj.method() ).toEqual( 'test' )
-		expect( bindedMethod() ).toEqual( 'test' )
+		expect( obj.method() ).toEqual('test')
+		expect( bindedMethod() ).toEqual('test')
 	} )
 } )
 
-describe( 'utils.domIndexOf', function () {
+describe('utils.domIndexOf', function () {
 
-	it( 'should return index of child element in parentNode', function () {
+	it('should return index of child element in parentNode', function () {
 
 		// Arrange
 		let div = document.createElement('div')
@@ -225,14 +225,14 @@ describe( 'utils.domIndexOf', function () {
 	} )
 } )
 
-describe( 'utils.isInput', function () {
+describe('utils.isInput', function () {
 
-	it( 'should return true if provided element is one of input types or element is in content-editable mode', function () {
+	it('should return true if provided element is one of input types or element is in content-editable mode', function () {
 
 		// Arrange
-		let inputElm = document.createElement( 'input' )
-		let textAreaElm = document.createElement( 'textarea' )
-		let selectElm = document.createElement( 'select' )
+		let inputElm = document.createElement('input')
+		let textAreaElm = document.createElement('textarea')
+		let selectElm = document.createElement('select')
 		let editableElm = document.createElement('div')
 		let editableChildElm = document.createElement('div')
 		let notInput = document.createElement('div')
@@ -264,9 +264,9 @@ describe( 'utils.isInput', function () {
 	} )
 } )
 
-describe( 'utils.isEditable', function () {
+describe('utils.isEditable', function () {
 
-	it( 'should return true if provided element is in content-editable mode', function () {
+	it('should return true if provided element is in content-editable mode', function () {
 
 		// Arrange
 		let editableElm = document.createElement('div')
@@ -291,9 +291,9 @@ describe( 'utils.isEditable', function () {
 	} )
 } )
 
-describe( 'utils.getIndexByElm', function () {
+describe('utils.getIndexByElm', function () {
 
-	it( 'should return index of the object in collection array looked up by elm property containing DOM element', function () {
+	it('should return index of the object in collection array looked up by elm property containing DOM element', function () {
 
 		// Arrange
 		let elm = document.createElement('div')

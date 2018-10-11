@@ -29,3 +29,20 @@ a:hover {
 	color: $aHover;
     text-decoration: none;
 }
+
+.footer {
+  padding: 2em;
+
+  a {
+      color: white;
+  }
+
+  .row {
+    padding-top: 2em;
+  }
+
+  .heart {
+    color: red;
+    font-size: 70%;
+  }
+}
