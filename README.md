@@ -2,7 +2,7 @@
 Total rewrite of drag&drop javascript library [dragula.js](https://github.com/bevacqua/dragula) into shiny new library with [SOLID](https://en.wikipedia.org/wiki/SOLID_%28object-oriented_design%29) design principles. ( work in progress!!! )
 
 ## :warning: WARNING
-THIS LIBRARY WAS UNDER TURBULENT DEVELOPMENT, CODE CAN BE CHANGED OR REFACTORED. THIS LIBRARY IS NOT READY TO BE USED. IF YOU WANT TO BE NOTIFIED WHEN IT WILL BE READY, LET ME KNOW ON MY MAIL LUCKYLOOKE@GMAIL.COM
+THIS LIBRARY IS UNFINISHED AND STILL UNDER DEVELOPMENT, CODE CAN BE CHANGED OR REFACTORED ANYTIME. THIS LIBRARY IS NOT READY TO BE USED. IF YOU WANT TO BE NOTIFIED WHEN IT WILL BE READY, LET ME KNOW ON MY MAIL LUCKYLOOKE@GMAIL.COM
 
 ## CURRENT STATE!!!
 I have desparatelly trying to find time for this, but I am not much successful. So I cannot promise anything then I would love to continue on this but I dont know when it will be. Really sorry about that :/
