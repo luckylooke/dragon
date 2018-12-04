@@ -7,6 +7,8 @@ THIS LIBRARY WAS UNDER TURBULENT DEVELOPMENT, CODE CAN BE CHANGED OR REFACTORED.
 ## CURRENT STATE!!!
 I have desparatelly trying to find time for this, but I am not much successful. So I cannot promise anything then I would love to continue on this but I dont know when it will be. Really sorry about that :/
 
+My [plan here](https://github.com/luckylooke/dragon/wiki/Roadmap).
+
 ## Installation
 ```
 npm install dragon
